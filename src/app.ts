@@ -8,7 +8,7 @@ import bodyParser from 'body-parser'
 export const app = express()
 app.use(express.json())
 app.use(cors())
-app.use(bodyParser())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get('/',(req,res)=>{
     res.status(200).json({version:'1.0'})

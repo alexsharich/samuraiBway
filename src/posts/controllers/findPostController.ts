@@ -3,10 +3,10 @@ import {postsRepository} from "../../repositories/posts-repository";
 
 export const findPostController = (req: Request<{id:string}>, res: Response) => {
 
-    const foundPost = postsRepository.findPost(req.params.id ? req.params.id : null)
+    const foundPost = postsRepository.findPost(req.params.id )
     if(foundPost){
         res.status(200).json(foundPost)
+        return;
     }
-    res.status(404)
-
+    res.sendStatus(404)
 }

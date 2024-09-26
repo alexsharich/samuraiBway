@@ -4,45 +4,39 @@ import {InputBlogType} from "../input-output-types/blog-types";
 
 export const blogsRepository = {
     findBlog(id: string | null) {
-        const foundedBlog = DB.blogs.find((blog: BlogDBType) => blog.id === id)
-
-        if (!foundedBlog || id === undefined) {
-            return
-        }
-        return foundedBlog
+        return DB.blogs.find((blog: BlogDBType) => blog.id === id)
     },
     getBlogs() {
-        const blogs = DB.blogs
-        return blogs
+        return DB.blogs
+
     },
     deleteBlog(id: string) {
-        const blogForDelete = DB.blogs.find((blog:BlogDBType) => blog.id === id)
+        const blogForDelete = DB.blogs.find((blog: BlogDBType) => blog.id === id)
         if (!blogForDelete) {
             return false
         }
-        DB.blogs = DB.blogs.filter((blog:BlogDBType) => blog.id !== id)
+        DB.blogs = DB.blogs.filter((blog: BlogDBType) => blog.id !== id)
         return true
     },
-    createBlog({name, description, websiteUrl}:InputBlogType) {
+    createBlog({name, description, websiteUrl}: InputBlogType) {
         const newBlog = {
-            id: new Date().toISOString(),
+            id: new Date().toISOString() + Math.random(),
             name: name,
             description: description,
             websiteUrl: websiteUrl
         }
-        DB.blogs.push(newBlog)
-        return newBlog
+        DB.blogs = [...DB.blogs, newBlog]
+        return newBlog.id
     },
-    updateBlog({params,body}:any) {
-        const blogForUpdate = DB.blogs.find((blog:BlogDBType) => blog.id === params.id)
+    updateBlog({params, body}: any) {
+        const blogForUpdate = DB.blogs.find((blog: BlogDBType) => blog.id === params.id)
         if (blogForUpdate) {
             blogForUpdate.name = body.name,
                 blogForUpdate.description = body.description,
                 blogForUpdate.websiteUrl = body.websiteUrl
 
-            return true
+            return blogForUpdate
         }
-        return false
-
+        return null
     }
 }

@@ -4,10 +4,13 @@ import {InputBlogType, OutputBlogType} from "../../input-output-types/blog-types
 import {OutputErrorsType} from "../../input-output-types/output-errors-type";
 
 
-export const createBlogController = (req: Request<any, any, InputBlogType>, res:Response<OutputBlogType | OutputErrorsType>) => {
-    const isNewBlogCreated = blogsRepository.createBlog(req.body)
+export const createBlogController =  (req: Request<any, any, InputBlogType>, res:any) => {
+    const isNewBlogCreated =  blogsRepository.createBlog(req.body)
 
-    if(isNewBlogCreated){
-        res.status(201).json(isNewBlogCreated)
+    if (isNewBlogCreated) {
+        const newBlog =  blogsRepository.findBlog(isNewBlogCreated)
+        if (newBlog) {
+            res.status(201).json(newBlog)
+        }
     }
 }
