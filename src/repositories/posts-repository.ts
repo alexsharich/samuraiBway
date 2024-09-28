@@ -20,23 +20,23 @@ export const postsRepository = {
         DB.posts = DB.posts.filter((post: PostDBType) => post.id !== id)
         return true
     },
-    createPost({title, shortDescription, content, blogId}: any) {
+    createPost(body: InputPostType) {
 const blogIdForCreated = DB.blogs.find((blog:BlogDBType)=>blog.id === blogId)
         if(blogIdForCreated){
             const newPost = {
                 id: new Date().toISOString() + Math.random(),
-                title: title,
-                shortDescription: shortDescription,
-                content: content,
-                blogId: blogId,
-                blogName: blogsRepository.findBlog(blogId)!.name
+                title: body.title,
+                shortDescription: body.shortDescription,
+                content: body.content,
+                blogId: body.blogId,
+                blogName: blogIdForCreated.name
             }
             DB.posts = [...DB.posts, newPost]
-            return newPost.id
+            return newPost
         } return  null
     },
     updatePost({params, body}: any) {
-        const postForUpdate = DB.posts.find((post: PostDBType) => post.id === params.id)
+        const postForUpdate = DB.posts.find((post: PostDBType) => post.id === params)
         if (postForUpdate) {
             postForUpdate.title = body.title,
                 postForUpdate.content = body.content,

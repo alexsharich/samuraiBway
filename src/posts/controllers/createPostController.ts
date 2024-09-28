@@ -6,10 +6,12 @@ import {InputPostType} from "../../input-output-types/post-types";
 export const createPostController = (req: Request<any, any, InputPostType>, res: any) => {
     const newPostCreated = postsRepository.createPost(req.body)
     if (newPostCreated) {
-        const newPost = postsRepository.findPost(newPostCreated)
-        if (newPost) {
-            res.status(201).json(newPost)
+        const newPost = postsRepository.findPost(newPostCreated.id)
+        if (!newPost) {
+            res.sendStatus(404)
+            return
         }
+        res.status(201).json(newPost)
     }
-    res.sendStatus(404)
+
 }

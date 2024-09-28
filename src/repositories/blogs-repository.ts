@@ -15,7 +15,7 @@ export const blogsRepository = {
         if (!blogForDelete) {
             return false
         }
-        DB.blogs = DB.blogs.filter((blog: BlogDBType) => blog.id !== id)
+        DB.blogs = DB.blogs.filter((blog: BlogDBType) => blog.id !== blogForDelete.id)
         return true
     },
     createBlog({name, description, websiteUrl}: InputBlogType) {
@@ -29,7 +29,7 @@ export const blogsRepository = {
         return newBlog.id
     },
     updateBlog({params, body}: any) {
-        const blogForUpdate = DB.blogs.find((blog: BlogDBType) => blog.id === params.id)
+        const blogForUpdate = DB.blogs.find((blog: BlogDBType) => blog.id === params)
         if (blogForUpdate) {
             blogForUpdate.name = body.name,
                 blogForUpdate.description = body.description,

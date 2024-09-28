@@ -1,11 +1,11 @@
 import {Request, Response} from "express";
 import {blogsRepository} from "../../repositories/blogs-repository";
 
-export const findBlogController = (req: Request<{id:string}>, res: Response) => {
+export const findBlogController = (req: Request<{ id: string }>, res: Response) => {
     const foundBlog = blogsRepository.findBlog(req.params.id)
-    if(foundBlog){
-        res.status(200).send(foundBlog)
+    if (!foundBlog) {
+        res.sendStatus(404)
         return
     }
-    res.sendStatus(404)
+    res.status(200).send(foundBlog)
 }
