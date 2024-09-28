@@ -1,7 +1,6 @@
 import {Request, Response} from "express";
 import {blogsRepository} from "../../repositories/blogs-repository";
-import {InputBlogType, OutputBlogType} from "../../input-output-types/blog-types";
-import {OutputErrorsType} from "../../input-output-types/output-errors-type";
+import {InputBlogType} from "../../input-output-types/blog-types";
 
 
 export const createBlogController =  (req: Request<any, any, InputBlogType>, res:any) => {

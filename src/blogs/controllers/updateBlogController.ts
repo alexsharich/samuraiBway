@@ -4,9 +4,10 @@ import {InputBlogType} from "../../input-output-types/blog-types";
 
 export const updateBlogController = (req: Request<{ id: string }, any, InputBlogType>, res: any) => {
     const isBolgUpdated = blogsRepository.updateBlog({params: req.params.id, body: req.body})
-    if (isBolgUpdated) {
-        res.status(204).send(isBolgUpdated)
+    if (!isBolgUpdated) {
+        res.sendStatus(404)
         return
     }
-    res.sendStatus(404)
+    res.status(204).send(isBolgUpdated)
+
 }

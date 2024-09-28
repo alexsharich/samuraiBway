@@ -9,8 +9,8 @@ import {adminMiddleware} from "../global-middleware/admin-middleware";
 
 export const blogsRouter = Router()
 
-blogsRouter.get('/', getBlogController)
 blogsRouter.post('/', ...blogValidators, createBlogController)
+blogsRouter.get('/', getBlogController)
 blogsRouter.get('/:id', findBlogValidator, findBlogController)
 blogsRouter.delete('/:id', adminMiddleware, findBlogValidator, deleteBlogController)
 blogsRouter.put('/:id', findBlogValidator, ...blogValidators, updateBlogController)

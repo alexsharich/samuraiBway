@@ -13,6 +13,7 @@ describe('/blogs', () => {
     })
 
     it('should create', async () => {
+        setDB()
         const newBlog: InputBlogType = {
             name: 'n1',
             description: 'd1',
@@ -34,6 +35,7 @@ describe('/blogs', () => {
         expect(res.body).toEqual(DB.blogs[0])
     })
     it('shouldn\'t create 401', async () => {
+        setDB()
         const newBlog: InputBlogType = {
             name: 'n1',
             description: 'd1',
@@ -49,6 +51,7 @@ describe('/blogs', () => {
         expect(DB.blogs.length).toEqual(0)
     })
     it('shouldn\'t create', async () => {
+        setDB()
         const newBlog: InputBlogType = {
             name: createString(16),
             description: createString(501),
@@ -70,7 +73,7 @@ describe('/blogs', () => {
         expect(DB.blogs.length).toEqual(0)
     })
     it('should get empty array', async () => {
-
+        setDB()
         const res = await req
             .get(SETTINGS.PATH.BLOGS)
             .expect(200)
@@ -119,7 +122,7 @@ describe('/blogs', () => {
         expect(DB.blogs.length).toEqual(0)
     })
     it('shouldn\'t del', async () => {
-
+        setDB()
         const res = await req
             .delete(SETTINGS.PATH.BLOGS + '/1')
             .set({'Authorization': 'Basic ' + codedAuth})
@@ -127,7 +130,7 @@ describe('/blogs', () => {
 
     })
     it('shouldn\'t del 401', async () => {
-
+        setDB()
         const res = await req
             .delete(SETTINGS.PATH.BLOGS + '/1')
             .set({'Authorization': 'Basic' + codedAuth}) // no ' '

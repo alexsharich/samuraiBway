@@ -12,6 +12,7 @@ describe('/posts', () => {
     })
 
     it('should create', async () => {
+        setDB(dataset1)
         const newPost: InputPostType = {
             title: 't1',
             shortDescription: 's1',
@@ -53,6 +54,7 @@ describe('/posts', () => {
         expect(DB.posts.length).toEqual(0)
     })
     it('shouldn\'t create', async () => {
+        setDB()
         const newPost: InputPostType = {
             title: createString(31),
             content: createString(1001),
@@ -76,7 +78,7 @@ describe('/posts', () => {
         expect(DB.posts.length).toEqual(0)
     })
     it('should get empty array', async () => {
-
+        setDB()
         const res = await req
             .get(SETTINGS.PATH.POSTS)
             .expect(200)
@@ -124,7 +126,7 @@ describe('/posts', () => {
         expect(DB.posts.length).toEqual(0)
     })
     it('shouldn\'t del', async () => {
-
+        setDB()
         const res = await req
             .delete(SETTINGS.PATH.POSTS + '/1')
             .set({'Authorization': 'Basic ' + codedAuth})

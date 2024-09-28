@@ -6,7 +6,6 @@ export const inputCheckErrorsMiddleware = (req: Request, res: Response<OutputErr
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         const eArray = errors.array({onlyFirstError: true}) as { path: FieldNamesType, msg: string }[]
-        // console.log(eArray)
 
         res
             .status(400)

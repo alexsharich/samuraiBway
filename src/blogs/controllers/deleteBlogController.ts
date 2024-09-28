@@ -5,6 +5,7 @@ export const deleteBlogController = (req: Request<{ id: string }>, res: Response
     const isDeletedBlog = blogsRepository.deleteBlog(req.params.id)
     if (!isDeletedBlog) {
         res.sendStatus(404)
+        return
     }
     res.sendStatus(204)
 }

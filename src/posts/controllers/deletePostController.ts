@@ -5,6 +5,7 @@ export const deletePostController = (req: Request<{ id: string }>, res: Response
     const isDeletedPost = postsRepository.deletePost(req.params.id)
     if (!isDeletedPost) {
         res.sendStatus(404)
+        return
     }
     res.sendStatus(204)
 }

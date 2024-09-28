@@ -11,4 +11,5 @@ export const createPostController = (req: Request<any, any, InputPostType>, res:
             res.status(201).json(newPost)
         }
     }
+    res.sendStatus(404)
 }
