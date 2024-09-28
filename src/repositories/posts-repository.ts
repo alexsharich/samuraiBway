@@ -7,7 +7,7 @@ import {BlogDBType} from "../db/blog-db-type";
 
 export const postsRepository = {
     findPost(id: string | null) {
-        return DB.blogs.find((post: PostDBType) => post.id === id)
+        return DB.posts.find((post: PostDBType) => post.id === id)
     },
     getPosts() {
         return DB.posts
@@ -21,19 +21,16 @@ export const postsRepository = {
         return true
     },
     createPost(body: InputPostType) {
-const blogIdForCreated = DB.blogs.find((blog:BlogDBType)=>blog.id === blogId)
-        if(blogIdForCreated){
             const newPost = {
                 id: new Date().toISOString() + Math.random(),
                 title: body.title,
                 shortDescription: body.shortDescription,
                 content: body.content,
                 blogId: body.blogId,
-                blogName: blogIdForCreated.name
+                blogName: blogsRepository.findBlog(body.blogId)!.name,
             }
             DB.posts = [...DB.posts, newPost]
-            return newPost
-        } return  null
+            return newPost.id
     },
     updatePost({params, body}: any) {
         const postForUpdate = DB.posts.find((post: PostDBType) => post.id === params)
