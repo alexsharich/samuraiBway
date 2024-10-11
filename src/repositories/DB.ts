@@ -4,7 +4,7 @@ import {PostDBType} from "../db/post-db-type";
 import {BlogDBType} from "../db/blog-db-type";
 dotenv.config()
 
-const mongoUri = process.env.mongoURL || 'mongodb://0.0.0.0:27017'
+const mongoUri = process.env.mongoURL || 'mongodb+srv://alexandev444:EDBJ9FI1lCHHvqlw@cluster0.yfpj9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 const client = new MongoClient(mongoUri)
 const DB = client.db('social')
 export const postsCllection = DB.collection<PostDBType>('posts')

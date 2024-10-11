@@ -3,6 +3,7 @@ import {DB} from "../db/db";
 import {InputPostType} from "../input-output-types/post-types";
 import {blogsRepository} from "./blogs-repository";
 import {BlogDBType} from "../db/blog-db-type";
+import {postsCllection} from "./DB";
 
 
 export const postsRepository = {
@@ -21,7 +22,24 @@ export const postsRepository = {
         return true
     },
     async createPost(body: InputPostType): Promise<string | null> {
-        const newPost = {
+
+        const existBlog = await blogsRepository.findBlog( body.blogId )
+        if(existBlog){
+            const newPost = {
+                id: new Date().toISOString() + Math.random(),
+                title: body.title,
+                shortDescription: body.shortDescription,
+                content: body.content,
+                blogId: body.blogId,
+                blogName: existBlog.name,
+            }
+            DB.posts = [...DB.posts, newPost]
+            return newPost.id
+        } else {
+            return null
+        }
+
+        /*const newPost = {
             id: new Date().toISOString() + Math.random(),
             title: body.title,
             shortDescription: body.shortDescription,
@@ -30,7 +48,7 @@ export const postsRepository = {
             blogName: (await blogsRepository.findBlog(body.blogId)!).name,
         }
         DB.posts = [...DB.posts, newPost]
-        return newPost.id
+        return newPost.id*/
     },
     async updatePost({params, body}: any): Promise<any> {
         const postForUpdate = DB.posts.find((post: PostDBType) => post.id === params)

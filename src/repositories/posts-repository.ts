@@ -48,6 +48,8 @@ export const postsRepository = {
             const result = await postsCllection.insertOne(newPost)
             //DB.posts = [...DB.posts, newPost]
             return newPost.id
+        }else {
+            return null
         }
 
     },
