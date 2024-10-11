@@ -1,35 +1,64 @@
 import {BlogDBType} from "../db/blog-db-type";
-import {DB} from "../db/db";
 import {InputBlogType} from "../input-output-types/blog-types";
+import {blogsCollection} from "./DB";
+
+
 
 export const blogsRepository = {
-    findBlog(id: string | null) {
-        return DB.blogs.find((blog: BlogDBType) => blog.id === id)
-    },
-    getBlogs() {
-        return DB.blogs
+    async findBlog(id: string ): Promise<BlogDBType | null> {
 
+        const blog = await blogsCollection.findOne({id: id})
+        if (blog) {
+            return blog
+        } else {
+            return null
+        }
+        //return DB.blogs.find((blog: BlogDBType) => blog.id === id)
     },
-    deleteBlog(id: string) {
-        const blogForDelete = DB.blogs.find((blog: BlogDBType) => blog.id === id)
+    async getBlogs(): Promise<BlogDBType[]> {
+        return blogsCollection.find({}).toArray()
+        //return DB.blogs
+    },
+    async deleteBlog(id: string): Promise<boolean> {
+        const result = await blogsCollection.deleteOne({id:id})
+        if(result.deletedCount === 1){
+            return true
+        }else{
+            return false
+        }
+        /*const blogForDelete = DB.blogs.find((blog: BlogDBType) => blog.id === id)
         if (!blogForDelete) {
             return false
         }
         DB.blogs = DB.blogs.filter((blog: BlogDBType) => blog.id !== blogForDelete.id)
-        return true
+        return true*/
     },
-    createBlog({name, description, websiteUrl}: InputBlogType) {
+    async createBlog({name, description, websiteUrl}: InputBlogType): Promise<string> {
         const newBlog = {
             id: new Date().toISOString() + Math.random(),
             name: name,
             description: description,
             websiteUrl: websiteUrl
         }
-        DB.blogs = [...DB.blogs, newBlog]
+        const result = await blogsCollection.insertOne(newBlog)//дождаться промиса и отдать id ???
+        // DB.blogs = [...DB.blogs, newBlog]
         return newBlog.id
     },
-    updateBlog({params, body}: any) {
-        const blogForUpdate = DB.blogs.find((blog: BlogDBType) => blog.id === params)
+    async updateBlog({params, body}: any) {
+        const result = await blogsCollection.updateOne({id: params}, {
+            $set: {
+                name: body.name,
+                description: body.description,
+                websiteUrl: body.websiteUrl
+            }
+        })
+
+        if (result.matchedCount === 1) {
+            return await blogsCollection.findOne({id: params})
+        } else {
+            return null
+        }
+        /*const blogForUpdate = DB.blogs.find((blog: BlogDBType) => blog.id === params)
         if (blogForUpdate) {
             blogForUpdate.name = body.name,
                 blogForUpdate.description = body.description,
@@ -37,6 +66,6 @@ export const blogsRepository = {
 
             return blogForUpdate
         }
-        return null
+        return null*/
     }
 }
