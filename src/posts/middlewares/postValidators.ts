@@ -4,6 +4,7 @@ import {adminMiddleware} from "../../global-middleware/admin-middleware";
 import {inputCheckErrorsMiddleware} from "../../global-middleware/inputCheckErrorsMiddleware";
 import {postsRepository} from "../../repositories/posts-repository";
 import {blogsRepository} from "../../repositories/blogs-repository";
+import {ObjectId} from "mongodb";
 
 export const titleValidator = body('title').isString().withMessage('not string')
     .trim().isLength({min: 1, max: 30}).withMessage('more then 30 or 0')
@@ -12,9 +13,12 @@ export const shortDescriptionValidator = body('shortDescription').isString().wit
 export const contentValidator = body('content').isString().withMessage('not string')
     .trim().isLength({min: 1, max: 1000}).withMessage('more then 1000 or 0')
 export const blogIdValidator = body('blogId').isString().withMessage('not string')
-    .trim().custom(blogId => {
-        const blog = blogsRepository.findBlog(blogId)
-        return !!blog
+    .trim().custom(async(blogId:string) => {
+        const blog = await blogsRepository.findBlog(blogId)
+        if(!blog){
+            throw new Error('blog not found !')
+        }
+        return true
     }).withMessage('no blog')
 export const findPostValidator = (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
     const post = postsRepository.findPost(req.params.id)
