@@ -3,7 +3,7 @@ import {DB} from "../db/db";
 import {InputPostType} from "../input-output-types/post-types";
 import {blogsRepository} from "./blogs-repository";
 import {BlogDBType} from "../db/blog-db-type";
-import {postsCllection} from "./DB";
+import {postsCollection} from "./DB";
 
 
 export const postsRepository = {
