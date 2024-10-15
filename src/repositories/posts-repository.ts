@@ -1,10 +1,10 @@
 import {PostDBType} from "../db/post-db-type";
-import {InputPostType, OutputPostType} from "../input-output-types/post-types";
-import {blogsRepository} from "./blogs-repository";
+import {OutputPostType} from "../input-output-types/post-types";
 import {postsCollection} from "./DB";
 import {ObjectId, WithId} from "mongodb";
+import {PostType} from "../domain/posts-service";
 
-
+/*ГДЕ СТАВИТЬ ТРАЙ КЭТЧ ???!!!*/
 const mapToOutput = (post: WithId<PostDBType>): OutputPostType => {
     return {
         id: post._id.toString(),
@@ -16,6 +16,7 @@ const mapToOutput = (post: WithId<PostDBType>): OutputPostType => {
         blogName: post.blogName
     }
 }
+
 
 export const postsRepository = {
     async findPost(id: string): Promise<PostDBType | null> {
@@ -55,23 +56,10 @@ export const postsRepository = {
             throw new Error('Delete... Something wrong')
         }
     },
-    async createPost(body: InputPostType): Promise<ObjectId | null> {
+    async createPost(newPost: PostType): Promise<ObjectId | null> {
         try {
-            const existBlog = await blogsRepository.findBlog(body.blogId)
-            if (existBlog) {
-                const newPost = {
-                    title: body.title,
-                    shortDescription: body.shortDescription,
-                    content: body.content,
-                    blogId: body.blogId,
-                    blogName: existBlog.name,
-                    createdAt: (new Date().toISOString())
-                }
-                const result = await postsCollection.insertOne(newPost)
-                return result.insertedId
-            } else {
-                return null
-            }
+            const createdPost = await postsCollection.insertOne(newPost)
+            return createdPost.insertedId
         } catch (e) {
             return null
         }

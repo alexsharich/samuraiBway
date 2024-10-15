@@ -1,9 +1,9 @@
 import {Request, Response} from 'express'
-import {blogsRepository} from "../../repositories/blogs-repository";
 import {OutputBlogType} from "../../input-output-types/blog-types";
+import {blogsService} from "../../domain/blogs-service";
 
 export const getBlogController = async (req: Request, res: Response<OutputBlogType[]>) => {
-    const blogs: OutputBlogType[] = await blogsRepository.getBlogs()
+    const blogs: OutputBlogType[] = await blogsService.getBlogs()
     if (blogs) {
         res.status(200).send(blogs)
     }

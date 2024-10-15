@@ -1,7 +1,8 @@
 import {BlogDBType} from "../db/blog-db-type";
-import {InputBlogType, OutputBlogType} from "../input-output-types/blog-types";
+import {OutputBlogType} from "../input-output-types/blog-types";
 import {blogsCollection} from "./DB";
 import {ObjectId, WithId} from "mongodb";
+import {BlogType} from "../domain/blogs-service";
 
 const mapToOutput = (blog: WithId<BlogDBType>): OutputBlogType => {
     return {
@@ -13,7 +14,7 @@ const mapToOutput = (blog: WithId<BlogDBType>): OutputBlogType => {
         isMembership: blog.isMembership,
     }
 }
-
+/*ГДЕ СТАВИТЬ ТРАЙ КЭТЧ ???!!!*/
 export const blogsRepository = {
     async findBlog(id: string): Promise<BlogDBType | null> {
         try {
@@ -52,17 +53,10 @@ export const blogsRepository = {
         }
 
     },
-    async createBlog({name, description, websiteUrl}: InputBlogType): Promise<ObjectId | null> {
+    async createBlog(newBlog: BlogType): Promise<ObjectId | null> {
         try {
-            const newBlog = {
-                name: name,
-                description: description,
-                websiteUrl: websiteUrl,
-                isMembership: false,
-                createdAt: (new Date().toISOString())
-            }
-            const result = await blogsCollection.insertOne(newBlog)//дождаться промиса и отдать id ???
-            return result.insertedId
+            const cratedBlog = await blogsCollection.insertOne(newBlog)
+            return cratedBlog.insertedId
         } catch {
             return null
         }

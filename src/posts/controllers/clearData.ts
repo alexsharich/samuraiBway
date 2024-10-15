@@ -1,9 +1,10 @@
 import {Request, Response} from "express";
-import {postsRepository} from "../../repositories/posts-repository";
-import {blogsRepository} from "../../repositories/blogs-repository";
+import {postsService} from "../../domain/posts-service";
+import {blogsService} from "../../domain/blogs-service";
+
 
 export const clearData = async (req: Request, res: Response) => {
-    await postsRepository.deleteAllPosts()
-    await blogsRepository.deleteAllBlogs()
+    await postsService.deleteAllPosts()
+    await blogsService.deleteAllBlogs()
     res.sendStatus(204)
 }
