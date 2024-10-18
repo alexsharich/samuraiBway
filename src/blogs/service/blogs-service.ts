@@ -6,6 +6,7 @@ import {blogsRepository} from "../repositories/blogs-repository";
 import {postsRepository} from "../../posts/repositories/posts-repository";
 import {postsQueryRepository} from "../../posts/repositories/post-query-repository";
 import {PaginationQueriesType} from "../../helpers/pagination_values";
+import {InputPostType} from "../../input-output-types/post-types";
 
 export type BlogType = {
     name: string,
@@ -42,7 +43,7 @@ export const blogsService = {
     async updateBlog({params, body}: any) {
         return await blogsRepository.updateBlog({params, body})
     },
-    async createPostForSelectedBlog({blogId, body}) {
+    async createPostForSelectedBlog({blogId, body}:{blogId:string,body:any}) {// any any any
         const existBlog = await blogsService.findBlog(blogId)///к сервису или репе
         if (existBlog) {
             const newPost: PostType = {
