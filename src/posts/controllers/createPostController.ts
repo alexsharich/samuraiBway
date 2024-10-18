@@ -1,6 +1,6 @@
 import {Request} from "express";
 import {InputPostType} from "../../input-output-types/post-types";
-import {postsService} from "../../domain/posts-service";
+import {postsService} from "../service/posts-service";
 
 
 export const createPostController = async (req: Request<any, any, InputPostType>, res: any) => {

@@ -1,6 +1,6 @@
 import {Request} from 'express'
 import {InputBlogType} from "../../input-output-types/blog-types";
-import {blogsService} from "../../domain/blogs-service";
+import {blogsService} from "../service/blogs-service";
 
 export const updateBlogController = async (req: Request<{ id: string }, {}, InputBlogType>, res: any) => {
     const isBlogUpdated = await blogsService.updateBlog({params: req.params.id, body: req.body})

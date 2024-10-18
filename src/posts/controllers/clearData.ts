@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
-import {postsService} from "../../domain/posts-service";
-import {blogsService} from "../../domain/blogs-service";
+import {postsService} from "../service/posts-service";
+import {blogsService} from "../../blogs/service/blogs-service";
 
 
 export const clearData = async (req: Request, res: Response) => {

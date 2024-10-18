@@ -1,6 +1,6 @@
 import {Request} from 'express'
 import {InputPostType} from "../../input-output-types/post-types";
-import {postsService} from "../../domain/posts-service";
+import {postsService} from "../service/posts-service";
 
 export const updatePostController = async (req: Request<{ id: string }, any, InputPostType>, res: any) => {
     const isPostUpdated = await postsService.updatePost({params: req.params.id, body: req.body})

@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {blogsService} from "../../domain/blogs-service";
+import {blogsService} from "../service/blogs-service";
 
 export const findBlogController = async (req: Request<{ id: string }>, res: Response) => {
     const foundBlog = await blogsService.findBlog(req.params.id)

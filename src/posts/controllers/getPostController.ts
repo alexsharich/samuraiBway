@@ -1,5 +1,5 @@
 import {Request, Response} from 'express'
-import {postsService} from "../../domain/posts-service";
+import {postsService} from "../service/posts-service";
 
 export const getPostController = async (req: Request, res: Response) => {
     const posts = await postsService.getPosts()

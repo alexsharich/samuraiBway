@@ -1,8 +1,10 @@
-import {BlogDBType} from "../db/blog-db-type";
-import {OutputBlogType} from "../input-output-types/blog-types";
-import {blogsCollection} from "./DB";
+
 import {ObjectId, WithId} from "mongodb";
-import {BlogType} from "../domain/blogs-service";
+import {BlogDBType} from "../../db/blog-db-type";
+import {OutputBlogType} from "../../input-output-types/blog-types";
+import {blogsCollection} from "../../repositories/DB";
+import {BlogType} from "../service/blogs-service";
+
 
 const mapToOutput = (blog: WithId<BlogDBType>): OutputBlogType => {
     return {
@@ -14,7 +16,6 @@ const mapToOutput = (blog: WithId<BlogDBType>): OutputBlogType => {
         isMembership: blog.isMembership,
     }
 }
-/*ГДЕ СТАВИТЬ ТРАЙ КЭТЧ ???!!!*/
 export const blogsRepository = {
     async findBlog(id: string): Promise<BlogDBType | null> {
         try {
@@ -23,6 +24,7 @@ export const blogsRepository = {
             if (blog) return mapToOutput(blog)
             return null
         } catch (e) {
+            console.log('Blog repository, find blog',e)
             return null
         }
     },
@@ -30,7 +32,7 @@ export const blogsRepository = {
         try {
             const blogs = await blogsCollection.find({}).toArray()
             return blogs.map(mapToOutput)
-        } catch {
+        } catch (e){
             throw new Error('Blogs not found')
         }
 

@@ -1,10 +1,9 @@
-import {PostDBType} from "../db/post-db-type";
-import {InputPostType} from "../input-output-types/post-types";
+import {PostDBType} from "../../db/post-db-type";
+import {InputPostType} from "../../input-output-types/post-types";
 import {ObjectId,} from "mongodb";
-import {postsCollection} from "../repositories/DB";
-import {blogsRepository} from "../repositories/blogs-repository";
+
+import {blogsService} from "../../blogs/service/blogs-service";
 import {postsRepository} from "../repositories/posts-repository";
-import {blogsService} from "./blogs-service";
 
 
 export type PostType = {

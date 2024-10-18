@@ -1,10 +1,10 @@
-import {PostDBType} from "../db/post-db-type";
-import {OutputPostType} from "../input-output-types/post-types";
-import {postsCollection} from "./DB";
-import {ObjectId, WithId} from "mongodb";
-import {PostType} from "../domain/posts-service";
 
-/*ГДЕ СТАВИТЬ ТРАЙ КЭТЧ ???!!!*/
+import {ObjectId, WithId} from "mongodb";
+import {PostDBType} from "../../db/post-db-type";
+import {OutputPostType} from "../../input-output-types/post-types";
+import {postsCollection} from "../../repositories/DB";
+import {PostType} from "../service/posts-service";
+
 const mapToOutput = (post: WithId<PostDBType>): OutputPostType => {
     return {
         id: post._id.toString(),

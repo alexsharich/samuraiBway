@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {postsService} from "../../domain/posts-service";
+import {postsService} from "../service/posts-service";
 
 export const deletePostController = async (req: Request<{ id: string }>, res: Response) => {
     const isDeletedPost = await postsService.deletePost(req.params.id)

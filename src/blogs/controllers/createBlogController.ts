@@ -1,9 +1,9 @@
 import {Request, Response} from "express";
 import {InputBlogType} from "../../input-output-types/blog-types";
-import {blogsService} from "../../domain/blogs-service";
+import {blogsService} from "../service/blogs-service";
 
 
-export const createBlogController = async (req: Request<any, any, InputBlogType>, res: any) => {
+export const createBlogController = async (req: Request<any, any, InputBlogType>, res: Response) => {
     const isNewBlogCreated = await blogsService.createBlog(req.body)
 
     if (isNewBlogCreated) {
