@@ -4,6 +4,8 @@ import {adminMiddleware} from "../../global-middleware/admin-middleware";
 import {inputCheckErrorsMiddleware} from "../../global-middleware/inputCheckErrorsMiddleware";
 import {postsRepository} from "../repositories/posts-repository";
 import {blogsRepository} from "../../blogs/repositories/blogs-repository";
+import {postsQueryRepository} from "../repositories/post-query-repository";
+import {blogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 
 
 export const titleValidator = body('title').isString().withMessage('not string')
@@ -14,14 +16,24 @@ export const contentValidator = body('content').isString().withMessage('not stri
     .trim().isLength({min: 1, max: 1000}).withMessage('more then 1000 or 0')
 export const blogIdValidator = body('blogId').isString().withMessage('not string')
     .trim().custom(async(blogId:string) => {
-        const blog = await blogsRepository.findBlog(blogId)
+        const blog = await blogsQueryRepository.findBlog(blogId)
         if(!blog){
             throw new Error('blog not found !')
         }
         return true
     }).withMessage('no blog')
+
+export const blogIdInParamsValidator = param('id').isString().withMessage('not string')
+    .trim().custom(async(blogId:string) => {
+        const blog = await blogsQueryRepository.findBlog(blogId)
+        if(!blog){
+            throw new Error('blog not found !')
+        }
+        return true
+    }).withMessage('no blog')
+
 export const findPostValidator = (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
-    const post = postsRepository.findPost(req.params.id)
+    const post = postsQueryRepository.findPost(req.params.id)
     if (!post) {
 
         res
@@ -41,5 +53,14 @@ export const postValidators = [
     contentValidator,
     blogIdValidator,
 
+    inputCheckErrorsMiddleware,
+]
+export const postForBlogValidator =[
+    adminMiddleware,
+
+    titleValidator,
+    shortDescriptionValidator,
+    contentValidator,
+    blogIdInParamsValidator,
     inputCheckErrorsMiddleware,
 ]

@@ -1,9 +1,11 @@
 import {PostDBType} from "../../db/post-db-type";
 import {InputPostType} from "../../input-output-types/post-types";
-import {ObjectId,} from "mongodb";
+import {ObjectId, WithId,} from "mongodb";
 
 import {blogsService} from "../../blogs/service/blogs-service";
 import {postsRepository} from "../repositories/posts-repository";
+import {mapToOutputPost, postsQueryRepository} from "../repositories/post-query-repository";
+import {PaginationQueriesType} from "../../helpers/pagination_values";
 
 
 export type PostType = {
@@ -17,10 +19,7 @@ export type PostType = {
 
 export const postsService = {
     async findPost(id: string): Promise<PostDBType | null> {
-        return await postsRepository.findPost(id)
-    },
-    async getPosts(): Promise<PostDBType[]> {
-        return await postsRepository.getPosts()
+        return await postsQueryRepository.findPost(id)
     },
     async deletePost(id: string) {
         return await postsRepository.deletePost(id)

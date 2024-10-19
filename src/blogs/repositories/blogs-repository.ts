@@ -1,42 +1,9 @@
 
-import {ObjectId, WithId} from "mongodb";
-import {BlogDBType} from "../../db/blog-db-type";
-import {OutputBlogType} from "../../input-output-types/blog-types";
+import {ObjectId} from "mongodb";
 import {blogsCollection} from "../../repositories/DB";
 import {BlogType} from "../service/blogs-service";
 
-
-const mapToOutput = (blog: WithId<BlogDBType>): OutputBlogType => {
-    return {
-        id: blog._id.toString(),
-        name: blog.name,
-        description: blog.description,
-        websiteUrl: blog.websiteUrl,
-        createdAt: blog.createdAt,
-        isMembership: blog.isMembership,
-    }
-}
 export const blogsRepository = {
-    async findBlog(id: string): Promise<BlogDBType | null> {
-        try {
-            const blogId = new ObjectId(id)
-            const blog = await blogsCollection.findOne({_id: blogId})
-            if (blog) return mapToOutput(blog)
-            return null
-        } catch (e) {
-            console.log('Blog repository, find blog',e)
-            return null
-        }
-    },
-    async getBlogs(): Promise<OutputBlogType[]> {
-        try {
-            const blogs = await blogsCollection.find({}).toArray()
-            return blogs.map(mapToOutput)
-        } catch (e){
-            throw new Error('Blogs not found')
-        }
-
-    },
     async deleteBlog(id: string): Promise<boolean> {
         try {
             const blogId = new ObjectId(id)
@@ -55,14 +22,15 @@ export const blogsRepository = {
         }
 
     },
-    async createBlog(newBlog: BlogType): Promise<ObjectId | null> {
+    async createBlog(newBlog: BlogType): Promise<string | null> {
         try {
             const cratedBlog = await blogsCollection.insertOne(newBlog)
-            return cratedBlog.insertedId
-        } catch {
+            console.log(cratedBlog)
+            return cratedBlog.insertedId.toHexString()
+        } catch (e){
+            console.log(e)
             return null
         }
-
     },
     async updateBlog({params, body}: any) {
         try {

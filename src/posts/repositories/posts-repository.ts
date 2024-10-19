@@ -1,44 +1,20 @@
-
 import {ObjectId, WithId} from "mongodb";
-import {PostDBType} from "../../db/post-db-type";
-import {OutputPostType} from "../../input-output-types/post-types";
 import {postsCollection} from "../../repositories/DB";
 import {PostType} from "../service/posts-service";
 
-const mapToOutput = (post: WithId<PostDBType>): OutputPostType => {
-    return {
-        id: post._id.toString(),
-        title: post.title,
-        shortDescription: post.shortDescription,
-        createdAt: post.createdAt,
-        content: post.content,
-        blogId: post.blogId,
-        blogName: post.blogName
-    }
-}
 
 
 export const postsRepository = {
-    async findPost(id: string): Promise<PostDBType | null> {
 
-        try {
-            const postId = new ObjectId(id)
-            const post = await postsCollection.findOne({_id: postId})
-            if (post) return mapToOutput(post)
-            return null
-        } catch (e) {
-            return null
-        }
-    },
-    async getPosts(): Promise<PostDBType[]> {
+    /*async getPosts(): Promise<PostDBType[]> {
         try {
             const posts = await postsCollection.find({}).toArray()
             return posts.map(mapToOutput)
         } catch (e) {
             throw new Error('Posts not found...')
         }
+    },*/
 
-    },
     async deletePost(id: string) {
         try {
             const postId = new ObjectId(id)
