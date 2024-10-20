@@ -62,5 +62,6 @@ export const postForBlogValidator =[
     shortDescriptionValidator,
     contentValidator,
     blogIdInParamsValidator,
+
     inputCheckErrorsMiddleware,
 ]

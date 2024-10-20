@@ -13,7 +13,7 @@ export const createPostForSelectedBlogController = async (req: Request<{
         return
     }
     console.log('newPostCreated',newPostCreated)
-    const newPost = await postsService.findPost(newPostCreated.toHexString())
+    const newPost = await postsService.findPost(newPostCreated)
     if (!newPost) {
         res.sendStatus(406)
         return

@@ -17,7 +17,6 @@ export const nameValidator = body('name').isString().withMessage('not string').t
 }).withMessage('more then 15 or 0')
 export const findBlogValidator = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
     const blog = await blogsQueryRepository.findBlog(req.params.id)
-    console.log('blog',blog)
     if (!blog) {
 
         res

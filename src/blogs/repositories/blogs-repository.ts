@@ -24,11 +24,11 @@ export const blogsRepository = {
     },
     async createBlog(newBlog: BlogType): Promise<string | null> {
         try {
-            const cratedBlog = await blogsCollection.insertOne(newBlog)
-            console.log(cratedBlog)
-            return cratedBlog.insertedId.toHexString()
+            const createdBlog = await blogsCollection.insertOne(newBlog)
+            console.log('CREATE',createdBlog)
+            return createdBlog.insertedId.toHexString()
         } catch (e){
-            console.log(e)
+            console.log('Create blog error : ',e)
             return null
         }
     },

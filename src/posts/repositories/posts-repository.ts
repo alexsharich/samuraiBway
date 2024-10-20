@@ -6,14 +6,6 @@ import {PostType} from "../service/posts-service";
 
 export const postsRepository = {
 
-    /*async getPosts(): Promise<PostDBType[]> {
-        try {
-            const posts = await postsCollection.find({}).toArray()
-            return posts.map(mapToOutput)
-        } catch (e) {
-            throw new Error('Posts not found...')
-        }
-    },*/
 
     async deletePost(id: string) {
         try {
@@ -32,11 +24,12 @@ export const postsRepository = {
             throw new Error('Delete... Something wrong')
         }
     },
-    async createPost(newPost: PostType): Promise<ObjectId | null> {
+    async createPost(newPost: PostType): Promise<string | null> {
         try {
             const createdPost = await postsCollection.insertOne(newPost)
-            return createdPost.insertedId
+            return createdPost.insertedId.toHexString()
         } catch (e) {
+            console.log('Create post repo  erro',e)
             return null
         }
     },

@@ -6,6 +6,7 @@ import {blogsService} from "../../blogs/service/blogs-service";
 import {postsRepository} from "../repositories/posts-repository";
 import {mapToOutputPost, postsQueryRepository} from "../repositories/post-query-repository";
 import {PaginationQueriesType} from "../../helpers/pagination_values";
+import {blogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 
 
 export type PostType = {
@@ -27,8 +28,8 @@ export const postsService = {
     async deleteAllPosts() {
         return await postsRepository.deleteAllPosts()
     },
-    async createPost(body: InputPostType): Promise<ObjectId | null> {
-            const existBlog = await blogsService.findBlog(body.blogId)///к сервису или репе
+    async createPost(body: InputPostType): Promise<string | null> {
+            const existBlog = await blogsQueryRepository.findBlog(body.blogId)///к сервису или репе
             if (existBlog) {
                 const newPost: PostType = {
                     title: body.title,
