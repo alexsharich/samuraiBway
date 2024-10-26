@@ -1,4 +1,3 @@
-import {BlogDBType} from "../../db/blog-db-type";
 import {InputBlogType} from "../../input-output-types/blog-types";
 import {PostType} from "../../posts/service/posts-service";
 import {blogsRepository} from "../repositories/blogs-repository";

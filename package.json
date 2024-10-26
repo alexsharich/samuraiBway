@@ -15,6 +15,7 @@
     "@types/jest": "^29.5.12",
     "@types/node": "^22.5.4",
     "@types/supertest": "^6.0.2",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
@@ -26,5 +27,8 @@
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2"
   }
 }

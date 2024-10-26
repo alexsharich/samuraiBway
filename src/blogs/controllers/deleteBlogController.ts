@@ -3,7 +3,6 @@ import {blogsService} from "../service/blogs-service";
 
 export const deleteBlogController = async (req: Request<{ id: string }>, res: Response) => {
     const isDeletedBlog = await blogsService.deleteBlog(req.params.id)
-    console.log(isDeletedBlog)
     if (!isDeletedBlog) {
         res.sendStatus(404)
         return

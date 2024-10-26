@@ -2,8 +2,6 @@ import {body, param} from 'express-validator'
 import {NextFunction, Request, Response} from 'express'
 import {adminMiddleware} from "../../global-middleware/admin-middleware";
 import {inputCheckErrorsMiddleware} from "../../global-middleware/inputCheckErrorsMiddleware";
-import {postsRepository} from "../repositories/posts-repository";
-import {blogsRepository} from "../../blogs/repositories/blogs-repository";
 import {postsQueryRepository} from "../repositories/post-query-repository";
 import {blogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 

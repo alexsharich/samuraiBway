@@ -6,7 +6,6 @@ import {blogsQueryRepository} from "../repositories/blogs-query-repository";
 
 export const createBlogController = async (req: Request<any, any, InputBlogType>, res: Response) => {
     const isNewBlogCreated = await blogsService.createBlog(req.body)
-    console.log('is new created : ', isNewBlogCreated)
     if (isNewBlogCreated) {
         const newBlog = await blogsQueryRepository.findBlog(isNewBlogCreated)
         if (newBlog) {

@@ -12,7 +12,6 @@ export const createPostForSelectedBlogController = async (req: Request<{
         res.sendStatus(407)
         return
     }
-    console.log('newPostCreated',newPostCreated)
     const newPost = await postsService.findPost(newPostCreated)
     if (!newPost) {
         res.sendStatus(406)
