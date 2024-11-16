@@ -1,6 +1,5 @@
 import {Request, Response} from 'express'
 import {paginationQueries, PaginationQueriesType} from "../../helpers/pagination_values";
-import {blogsService} from "../service/blogs-service";
 import {blogsQueryRepository} from "../repositories/blogs-query-repository";
 import {postsQueryRepository} from "../../posts/repositories/post-query-repository";
 
