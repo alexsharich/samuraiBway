@@ -9,11 +9,9 @@ if(!auth){
     return
 }
 const token = auth.split(' ')[1]
-    const user_id = await jwtServise.verifyToken(token)
-    if(user_id){
-        ///????????????
-            user_id
-        ///????????????
+    const userId =  jwtServise.verifyToken(token)
+    if(userId){
+        req.userId = userId.userId
         next()
     }
     else{
