@@ -16,6 +16,12 @@ export type PaginationQueriesUsersType ={
     searchLoginTerm : string | null
     searchEmailTerm:string |null
 }
+export type PaginationQueriesCommentType ={
+    pageNumber  : number
+    pageSize : number
+    sortBy  : string
+    sortDirection: SortType
+}
 export const paginationQueries = (query:PaginationQueriesType) => {
     const pageNumber = query.pageNumber ? +query.pageNumber : 1
     const pageSize = query.pageSize ? +query.pageSize : 10
@@ -24,6 +30,14 @@ export const paginationQueries = (query:PaginationQueriesType) => {
     const searchNameTerm = query.searchNameTerm ? query.searchNameTerm.toString() : null
 
     return {pageNumber, pageSize, sortBy, sortDirection, searchNameTerm}
+}
+export const paginationQueriesComment = (query:PaginationQueriesCommentType) => {
+    const pageNumber = query.pageNumber ? +query.pageNumber : 1
+    const pageSize = query.pageSize ? +query.pageSize : 10
+    const sortBy = query.sortBy ? query.sortBy.toString() : 'createdAt'
+    const sortDirection: SortType = query.sortDirection && query.sortDirection === 'asc' ? 'asc' : 'desc'
+
+    return {pageNumber, pageSize, sortBy, sortDirection}
 }
 
 export const paginationQueriesForUsers = (query:PaginationQueriesUsersType) => {

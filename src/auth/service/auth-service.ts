@@ -1,8 +1,6 @@
 import {LoginInputType} from "../controllers/loginController";
 import {usersRepository} from "../../users/repositories/users-repository";
 import bcrypt from "bcrypt";
-import {ObjectId} from "mongodb";
-import {UserDBType} from "../../db/user-db-type";
 
 export const authService = {
     async loginWithEmailOrLogin({loginOrEmail, password}: LoginInputType): Promise<string | null> {

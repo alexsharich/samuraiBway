@@ -10,6 +10,7 @@ if(!auth){
 }
 const token = auth.split(' ')[1]
     const userId =  jwtServise.verifyToken(token)
+    console.log(userId)
     if(userId){
         req.userId = userId.userId
         next()

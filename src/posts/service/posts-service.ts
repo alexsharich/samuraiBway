@@ -1,11 +1,8 @@
 import {PostDBType} from "../../db/post-db-type";
 import {InputPostType} from "../../input-output-types/post-types";
-import {ObjectId, WithId,} from "mongodb";
 
-import {blogsService} from "../../blogs/service/blogs-service";
 import {postsRepository} from "../repositories/posts-repository";
-import {mapToOutputPost, postsQueryRepository} from "../repositories/post-query-repository";
-import {PaginationQueriesType} from "../../helpers/pagination_values";
+import {postsQueryRepository} from "../repositories/post-query-repository";
 import {blogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 
 
@@ -29,20 +26,20 @@ export const postsService = {
         return await postsRepository.deleteAllPosts()
     },
     async createPost(body: InputPostType): Promise<string | null> {
-            const existBlog = await blogsQueryRepository.findBlog(body.blogId)///к сервису или репе
-            if (existBlog) {
-                const newPost: PostType = {
-                    title: body.title,
-                    shortDescription: body.shortDescription,
-                    content: body.content,
-                    blogId: body.blogId,
-                    blogName: existBlog.name,
-                    createdAt: (new Date().toISOString())
-                }
-                return await postsRepository.createPost(newPost)
-            } else {
-                return null
+        const existBlog = await blogsQueryRepository.findBlog(body.blogId)///к сервису или репе
+        if (existBlog) {
+            const newPost: PostType = {
+                title: body.title,
+                shortDescription: body.shortDescription,
+                content: body.content,
+                blogId: body.blogId,
+                blogName: existBlog.name,
+                createdAt: (new Date().toISOString())
             }
+            return await postsRepository.createPost(newPost)
+        } else {
+            return null
+        }
     },
     async updatePost({params, body}: any): Promise<any> {
         return await postsRepository.updatePost({params, body})
