@@ -8,7 +8,7 @@ import {blogValidators, findBlogValidator} from "../blogs/middlewares/blogValida
 import {adminMiddleware} from "../global-middleware/admin-middleware";
 import {createPostForSelectedBlogController} from "../blogs/controllers/createPostForSelectedBlogController";
 import {getPostsForSelectedBlogController} from "../blogs/controllers/getPostsForSelectedBlogController";
-import {postValidators, postForBlogValidator} from "../posts/middlewares/postValidators";
+import { postForBlogValidator} from "../posts/middlewares/postValidators";
 
 export const blogsRouter = Router()
 

@@ -9,7 +9,8 @@ export const SETTINGS = {
         TEST:'/testing',
         USERS:'/users',
         AUTH:'/auth',
-        COMMENTS:'/comments'
+        COMMENTS:'/comments',
+        EMAIL:'/email'
     },
     ADMIN: process.env.ADMIN || 'admin:qwerty',
     JWT: process.env.JWT_SECRET || '111'
