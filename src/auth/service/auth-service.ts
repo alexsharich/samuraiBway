@@ -5,10 +5,14 @@ import {emailManager} from "../../managers/emailManager";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
+import {SETTINGS} from "../../settings";
 
 export const authService = {
     async loginWithEmailOrLogin({loginOrEmail, password}: LoginInputType): Promise<string | null> {
         const user = await usersRepository.findUserWithEmailOrLogin(loginOrEmail)
+        // if(!user.emailConfirmation.isConfirmed){
+        //     return null
+        // }
         if (user) {
             const match = await bcrypt.compare(password, user.passwordHash);
             if (match) {
@@ -32,14 +36,50 @@ export const authService = {
             emailConfirmation: {
                 confirmationCode: uuidv4(),
                 experationDate: add(new Date, {
-                    hours:1,
-                    minutes:3
+                    hours: 1,
+                    // minutes: 3
                 }),
                 isConfirme: false
             }
         }
         const createResult = usersRepository.createUser(user)
-        await emailManager.sendEmailConfirmationMessage(user)
+        try {
+            await emailManager.sendEmailConfirmationMessage(user)
+        } catch (error) {
+            console.error(error)
+            await usersRepository.deleteUser(String(user._id))
+            return null
+        }
         return createResult
+    },
+    async confirmEmail(code) {
+        let user = await usersRepository.findUserByConfirmationCode(code)
+        if (!user) return false
+        if (user.emailConfirmation.isConfirmed) return false
+        if (user.emailConfirmation.confirmationCode !== code) return false
+        if (user.emailConfirmation.expirationDate < new Date()) return false
+        let result = await usersRepository.updateConfirmation(String(user._id))
+        return result
+    },
+    async _generateHash(password: string) {
+        const hash = await bcrypt.hash(password, 10)
+        return hash
+    },
+    async checkCredentials(loginOrEmail: string, password: string) {
+        const user = await usersRepository.findUserWithEmailOrLogin(loginOrEmail)
+        if (!user) return null
+        if (!user.emailConfirmation.isConfirmed) return null
+        const isHashesEguals = await this.isPasswordCorrect(password, user.acountData.passwordHash)
+        if (!isHashesEguals) {
+            return user
+        } else {
+            return null
+        }
+    },
+    async isPasswordCorrect(password: string, hash: string) {
+        const isEqual = await bcrypt.compare(password,hash)
+        if(!isEqual){
+            return null
+        }
     }
 }

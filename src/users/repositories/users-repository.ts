@@ -3,13 +3,13 @@ import {usersCollection} from "../../repositories/DB";
 import {UserDBType} from "../../db/user-db-type";
 
 export const usersRepository = {
-    async findUserWithEmailOrLogin (loginOrEmail:string){
-        return await usersCollection.findOne({$or: [{ login: loginOrEmail }, { email: loginOrEmail }]})
+    async findUserWithEmailOrLogin(loginOrEmail: string) {
+        return await usersCollection.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]})
     },
-    async checkUniqUserWithEmailOrLogin(login:string,email:string){
-       return await usersCollection.findOne({$or: [{ login: login }, { email: email }]})
+    async checkUniqUserWithEmailOrLogin(login: string, email: string) {
+        return await usersCollection.findOne({$or: [{login: login}, {email: email}]})
     },
-    async createUser(user: UserDBType):Promise<string | null> {
+    async createUser(user: UserDBType): Promise<string | null> {
         try {
             const createdUser = await usersCollection.insertOne(user)
             return createdUser.insertedId.toHexString()
@@ -27,5 +27,14 @@ export const usersRepository = {
         } catch (e) {
             return false
         }
+    },
+    async updateConfirmation(id: string) {
+        let userId = new ObjectId(id)
+        let result = await usersCollection.updateOne({userId}, {$set: {'emailConfirmation.isConfirmed': true}})
+        return result.modifiedCount === 1
+    },
+    async findUserByConfirmationCode(emailConfirmationCode) {
+        const user = usersCollection.findOne({'emailConfirmation.confirmationeCode': emailConfirmationCode})
+        return user
     }
 }
