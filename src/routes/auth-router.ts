@@ -7,5 +7,6 @@ import {authMiddleware} from "../global-middleware/auth-middleware";
 
 export const authRouter = Router()
 
+authRouter.post('/registration',registerController)
 authRouter.post('/login', authValidator, loginController)
 authRouter.get('/me',meValidator, authMiddleware, meController)
