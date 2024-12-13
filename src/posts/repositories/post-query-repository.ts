@@ -29,7 +29,6 @@ export type MapToOutputWithPagination = {
 export const postsQueryRepository = {
     async getPostsForSelectedBlog({blogId, query}: { blogId: string, query: PaginationQueriesType }): Promise<any> {
 
-        try {
             const pageNumber = query.pageNumber
             const pageSize = query.pageSize
             const sortBy = query.sortBy
@@ -54,14 +53,10 @@ export const postsQueryRepository = {
                 items: posts.map((post: WithId<PostDBType>)=>mapToOutputPost(post))
             }
 
-        } catch (e) {
-            console.log('Get posts for selected blog Error')
-            return null
-        }
+
     },
 
     async getAllPosts(query: PaginationQueriesType ): Promise<any> {
-        try {
             const pageNumber = query.pageNumber
             const pageSize = query.pageSize
             const sortBy = query.sortBy
@@ -89,23 +84,15 @@ export const postsQueryRepository = {
                 totalCount: totalCount,
                 items: posts.map((post: WithId<PostDBType>)=>mapToOutputPost(post))
             }
-        } catch (e) {
-
-            console.log('Get posts for selected blog Error')
-            return null
-        }
     },
 
     async findPost(id: string): Promise<PostDBType | null> {
 
-        try {
             const postId = new ObjectId(id)
             const post = await postsCollection.findOne({_id: postId})
             if (post) return mapToOutputPost(post)
             return null
-        } catch (e) {
-            return null
-        }
+
     },
 
 }

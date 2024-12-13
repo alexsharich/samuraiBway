@@ -16,9 +16,6 @@ export const blogsService = {
     async deleteBlog(id: string): Promise<boolean> {
         return await blogsRepository.deleteBlog(id)
     },
-    async deleteAllBlogs() {
-        return await blogsRepository.deleteAllBlogs()
-    },
     async createBlog({name, description, websiteUrl}: InputBlogType): Promise<string | null> {
 
         const newBlog: BlogType = {

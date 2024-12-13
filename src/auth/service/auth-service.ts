@@ -5,7 +5,6 @@ import {emailManager} from "../../managers/emailManager";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
-import {SETTINGS} from "../../settings";
 
 export const authService = {
     async loginWithEmailOrLogin({loginOrEmail, password}: LoginInputType): Promise<string | null> {
@@ -24,7 +23,7 @@ export const authService = {
         return null
     },
     async createUserA(login, email, password) {
-        const passwordHash = await this._generateHash(password) ///pofiksit
+        const passwordHash = await this._generateHash(password)
         const user = {
             _id: new ObjectId(),
             accountDate: {
@@ -37,7 +36,6 @@ export const authService = {
                 confirmationCode: uuidv4(),
                 experationDate: add(new Date, {
                     hours: 1,
-                    // minutes: 3
                 }),
                 isConfirme: false
             }
@@ -61,10 +59,14 @@ export const authService = {
         let result = await usersRepository.updateConfirmation(String(user._id))
         return result
     },
-    async _generateHash(password: string) {
-        const hash = await bcrypt.hash(password, 10)
-        return hash
+    async resendingEmail(email:string){
+        const user = await usersRepository.findUserWithEmailOrLogin(email)
+
     },
+    // async _generateHash(password: string) {
+    //     const hash = await bcrypt.hash(password, 10)
+    //     return hash
+    // },
     async checkCredentials(loginOrEmail: string, password: string) {
         const user = await usersRepository.findUserWithEmailOrLogin(loginOrEmail)
         if (!user) return null

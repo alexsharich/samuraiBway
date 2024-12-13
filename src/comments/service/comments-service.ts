@@ -35,10 +35,6 @@ export const commentsService = {
             return await commentsRepository.updateComment(commentId, content)
         }
         return 'forbidden'
-
-    },
-    async deleteAllComments() {
-        return await commentsCollection.drop()
     },
     async createComment({userId, userLogin, postId, comment}: any) {
 

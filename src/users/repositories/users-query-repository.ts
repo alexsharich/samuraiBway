@@ -20,18 +20,13 @@ interface UserFilter {
 
 export const usersQueryRepository = {
     async findUser(id: string): Promise<OutputUserType | null> {
-        try {
             const userId = new ObjectId(id)
             const user = await usersCollection.findOne({_id: userId})
             if (user) return mapToOutputUser(user)
             return null
-        } catch (e) {
-            console.log('User repository, find user / find user ', e)
-            return null
-        }
+
     },
     async getUsers(query: PaginationQueriesUsersType) {
-        try {
             const pageNumber = query.pageNumber
             const pageSize = query.pageSize
             const sortBy = query.sortBy
@@ -69,9 +64,5 @@ export const usersQueryRepository = {
                 totalCount: totalCount,
                 items: users.map((user: WithId<UserDBType>) => mapToOutputUser(user))
             }
-        } catch (e) {
-            console.log('blogs query repo / get blogs : ', e)
-            throw new Error('Blogs not found')
-        }
     }
 }

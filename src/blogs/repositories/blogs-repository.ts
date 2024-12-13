@@ -1,4 +1,3 @@
-
 import {ObjectId} from "mongodb";
 import {blogsCollection} from "../../repositories/DB";
 import {BlogType} from "../service/blogs-service";
@@ -14,21 +13,13 @@ export const blogsRepository = {
             return false
         }
     },
-    async deleteAllBlogs() {
-        try {
-            await blogsCollection.deleteMany({})
-        } catch (e) {
-            throw new Error('Delete...Something wrong')
-        }
-
-    },
     async createBlog(newBlog: BlogType): Promise<string | null> {
         try {
             const createdBlog = await blogsCollection.insertOne(newBlog)
-            console.log('CREATE',createdBlog)
+            console.log('CREATE', createdBlog)
             return createdBlog.insertedId.toHexString()
-        } catch (e){
-            console.log('Create blog error : ',e)
+        } catch (e) {
+            console.log('Create blog error : ', e)
             return null
         }
     },

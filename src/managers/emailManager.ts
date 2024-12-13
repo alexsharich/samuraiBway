@@ -2,9 +2,8 @@ import {emailAdapter} from "../adapters/emailAdapter";
 
 export const emailManager = {
     async sendPasswordRecoveryMessage(user: any) {
-        await emailAdapter.sendEmail(user.email!, '', '')
     },
-    async sendEmailConfirmationMessage(user){
-
+    async sendEmailConfirmationMessage(user) {
+        await emailAdapter.sendEmail(user.email!, 'Email Confirmation', 'Передать код')
     }
 }

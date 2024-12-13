@@ -55,14 +55,9 @@ export const blogsQueryRepository = {
     },
 
     async findBlog(id: string): Promise<BlogDBType | null> {
-        try {
             const blogId = new ObjectId(id)
             const blog = await blogsCollection.findOne({_id: blogId})
             if (blog) return mapToOutputBlog(blog)
             return null
-        } catch (e) {
-            console.log('Blog repository, find blog / find blog ', e)
-            return null
-        }
     },
 }

@@ -1,14 +1,16 @@
 import {Router} from "express";
 import {loginController} from "../auth/controllers/loginController";
 import {authValidator, meValidator} from "../auth/middlewares/authValidator";
-import {adminMiddleware} from "../global-middleware/admin-middleware";
 import {meController} from "../auth/controllers/meController";
 import {authMiddleware} from "../global-middleware/auth-middleware";
+import {registrationEmailController} from "../auth/controllers/resendRegistrationCodeController";
+import {registerController} from "../auth/controllers/registerController";
+import {registrationConfirmationController} from "../auth/controllers/registrationConfirmationController";
 
 export const authRouter = Router()
 
-authRouter.post('/registration',registerController)
-authRouter.post('/confirm-email',confirmEmailController)
-authRouter.post('/resend-registration-code',resendRegistrationCodeController)
+authRouter.post('/registration', registerController)
+authRouter.post('/registration-confirmation', registrationConfirmationController)
+authRouter.post('/registration-email-resending', registrationEmailController)
 authRouter.post('/login', authValidator, loginController)
-authRouter.get('/me',meValidator, authMiddleware, meController)
+authRouter.get('/me', meValidator, authMiddleware, meController)

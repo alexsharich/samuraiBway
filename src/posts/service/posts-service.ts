@@ -1,8 +1,6 @@
-import {PostDBType} from "../../db/post-db-type";
 import {InputPostType} from "../../input-output-types/post-types";
 
 import {postsRepository} from "../repositories/posts-repository";
-import {postsQueryRepository} from "../repositories/post-query-repository";
 import {blogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 
 
@@ -16,14 +14,8 @@ export type PostType = {
 }
 
 export const postsService = {
-    async findPost(id: string): Promise<PostDBType | null> {
-        return await postsQueryRepository.findPost(id)
-    },
     async deletePost(id: string) {
         return await postsRepository.deletePost(id)
-    },
-    async deleteAllPosts() {
-        return await postsRepository.deleteAllPosts()
     },
     async createPost(body: InputPostType): Promise<string | null> {
         const existBlog = await blogsQueryRepository.findBlog(body.blogId)///к сервису или репе

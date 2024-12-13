@@ -1,4 +1,4 @@
-import {WithId} from "mongodb";
+import { WithId} from "mongodb";
 
 export type UserDBType = {
     passwordHash: string,
