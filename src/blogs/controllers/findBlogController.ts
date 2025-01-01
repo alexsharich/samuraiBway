@@ -1,5 +1,4 @@
 import {Request, Response} from "express";
-import {blogsService} from "../service/blogs-service";
 import {blogsQueryRepository} from "../repositories/blogs-query-repository";
 
 export const findBlogController = async (req: Request<{ id: string }>, res: Response) => {

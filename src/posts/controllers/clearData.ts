@@ -1,8 +1,4 @@
 import {Request, Response} from "express";
-import {postsService} from "../service/posts-service";
-import {blogsService} from "../../blogs/service/blogs-service";
-import {usersService} from "../../users/service/users-service";
-import {commentsService} from "../../comments/service/comments-service";
 import {blogsCollection, commentsCollection, postsCollection, usersCollection} from "../../repositories/DB";
 
 

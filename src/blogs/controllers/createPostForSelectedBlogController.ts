@@ -1,8 +1,7 @@
 import {blogsService} from "../service/blogs-service";
 import {Request, Response} from "express";
-import {InputBlogType} from "../../input-output-types/blog-types";
 import {postsService} from "../../posts/service/posts-service";
-import {InputPostForBlogType, InputPostType} from "../../input-output-types/post-types";
+import {InputPostForBlogType} from "../../input-output-types/post-types";
 
 export const createPostForSelectedBlogController = async (req: Request<{
     id: string

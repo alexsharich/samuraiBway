@@ -1,5 +1,4 @@
 import {InputPostType} from "../../input-output-types/post-types";
-
 import {postsRepository} from "../repositories/posts-repository";
 import {blogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 
