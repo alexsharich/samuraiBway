@@ -1,7 +1,7 @@
 import {blogsService} from "../service/blogs-service";
 import {Request, Response} from "express";
-import {postsService} from "../../posts/service/posts-service";
 import {InputPostForBlogType} from "../../input-output-types/post-types";
+import {postsQueryRepository} from "../../posts/repositories/post-query-repository";
 
 export const createPostForSelectedBlogController = async (req: Request<{
     id: string
@@ -11,7 +11,7 @@ export const createPostForSelectedBlogController = async (req: Request<{
         res.sendStatus(407)
         return
     }
-    const newPost = await postsService.findPost(newPostCreated)
+    const newPost = await postsQueryRepository.findPost(newPostCreated)
     if (!newPost) {
         res.sendStatus(406)
         return

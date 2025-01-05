@@ -1,6 +1,5 @@
 import {Request,Response} from 'express'
 import {authService} from "../service/auth-service";
-import {usersRepository} from "../../users/repositories/users-repository";
 import {jwtServise} from "../../application/jwtService";
 
 export type LoginInputType ={
