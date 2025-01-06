@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
-import {blogsRepository} from "../../repositories/blogs-repository";
+import {blogsQueryRepository} from "../repositories/blogs-query-repository";
 
 export const findBlogController = async (req: Request<{ id: string }>, res: Response) => {
-    const foundBlog = await blogsRepository.findBlog(req.params.id)
+    const foundBlog = await blogsQueryRepository.findBlog(req.params.id)
     if (!foundBlog) {
         res.sendStatus(404)
         return

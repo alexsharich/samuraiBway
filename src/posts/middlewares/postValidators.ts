@@ -2,9 +2,9 @@ import {body, param} from 'express-validator'
 import {NextFunction, Request, Response} from 'express'
 import {adminMiddleware} from "../../global-middleware/admin-middleware";
 import {inputCheckErrorsMiddleware} from "../../global-middleware/inputCheckErrorsMiddleware";
-import {postsRepository} from "../../repositories/posts-repository";
-import {blogsRepository} from "../../repositories/blogs-repository";
-import {ObjectId} from "mongodb";
+import {postsQueryRepository} from "../repositories/post-query-repository";
+import {blogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
+
 
 export const titleValidator = body('title').isString().withMessage('not string')
     .trim().isLength({min: 1, max: 30}).withMessage('more then 30 or 0')
@@ -14,14 +14,24 @@ export const contentValidator = body('content').isString().withMessage('not stri
     .trim().isLength({min: 1, max: 1000}).withMessage('more then 1000 or 0')
 export const blogIdValidator = body('blogId').isString().withMessage('not string')
     .trim().custom(async(blogId:string) => {
-        const blog = await blogsRepository.findBlog(blogId)
+        const blog = await blogsQueryRepository.findBlog(blogId)
         if(!blog){
             throw new Error('blog not found !')
         }
         return true
     }).withMessage('no blog')
+
+export const blogIdInParamsValidator = param('id').isString().withMessage('not string')
+    .trim().custom(async(blogId:string) => {
+        const blog = await blogsQueryRepository.findBlog(blogId)
+        if(!blog){
+            throw new Error('blog not found !')
+        }
+        return true
+    }).withMessage('no blog')
+
 export const findPostValidator = (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
-    const post = postsRepository.findPost(req.params.id)
+    const post = postsQueryRepository.findPost(req.params.id)
     if (!post) {
 
         res
@@ -32,7 +42,8 @@ export const findPostValidator = (req: Request<{ id: string }>, res: Response, n
 
     next()
 }
-
+export const contentForCommentValidator = body('content').isString().withMessage('not string')
+    .trim().isLength({min: 20, max: 300}).withMessage('more then 300 or min 20')
 export const postValidators = [
     adminMiddleware,
 
@@ -40,6 +51,22 @@ export const postValidators = [
     shortDescriptionValidator,
     contentValidator,
     blogIdValidator,
+
+    inputCheckErrorsMiddleware,
+]
+export const postForBlogValidator =[
+    adminMiddleware,
+
+    titleValidator,
+    shortDescriptionValidator,
+    contentValidator,
+    blogIdInParamsValidator,
+
+    inputCheckErrorsMiddleware,
+]
+
+export const commentContentValidator = [
+    contentForCommentValidator,
 
     inputCheckErrorsMiddleware,
 ]

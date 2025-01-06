@@ -1,10 +1,8 @@
 import {Request, Response} from "express";
-import {postsRepository} from "../../repositories/posts-repository";
-import {ObjectId} from "mongodb";
+import {postsQueryRepository} from "../repositories/post-query-repository";
 
-export const findPostController = async (req: Request<{ id: ObjectId }>, res: Response) => {
-    const postId = new ObjectId(req.params.id)
-    const foundPost = await postsRepository.findPost(postId.toString())
+export const findPostController = async (req: Request<{ id: string }>, res: Response) => {
+    const foundPost = await postsQueryRepository.findPost(req.params.id)
     if (!foundPost) {
         res.sendStatus(404)
         return;
