@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import {emailManager} from "../../managers/emailManager";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
-import add from 'date-fns/add'
+import add from "date-fns/add";
 
 export const authService = {
     async loginWithEmailOrLogin({loginOrEmail, password}: LoginInputType): Promise<string | null> {
@@ -26,7 +26,7 @@ export const authService = {
         const passwordHash = await this._generateHash(password)
         const user = {
             _id: new ObjectId(),
-            accountDate: {
+            accountData: {
                 userName: login,
                 email,
                 passwordHash,
@@ -35,9 +35,9 @@ export const authService = {
             emailConfirmation: {
                 confirmationCode: uuidv4(),
                 experationDate: add(new Date, {
-                    hours: 1,
+                    hours: 1, minutes: 1
                 }),
-                isConfirme: false
+                isConfirmed: false
             }
         }
         const createResult = usersRepository.createUser(user)
@@ -59,7 +59,7 @@ export const authService = {
         let result = await usersRepository.updateConfirmation(String(user._id))
         return result
     },
-    async resendingEmail(email:string){
+    async resendingEmail(email: string) {
         const user = await usersRepository.findUserWithEmailOrLogin(email)
 
     },
@@ -79,8 +79,8 @@ export const authService = {
         }
     },
     async isPasswordCorrect(password: string, hash: string) {
-        const isEqual = await bcrypt.compare(password,hash)
-        if(!isEqual){
+        const isEqual = await bcrypt.compare(password, hash)
+        if (!isEqual) {
             return null
         }
     }
