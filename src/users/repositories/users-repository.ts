@@ -1,5 +1,5 @@
-import {ObjectId} from "mongodb";
-import {usersCollection} from "../../repositories/DB";
+import {ObjectId, WithId} from "mongodb";
+import {usersCollection, usersCollectionA} from "../../repositories/DB";
 import {UserAccountDBType, UserDBType} from "../../db/user-db-type";
 
 export const usersRepository = {
@@ -9,7 +9,16 @@ export const usersRepository = {
     async checkUniqUserWithEmailOrLogin(login: string, email: string) {
         return await usersCollection.findOne({$or: [{login: login}, {email: email}]})
     },
-    async createUser(user: UserAccountDBType): Promise<string | null> {
+    async createUserA(user:UserAccountDBType):Promise<string | null>{
+        try {
+            const createdUser = await usersCollectionA.insertOne(user)
+            return createdUser.insertedId.toHexString()
+        } catch (e) {
+            console.log('Create blog error : ', e)
+            return null
+        }
+    },
+    async createUser(user: WithId<UserDBType>): Promise<string | null> {
         try {
             const createdUser = await usersCollection.insertOne(user)
             return createdUser.insertedId.toHexString()

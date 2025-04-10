@@ -27,7 +27,7 @@ export const usersService = {
 
         const newUser = {
             _id: new ObjectId(),
-            accountDate: {
+            accountData: {
                 userName: login,
                 email,
                 passwordHash,
@@ -42,7 +42,7 @@ export const usersService = {
             }
         }
 
-        return await usersRepository.createUser(newUser)
+        return await usersRepository.createUserA(newUser)
 
         /*?????????*/ await emailManager.sendEmailConfirmationMessage()
     },

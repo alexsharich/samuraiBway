@@ -1,6 +1,10 @@
 import {InputPostType} from "../../input-output-types/post-types";
 import {postsRepository} from "../repositories/posts-repository";
 import {blogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
+import {PostDBType} from "../../db/post-db-type";
+import {ObjectId} from "mongodb";
+import {postsCollection} from "../../repositories/DB";
+import {mapToOutputPost} from "../repositories/post-query-repository";
 
 
 export type PostType = {
@@ -34,5 +38,13 @@ export const postsService = {
     },
     async updatePost({params, body}: any): Promise<any> {
         return await postsRepository.updatePost({params, body})
-    }
+    },
+    async findPost(id: string): Promise<PostDBType | null> {
+
+        const postId = new ObjectId(id)
+        const post = await postsCollection.findOne({_id: postId})
+        if (post) return mapToOutputPost(post)
+        return null
+
+    },
 }

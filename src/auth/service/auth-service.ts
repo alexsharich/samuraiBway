@@ -23,7 +23,8 @@ export const authService = {
         return null
     },
     async createUserA(login, email, password) {
-        const passwordHash = await this._generateHash(password)
+        const salt = await bcrypt.genSalt(10);
+        const passwordHash = bcrypt.hash(password, salt)
         const user = {
             _id: new ObjectId(),
             accountData: {
@@ -40,7 +41,7 @@ export const authService = {
                 isConfirmed: false
             }
         }
-        const createResult = usersRepository.createUser(user)
+        const createResult = usersRepository.createUserA(user)
         try {
             await emailManager.sendEmailConfirmationMessage(user)
         } catch (error) {
@@ -50,7 +51,7 @@ export const authService = {
         }
         return createResult
     },
-    async confirmEmail(code) {
+    async confirmEmail(code: string) {
         let user = await usersRepository.findUserByConfirmationCode(code)
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
@@ -71,7 +72,7 @@ export const authService = {
         const user = await usersRepository.findUserWithEmailOrLogin(loginOrEmail)
         if (!user) return null
         if (!user.emailConfirmation.isConfirmed) return null
-        const isHashesEguals = await this.isPasswordCorrect(password, user.acountData.passwordHash)
+        const isHashesEguals = await this.isPasswordCorrect(password, user.accountData.passwordHash)
         if (!isHashesEguals) {
             return user
         } else {

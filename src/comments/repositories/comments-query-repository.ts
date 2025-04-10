@@ -1,11 +1,9 @@
-import {blogsCollection, commentsCollection, postsCollection} from "../../repositories/DB";
+import { commentsCollection} from "../../repositories/DB";
 import {ObjectId, WithId} from "mongodb";
 
 import {CommentDBType} from "../../db/comment-db-type";
 import {SortMongoType} from "../../blogs/repositories/blogs-query-repository";
-import {PostDBType} from "../../db/post-db-type";
-import {mapToOutputPost, postsQueryRepository} from "../../posts/repositories/post-query-repository";
-import {paginationQueriesComment, PaginationQueriesCommentType} from "../../helpers/pagination_values";
+import { PaginationQueriesCommentType} from "../../helpers/pagination_values";
 
 export const mapToOutputComment = (comment: WithId<CommentDBType>): any => {
     return {
@@ -33,7 +31,7 @@ export const commentsQueryRepository = {
             return null
         }
     },
-    async getComments (query:PaginationQueriesCommentType,postId){
+    async getComments (query:PaginationQueriesCommentType,postId:string){
         try {
             const pageNumber = +query.pageNumber
             const pageSize = +query.pageSize
