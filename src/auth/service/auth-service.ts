@@ -22,7 +22,7 @@ export const authService = {
         console.log('User not found.');
         return null
     },
-    async createUserA(login, email, password) {
+    async createUserA(login: string, email: string, password: string) {
         const salt = await bcrypt.genSalt(10);
         const passwordHash = bcrypt.hash(password, salt)
         const user = {
