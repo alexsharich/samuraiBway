@@ -47,6 +47,7 @@ export const usersService = {
         }
         const salt = await bcrypt.genSalt(10)
         const passwordHash = await bcrypt.hash(user.password, salt)
+        const now  = new Date()
 
         const newUser = {
             _id: new ObjectId(),
@@ -58,7 +59,7 @@ export const usersService = {
             },
             emailConfirmation: {
                 confirmationCode: uuidv4(),
-                experationDate: add(new Date, {
+                experationDate: add(now, {
                     hours: 1,
                 }),
                 isConfirme: isAdmin ? true : false

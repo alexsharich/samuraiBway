@@ -3,8 +3,8 @@ import {usersService} from "../../users/service/users-service";
 import {authService} from "../service/auth-service";
 
 export const registerController = async (req:Request,res:Response)=>{
-    //const user = await authService.createUserA(req.body.login,req.body.email,req.body.password)
-    const user = await usersService.createUser(req.body,false)
+    const user = await authService.createUserA(req.body.login,req.body.email,req.body.password)
+    //const user = await usersService.createUser(req.body,false)
     if(user){
         res.status(201).send()
     }else {

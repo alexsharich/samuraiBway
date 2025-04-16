@@ -23,8 +23,10 @@ export const authService = {
         return null
     },
     async createUserA(login: string, email: string, password: string) {
+
         const salt = await bcrypt.genSalt(10);
         const passwordHash = bcrypt.hash(password, salt)
+        const now = new Date()
         const user = {
             _id: new ObjectId(),
             accountData: {
@@ -35,7 +37,7 @@ export const authService = {
             },
             emailConfirmation: {
                 confirmationCode: uuidv4(),
-                experationDate: add(new Date, {
+                experationDate: add(now, {
                     hours: 1, minutes: 1
                 }),
                 isConfirmed: false
@@ -51,7 +53,7 @@ export const authService = {
         }
         return createResult
     },
-    async confirmEmail(code: string) {
+    /*async confirmEmail(code: string) {
         let user = await usersRepository.findUserByConfirmationCode(code)
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
@@ -59,7 +61,7 @@ export const authService = {
         if (user.emailConfirmation.expirationDate < new Date()) return false
         let result = await usersRepository.updateConfirmation(String(user._id))
         return result
-    },
+    },*/
     async resendingEmail(email: string) {
         const user = await usersRepository.findUserWithEmailOrLogin(email)
 
@@ -68,7 +70,7 @@ export const authService = {
     //     const hash = await bcrypt.hash(password, 10)
     //     return hash
     // },
-    async checkCredentials(loginOrEmail: string, password: string) {
+    /*async checkCredentials(loginOrEmail: string, password: string) {
         const user = await usersRepository.findUserWithEmailOrLogin(loginOrEmail)
         if (!user) return null
         if (!user.emailConfirmation.isConfirmed) return null
@@ -78,7 +80,7 @@ export const authService = {
         } else {
             return null
         }
-    },
+    },*/
     async isPasswordCorrect(password: string, hash: string) {
         const isEqual = await bcrypt.compare(password, hash)
         if (!isEqual) {
