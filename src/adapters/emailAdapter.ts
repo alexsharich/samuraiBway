@@ -37,7 +37,7 @@ console.log('transporter !!!!!')
             to: email,
             subject: subject,
             text: message,
-            html: `<b>Привет!</b> Это тестовое письмо от <a href='https://somesite.com/confirm-email?code=${code}'>complete registration</a> через <u>Яндекс</u>.`
+            html: `<b>Привет!</b> Пройди по ссылке <a href='https://somesite.com/confirm-email?code=${code}'>чтобы подтвердить регистрацию  </a> через <u>Яндекс</u>.`
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
@@ -48,16 +48,16 @@ console.log('transporter !!!!!')
         })
 
 
-         transporter.verify(function(error, success) {
-             if (error) {
-                 console.log('Ошибка соединения:', error);
-             } else {
-                 console.log('Соединение установлено, готов к отправке писем!');
-             }
-         })
+        transporter.verify(function (error, success) {
+            if (error) {
+                console.log('Ошибка соединения:', error);
+            } else {
+                console.log('Соединение установлено, готов к отправке писем!');
+            }
+        })
+    }
+
 }
-
-
 
 
 
