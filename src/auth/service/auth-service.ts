@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import {emailManager} from "../../managers/emailManager";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
-import add from "date-fns/add";
+import {add} from "date-fns/add";
 
 export const authService = {
     async loginWithEmailOrLogin({loginOrEmail, password}: LoginInputType): Promise<string | null> {
@@ -25,7 +25,7 @@ export const authService = {
     async createUserA(login: string, email: string, password: string) {
 
         const salt = await bcrypt.genSalt(10);
-        const passwordHash = bcrypt.hash(password, salt)
+        const passwordHash =await bcrypt.hash(password, salt)
         const now = new Date()
         const user = {
             _id: new ObjectId(),
@@ -37,23 +37,26 @@ export const authService = {
             },
             emailConfirmation: {
                 confirmationCode: uuidv4(),
-                experationDate: add(now, {
-                    hours: 1, minutes: 1
+                expirationDate: add(now, {
+                    hours: 1,
                 }),
                 isConfirmed: false
             }
         }
-        const createResult = usersRepository.createUserA(user)
+        const createResult = await usersRepository.createUserA(user)
+
         try {
-            await emailManager.sendEmailConfirmationMessage(user)
+
+                await emailManager.sendEmailConfirmationMessage(user.accountData.email,user.emailConfirmation.confirmationCode)
+
         } catch (error) {
             console.error(error)
-            await usersRepository.deleteUser(String(user._id))
+            //await usersRepository.deleteUser(String(user._id))
             return null
         }
         return createResult
     },
-    /*async confirmEmail(code: string) {
+   /* async confirmEmail(code: string) {
         let user = await usersRepository.findUserByConfirmationCode(code)
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false

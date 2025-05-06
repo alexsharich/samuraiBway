@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 import {ObjectId} from "mongodb";
 import {usersCollection} from "../../repositories/DB";
 import {v4 as uuidv4} from "uuid";
-import add from "date-fns/add";
+import {add} from "date-fns/add";
 import {emailAdapter} from "../../adapters/emailAdapter";
 import {emailManager} from "../../managers/emailManager";
 
@@ -59,10 +59,10 @@ export const usersService = {
             },
             emailConfirmation: {
                 confirmationCode: uuidv4(),
-                experationDate: add(now, {
+                expirationDate: add(now, {
                     hours: 1,
                 }),
-                isConfirme: isAdmin ? true : false
+                isConfirmed: isAdmin ? true : false
             }
         }
 

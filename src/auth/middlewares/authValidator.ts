@@ -1,13 +1,13 @@
 import {body} from "express-validator";
 import {inputCheckErrorsMiddleware} from "../../global-middleware/inputCheckErrorsMiddleware";
-import {emailValidator, loginValidator} from "../../users/middlewares/usersValidator";
 import {usersRepository} from "../../users/repositories/users-repository";
 import {Request,Response} from "express";
 import {NextFunction} from "express";
-import {LoginInputType} from "../controllers/loginController";
 import {InputUserType} from "../../input-output-types/userType";
 
 export const emailOrLoginValidator = body('loginOrEmail').trim().notEmpty().isString()
+ const emailValidator = body('email').trim().notEmpty().isString()
+ const loginValidator = body('login').trim().notEmpty().isString()
 
 export const passwordValidator = body('password').trim().notEmpty().isString()
 
@@ -30,7 +30,13 @@ export const authValidator =[
 
     inputCheckErrorsMiddleware,
 ]
+export const registrationValidator =[
+    loginValidator,
+    emailValidator,
+    passwordValidator,
 
+    inputCheckErrorsMiddleware,
+]
 export const meValidator = [
     emailValidator,
     loginValidator,
