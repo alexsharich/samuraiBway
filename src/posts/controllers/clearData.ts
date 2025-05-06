@@ -5,7 +5,7 @@ import {blogsCollection, commentsCollection, postsCollection, usersCollection} f
 export const clearData = async (req: Request, res: Response) => {
     await postsCollection.deleteMany({})
     await blogsCollection.deleteMany({})
-    return await usersCollection.drop()
-    return await commentsCollection.drop()
+    await usersCollection.drop()
+    await commentsCollection.drop()
     res.sendStatus(204)
 }
