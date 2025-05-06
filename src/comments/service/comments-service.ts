@@ -1,8 +1,6 @@
 import {commentsRepository} from "../repositories/comments-repository";
-import {commentsCollection, usersCollection} from "../../repositories/DB";
-import {postsService, PostType} from "../../posts/service/posts-service";
+import {postsService} from "../../posts/service/posts-service";
 import {commentsQueryRepository} from "../repositories/comments-query-repository";
-import {postsRepository} from "../../posts/repositories/posts-repository";
 
 export type CommentType = {
     postId: "string",

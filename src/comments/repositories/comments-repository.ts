@@ -1,9 +1,6 @@
 import {ObjectId} from "mongodb";
-import {blogsCollection, commentsCollection} from "../../repositories/DB";
-import {postsRepository} from "../../posts/repositories/posts-repository";
-import {postsQueryRepository} from "../../posts/repositories/post-query-repository";
+import {commentsCollection} from "../../repositories/DB";
 import {CommentType} from "../service/comments-service";
-import {mapToOutputBlog} from "../../blogs/repositories/blogs-query-repository";
 
 export const commentsRepository = {
     async findById(id: string) {
@@ -46,7 +43,7 @@ export const commentsRepository = {
             return null
         }
     },
-    async updateComment(commentId,content): Promise<any> {
+    async updateComment(commentId: string, content: string): Promise<any> {
         try {
             const id = new ObjectId(commentId)
             const result = await commentsCollection.updateOne({_id: id}, {
@@ -54,7 +51,7 @@ export const commentsRepository = {
                     content: content,
                 }
             })
-            if (result.matchedCount === 1) return await commentsCollection.findOne({_id: commentId})
+            if (result.matchedCount === 1) return await commentsCollection.findOne({_id: id})
             return null
         } catch (e) {
             return null

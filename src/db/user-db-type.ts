@@ -21,5 +21,5 @@ type UserAccountType = {
 type EmailConfirmationType = {
     isConfirmed:boolean
     confirmationCode:string
-    expirationDate:string
+    expirationDate:any
 }
