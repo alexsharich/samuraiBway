@@ -17,7 +17,7 @@ export const  isCreatedUserValidator = async (req:Request<any,any,InputUserType>
      const isCreatedUser = await usersRepository.checkUniqUserWithEmailOrLogin(req.body.login,req.body.email)
     if(isCreatedUser){
         res
-            .status(404)
+            .status(400)
             .json({})
         return
     }
@@ -41,5 +41,10 @@ export const meValidator = [
     emailValidator,
     loginValidator,
     userIdValidator,
+    inputCheckErrorsMiddleware,
+]
+export const emailValidation =[
+    emailValidator,
+
     inputCheckErrorsMiddleware,
 ]

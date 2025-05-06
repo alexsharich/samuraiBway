@@ -1,16 +1,16 @@
 import {ObjectId, WithId} from "mongodb";
 import {usersCollection} from "../../repositories/DB";
-import {UserDBType} from "../../db/user-db-type";
+import {UserAccountDBType, UserDBType} from "../../db/user-db-type";
 import {OutputUserType} from "../../input-output-types/userType";
 import {PaginationQueriesUsersType} from "../../helpers/pagination_values";
 import {SortMongoType} from "../../blogs/repositories/blogs-query-repository";
 
-const mapToOutputUser = (user: WithId<UserDBType>): OutputUserType => {
+const mapToOutputUser = (user: WithId<UserAccountDBType>): OutputUserType => {
     return {
         id: user._id.toString(),
-        login: user.login,
-        email: user.email,
-        createdAt: user.createdAt
+        login: user.accountData.userName,
+        email: user.accountData.email,
+        createdAt: user.accountData.createdAt
     }
 }
 
@@ -62,7 +62,7 @@ export const usersQueryRepository = {
                 page: query.pageNumber,
                 pageSize: query.pageSize,
                 totalCount: totalCount,
-                items: users.map((user: WithId<UserDBType>) => mapToOutputUser(user))
+                items: users.map((user: WithId<UserAccountDBType>) => mapToOutputUser(user))
             }
     }
 }
