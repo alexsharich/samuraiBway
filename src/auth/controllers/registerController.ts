@@ -6,6 +6,6 @@ export const registerController = async (req:Request,res:Response)=>{
     if(user){
         res.status(204).send()
     }else {
-        res.status(400).send({message:''})
+        res.status(400).send( { errorsMessages: [{ message: "Email error", field: "email" }] })
     }
 }

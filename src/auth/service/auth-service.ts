@@ -62,13 +62,13 @@ export const authService = {
     },
     async resendingEmail(email: string) {
         const user = await usersRepository.findUserWithEmailOrLogin(email)
-        if (!user) {
-            return
+        if (!user || user.emailConfirmation.isConfirmed) {
+            return null
         }
         await usersRepository.updateCode(user._id)
         const updatedUser = await usersRepository.findUserWithEmailOrLogin(email)
         await businessServis.sendEmail(updatedUser!.accountData.email, 'Resending email', ' Resending message', updatedUser?.emailConfirmation.confirmationCode)
-
+        return true
     },
     async isPasswordCorrect(password: string, hash: string) {
         const isEqual = await bcrypt.compare(password, hash)
