@@ -2,10 +2,10 @@ import {Request, Response} from "express";
 import {authService} from "../service/auth-service";
 
 export const registrationEmailController = async (req: Request, res: Response) => {
-   /* const result = await authService.confirmEmail(req.body.email)
-    if(result){
-        res.status(201).send()
-    }else{
-        res.sendStatus(400)
-    }*/
+    const user = await authService.resendingEmail(req.body.email)
+    if(!user){
+        res.status(400).send({ errorsMessages: [{ message: '123123', field: "email" }] })
+        return
+    }
+    res.status(204).send()
 }

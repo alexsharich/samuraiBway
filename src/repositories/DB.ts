@@ -14,9 +14,7 @@ const client = new MongoClient(mongoUri)
 const DB = client.db('social')
 export const postsCollection = DB.collection<PostDBType>('posts')
 export const blogsCollection = DB.collection<BlogDBType>('blogs')
-
-export const usersCollection = DB.collection<UserDBType>('users')
-export const usersCollectionA = DB.collection<UserAccountDBType>('users')
+export const usersCollection = DB.collection<UserAccountDBType>('users')
 export const commentsCollection = DB.collection<CommentDBType>('comment')
 export async function runDb() {
     try {
