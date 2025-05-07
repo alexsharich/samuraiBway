@@ -7,12 +7,13 @@ import {InputUserType} from "../../input-output-types/userType";
 
 export const emailOrLoginValidator = body('loginOrEmail').trim().notEmpty().isString()
  const emailValidator = body('email').trim().notEmpty().isString().isEmail()
- const loginValidator = body('login').trim().notEmpty().isString()
+ const loginValidator = body('login').trim().notEmpty().isString().isLength({min: 3, max: 10}).withMessage('more then 10 or 2')
 
-export const passwordValidator = body('password').trim().notEmpty().isString()
+export const passwordValidator = body('password').trim().notEmpty().isString().isLength({min: 6, max: 20}).withMessage('more then 20 or 5')
 
 export const userIdValidator = body('userId').trim().notEmpty().isString()
 
+export const codeResendingValidator = body('code').trim().notEmpty().isString()
 export const  isCreatedUserValidator = async (req:Request<any,any,InputUserType>,res:Response,next:NextFunction) =>{
      const isCreatedUser = await usersRepository.checkUniqUserWithEmailOrLogin(req.body.login,req.body.email)
     if(isCreatedUser){
@@ -45,6 +46,11 @@ export const meValidator = [
 ]
 export const emailValidation =[
     emailValidator,
+
+    inputCheckErrorsMiddleware,
+]
+export const emailCodeResendingValidator = [
+    codeResendingValidator,
 
     inputCheckErrorsMiddleware,
 ]
