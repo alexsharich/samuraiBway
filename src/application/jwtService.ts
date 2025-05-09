@@ -3,8 +3,9 @@ import {SETTINGS} from "../settings";
 
 export const jwtServise = {
     createToken(userId: string) {
-        const token = jwt.sign({userId: userId}, SETTINGS.JWT, {expiresIn: '1h'})
-        return token
+        const accessToken = jwt.sign({userId: userId}, SETTINGS.JWT_ACCESS, {expiresIn: '1h'})
+        const refreshToken = jwt.sign({userId: userId}, SETTINGS.JWT_REFRESH, {expiresIn: '3d'})
+        return {accessToken, refreshToken}
     },
     decodeToken(token: string) {
         try {

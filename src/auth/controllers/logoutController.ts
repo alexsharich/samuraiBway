@@ -1,7 +1,10 @@
 import {Request, Response} from "express";
 
 export const logoutController = (req: Request, res: Response) => {
-    /*Отметить рефреш токен как невалидный(токен приходит в куки)*/
+    const result = true // удалить токены
+    if (!result) {
+        res.status(401)
+        return
+    }
     res.status(204)
-    res.status(401)
 }

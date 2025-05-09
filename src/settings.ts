@@ -14,6 +14,8 @@ export const SETTINGS = {
     },
     ADMIN: process.env.ADMIN || 'admin:qwerty',
     JWT: process.env.JWT_SECRET || '111',
+    JWT_ACCESS:process.env.JWT_ACCESS_SECRET || '222',
+    JWT_REFRESH:process.env.JWT_REFRESH_SECRET || '333',
     SEND_EMAIL_PASS: process.env.EMAIL_PASS
 }
 

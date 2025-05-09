@@ -10,8 +10,6 @@ import {authMiddleware} from "../global-middleware/auth-middleware";
 import {registrationEmailController} from "../auth/controllers/resendRegistrationCodeController";
 import {registerController} from "../auth/controllers/registerController";
 import {registrationConfirmationController} from "../auth/controllers/registrationConfirmationController";
-import {cookieExampleControllerPost} from "../auth/controllers/cookieExampleControllerPost";
-import {cookieExampleControllerGet} from "../auth/controllers/cookieExampleControllerGet";
 import {refreshTokenController} from "../auth/controllers/refreshTokenController";
 import {logoutController} from "../auth/controllers/logoutController";
 
@@ -21,11 +19,8 @@ authRouter.post('/registration', registrationValidator, isCreatedUserValidator, 
 authRouter.post('/registration-confirmation', emailCodeResendingValidator, registrationConfirmationController)
 authRouter.post('/registration-email-resending', emailValidation, registrationEmailController)
 authRouter.post('/login', authValidator, loginController)
-authRouter.get('logout', logoutController)
+authRouter.get('/logout', logoutController)
 authRouter.get('/me', authMiddleware, meController)
 
 authRouter.post('/refresh-token', refreshTokenController)
 
-/*Examples*/
-authRouter.post('/example', cookieExampleControllerPost)
-authRouter.get('/result', cookieExampleControllerGet)
