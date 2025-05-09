@@ -11,6 +11,7 @@ const userId = await authService.loginWithEmailOrLogin(req.body)
     if(userId){
         const accessToken = jwtServise.createToken(userId)
         res.status(200).json({accessToken})
+        // Возвращаем рефреш токен в куки. Обратить внимание на время жизни токенов и настройки куки
         return
     }
     res.sendStatus(401)
