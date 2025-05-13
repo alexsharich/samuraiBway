@@ -1,5 +1,5 @@
 import {ObjectId} from "mongodb";
-import {usersCollection} from "../../repositories/DB";
+import {blackListCollection, usersCollection} from "../../repositories/DB";
 import {UserAccountDBType} from "../../db/user-db-type";
 import {add} from "date-fns/add";
 import {v4 as uuidv4} from 'uuid'
@@ -28,7 +28,7 @@ export const usersRepository = {
     },
     async updateConfirmation(userId: any) {
         const result = await usersCollection.updateOne({_id: userId}, {$set: {'emailConfirmation.isConfirmed': true}})
-          return result.modifiedCount === 1
+        return result.modifiedCount === 1
     },
     async findUserByConfirmationCode(emailConfirmationCode: string) {
         const user = await usersCollection.findOne({'emailConfirmation.confirmationCode': emailConfirmationCode})
@@ -42,5 +42,14 @@ export const usersRepository = {
                 'emailConfirmation.confirmationCode': uuidv4(),
             }
         })
+    },
+    async tokenToBlackList(oldRefreshToken: string,userId:string) {
+        const id = new ObjectId(userId)
+        const oldTokenId = await blackListCollection.updateOne({_id:id},{$push:{'oldRefreshTokens':oldRefreshToken}})
+        return oldTokenId.acknowledged
+    },
+    async checkTokenInBlackList(refreshToken: string) {
+        return await blackListCollection.find({'oldRefreshTokens': refreshToken})
+
     }
 }
