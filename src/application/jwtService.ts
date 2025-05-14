@@ -15,9 +15,13 @@ export const jwtServise = {
             return null
         }
     },
+    getExpirationTokenTime(token:string){
+        const decodedToken = jwt.decode(token)
+    },
     verifyToken(token: string) {
         try {
             return jwt.verify(token, SETTINGS.JWT) as { userId: string }
+
         } catch (error) {
             return null
         }

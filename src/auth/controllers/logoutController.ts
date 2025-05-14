@@ -3,8 +3,8 @@ import {authService} from "../service/auth-service";
 
 export const logoutController = async (req: Request, res: Response) => {
     const userId = req.userId
-    const refreshToken = req.cookies.refreshToken
-    const isAddToBlackList = await authService.addTokenToBlackList(refreshToken, userId!)
+    const oldRefreshToken = req.cookies.refreshToken
+    const isAddToBlackList = await authService.addTokenToBlackList(oldRefreshToken, userId!)
     if (!isAddToBlackList) {
         res.status(401)
         return
