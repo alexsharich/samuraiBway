@@ -70,8 +70,8 @@ export const authService = {
         await businessServis.sendEmail(updatedUser!.accountData.email, 'Resending email', ' Resending message', updatedUser?.emailConfirmation.confirmationCode)
         return true
     },
-    async addTokenToBlackList(oldRefreshToken:string,userId:string){
-        return  await usersRepository.tokenToBlackList(oldRefreshToken,userId)
+    async addTokenToBlackList(oldRefreshToken: string) {
+        return await usersRepository.tokenToBlackList(oldRefreshToken)
     },
     async isPasswordCorrect(password: string, hash: string) {
         const isEqual = await bcrypt.compare(password, hash)
@@ -79,7 +79,7 @@ export const authService = {
             return null
         }
     },
-    async checkTokenInBlackList(refreshToken:string,userId:string){
-        const isTokenInBlackList = await usersRepository.checkTokenInBlackList(refreshToken)
+    async checkTokenInBlackList(refreshToken: string) {
+        return await usersRepository.checkTokenInBlackList(refreshToken)
     }
 }

@@ -43,13 +43,14 @@ export const usersRepository = {
             }
         })
     },
-    async tokenToBlackList(oldRefreshToken: string,userId:string) {
-        const id = new ObjectId(userId)
-        const oldTokenId = await blackListCollection.updateOne({_id:id},{$push:{'oldRefreshTokens':oldRefreshToken}})
+    async tokenToBlackList(oldRefreshToken: string) {
+        const oldTokenId = await blackListCollection.insertOne({
+            token: oldRefreshToken
+        })
+        console.log(oldTokenId.acknowledged)
         return oldTokenId.acknowledged
     },
     async checkTokenInBlackList(refreshToken: string) {
-        return await blackListCollection.find({'oldRefreshTokens': refreshToken})
-
+        return await blackListCollection.findOne({token: refreshToken})
     }
 }

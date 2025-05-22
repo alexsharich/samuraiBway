@@ -3,8 +3,8 @@ import {SETTINGS} from "../settings";
 
 export const jwtServise = {
     createToken(userId: string) {
-        const accessToken = jwt.sign({userId: userId}, SETTINGS.JWT_ACCESS, {expiresIn: '1h'})
-        const refreshToken = jwt.sign({userId: userId}, SETTINGS.JWT_REFRESH, {expiresIn: '3d'})
+        const accessToken = jwt.sign({userId: userId}, SETTINGS.JWT_ACCESS, {expiresIn: '10s'})
+        const refreshToken = jwt.sign({userId: userId}, SETTINGS.JWT_REFRESH, {expiresIn: '20s'})
         return {accessToken, refreshToken}
     },
     decodeToken(token: string) {
@@ -15,13 +15,16 @@ export const jwtServise = {
             return null
         }
     },
-    getExpirationTokenTime(token:string){
-        const decodedToken = jwt.decode(token)
+    verifyRefreshToken(token: string) {
+        try {
+            return jwt.verify(token, SETTINGS.JWT_REFRESH) as { userId: string }
+        } catch (error) {
+            return null
+        }
     },
     verifyToken(token: string) {
         try {
-            return jwt.verify(token, SETTINGS.JWT) as { userId: string }
-
+            return jwt.verify(token, SETTINGS.JWT_ACCESS) as { userId: string }
         } catch (error) {
             return null
         }

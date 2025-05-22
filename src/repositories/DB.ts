@@ -11,7 +11,7 @@ const mongoUri = process.env.MONGO_URL
 if(!mongoUri){
     throw new Error('INVALID MONGO URL')
 }
-const client = new MongoClient(mongoUri)
+export const client = new MongoClient(mongoUri)
 const DB = client.db('social')
 export const postsCollection = DB.collection<PostDBType>('posts')
 export const blogsCollection = DB.collection<BlogDBType>('blogs')
