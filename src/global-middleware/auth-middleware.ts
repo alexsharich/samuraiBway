@@ -4,6 +4,7 @@ import {jwtServise} from "../application/jwtService";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const auth = req.headers['authorization'];
+
     if (!auth) {
         res.sendStatus(401)
         return

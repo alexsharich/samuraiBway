@@ -1,19 +1,17 @@
-import {Request, Response} from 'express'
+import {Request, Response} from "express";
 import {authService} from "../service/auth-service";
 import {jwtServise} from "../../application/jwtService";
 import {daysToMs} from "../../helpers/daysToMs";
 
-export type LoginInputType = {
-    loginOrEmail: string,
-    password: string
-}
-
-export const loginController = async (req: Request<any, any, LoginInputType>, res: Response) => {
-    const userId = await authService.loginWithEmailOrLogin(req.body)
+export const refreshTokenController = async (req: Request, res: Response) => {
+    const oldRefreshToken = req.cookies.refreshToken
+    const userId = req.userId
     if (!userId) {
         res.sendStatus(401)
         return
     }
+
+    await authService.addTokenToBlackList(oldRefreshToken)
     const {accessToken, refreshToken} = jwtServise.createToken(userId)
     res.cookie('refreshToken', refreshToken, {
         maxAge: (daysToMs(3)),
@@ -21,4 +19,5 @@ export const loginController = async (req: Request<any, any, LoginInputType>, re
         secure: true
     })
     res.status(200).json({accessToken})
+
 }

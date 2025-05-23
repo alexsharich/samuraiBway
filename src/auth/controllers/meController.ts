@@ -10,15 +10,13 @@ export const meController = async (req: Request<any, any, any>, res: Response) =
     }
     const user = await usersQueryRepository.findUser(userId)
 
-    if (user) {
-        res.status(200).send({
-            email: user.email,
-            login: user.login,
-            userId: user.id
-        })
+    if (!user) {
+        res.sendStatus(401)
         return
     }
-
-    res.sendStatus(401)
-    return
+    res.status(200).send({
+        email: user.email,
+        login: user.login,
+        userId: user.id
+    })
 }
