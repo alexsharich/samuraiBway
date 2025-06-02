@@ -1,4 +1,4 @@
-import { WithId} from "mongodb";
+import {WithId} from "mongodb";
 
 export type UserDBType = {
     passwordHash: string,
@@ -19,7 +19,7 @@ type UserAccountType = {
     createdAt: Date
 }
 type EmailConfirmationType = {
-    isConfirmed:boolean
-    confirmationCode:string
-    expirationDate:any
+    isConfirmed: boolean
+    confirmationCode: string
+    expirationDate: any
 }

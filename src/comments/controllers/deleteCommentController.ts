@@ -10,7 +10,8 @@ export const deleteCommentController = async (req: Request<{ commentId: string }
     if (isDeletedComment === "not found") {
         res.sendStatus(404)
         return
-    } if (isDeletedComment === 'forbidden'){
+    }
+    if (isDeletedComment === 'forbidden') {
         res.sendStatus(403)
         return
     }

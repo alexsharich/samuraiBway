@@ -25,7 +25,7 @@ export const commentsService = {
     },
     async updateComment(userId: string, commentId: string, content: string) {
         const comment = await commentsRepository.findById(commentId)
-        console.log('COMMENT :',comment)
+        console.log('COMMENT :', comment)
         if (!comment) {
             return 'not found'
         }
@@ -39,7 +39,7 @@ export const commentsService = {
         const existPost = await postsService.findPost(postId)
         if (existPost) {
             const newComment: CommentType = {
-                postId,////////  ????
+                postId,
                 content: comment,
                 commentatorInfo: {
                     userId,
@@ -52,6 +52,5 @@ export const commentsService = {
                 return await commentsQueryRepository.findComment(createdCommentId)
             }
         }
-
     }
 }
