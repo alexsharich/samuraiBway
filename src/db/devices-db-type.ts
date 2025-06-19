@@ -1,15 +1,13 @@
 export const DevicesDBType = {}
 
 export class Device {
-    _id:string
     ip: string
     deviceName: string
     createdAt: string
     userId: string
     expAt: string
 
-    constructor(_id: string,
-                ip: string,
+    constructor(ip: string,
                 deviceName: string,
                 createdAt: string,
                 userId: string,

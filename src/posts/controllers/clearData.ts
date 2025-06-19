@@ -1,5 +1,11 @@
 import {Request, Response} from "express";
-import {blogsCollection, commentsCollection, postsCollection, usersCollection} from "../../repositories/DB";
+import {
+    blogsCollection,
+    commentsCollection,
+    devicesCollection,
+    postsCollection,
+    usersCollection
+} from "../../repositories/DB";
 
 
 export const clearData = async (req: Request, res: Response) => {
@@ -7,5 +13,6 @@ export const clearData = async (req: Request, res: Response) => {
     await blogsCollection.deleteMany({})
     await usersCollection.drop()
     await commentsCollection.drop()
+    await devicesCollection.drop()
     res.sendStatus(204)
 }

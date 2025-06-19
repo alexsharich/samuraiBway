@@ -8,9 +8,9 @@ interface MyJwtPayload extends JwtPayload {
 }
 
 export const jwtServise = {
-    createToken(userId: string,deviceId:string) {
+    createToken(userId: string, deviceId?: string) {
         const accessToken = jwt.sign({userId}, SETTINGS.JWT_ACCESS, {expiresIn: '10s'})
-        const refreshToken = jwt.sign({userId,deviceId}, SETTINGS.JWT_REFRESH, {expiresIn: '20s'})
+        const refreshToken = jwt.sign({userId, deviceId}, SETTINGS.JWT_REFRESH, {expiresIn: '20s'})
         return {accessToken, refreshToken}
     },
     decodeToken(token: string) {
