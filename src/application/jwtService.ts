@@ -23,7 +23,7 @@ export const jwtServise = {
     },
     verifyRefreshToken(token: string) {
         try {
-            return jwt.verify(token, SETTINGS.JWT_REFRESH) as { userId: string }
+            return <MyJwtPayload>jwt.verify(token, SETTINGS.JWT_REFRESH)
         } catch (error) {
             return null
         }

@@ -29,11 +29,11 @@ export const loginController = async (req: Request<any, any, LoginInputType>, re
     const _id = new ObjectId()
     const {accessToken, refreshToken} = jwtServise.createToken(userId, String(_id))
     const decodedRefreshToken = jwtServise.decodeToken(refreshToken)
-    const ip = '1'
+    const ip = req.ip || '1'
     const deviceName = '2'
 
     try {
-        await devicesService.saveDevice(_id, ip, deviceName, String(decodedRefreshToken?.iat), String(decodedRefreshToken?.userId), String(decodedRefreshToken?.exp))
+        await devicesService.saveDevice(_id, ip , deviceName, String(decodedRefreshToken?.iat), String(decodedRefreshToken?.userId), String(decodedRefreshToken?.exp))
     } catch (error) {
         throw new Error('Error')
     }
