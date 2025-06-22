@@ -50,7 +50,4 @@ export const usersRepository = {
         console.log(oldTokenId.acknowledged)
         return oldTokenId.acknowledged
     },
-    async checkTokenInBlackList(refreshToken: string) {
-        return await blackListCollection.findOne({token: refreshToken})
-    }
 }

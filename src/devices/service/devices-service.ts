@@ -24,7 +24,7 @@ export const devicesService = {
         if (device.userId !== userId) {
             return STATUS_CODE_DEVICES.FORBIDDEN
         }
-        const result = await devicesCollection.deleteOne({_id: new ObjectId(deviceId)})
+        await devicesCollection.deleteOne({_id: new ObjectId(deviceId)})
         return STATUS_CODE_DEVICES.NO_CONTENT
     },
     async deleteDevices(deviceId: string, userId: string): Promise<boolean> {
@@ -33,9 +33,6 @@ export const devicesService = {
     },
     async updateDevice(deviceId: ObjectId, expAt: string, createdAt: string) {
         await devicesRepository.updateDevice(deviceId, expAt, createdAt)
-    },
-    async getExistingDevice(userId: string, deviceName: string) {
-        return await devicesRepository.getExistingDevice(userId, deviceName)
     },
     async getDevices(userId: string) {
         return await queryDevicesRepository.getDevices(userId)

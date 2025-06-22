@@ -18,22 +18,23 @@ export const loginController = async (req: Request<any, any, LoginInputType>, re
         res.sendStatus(401)
         return
     }
-    if (req.cookies.refreshToken) {
-        res.clearCookie('refreshToken', {
-            httpOnly: true,
-            secure: true,
-        })
-        res.sendStatus(401)
-        return
-    }
+    /*  if (req.cookies.refreshToken) {
+          res.clearCookie('refreshToken', {
+              httpOnly: true,
+              secure: true,
+          })
+          res.sendStatus(401)
+          return
+      }*/
     const _id = new ObjectId()
     const {accessToken, refreshToken} = jwtServise.createToken(userId, String(_id))
     const decodedRefreshToken = jwtServise.decodeToken(refreshToken)
+// TODO
     const ip = req.ip || '1'
-    const deviceName = '2'
+    const deviceName = '2' /// uaparser
 
     try {
-        await devicesService.saveDevice(_id, ip , deviceName, String(decodedRefreshToken?.iat), String(decodedRefreshToken?.userId), String(decodedRefreshToken?.exp))
+        await devicesService.saveDevice(_id, ip, deviceName, new Date(decodedRefreshToken?.iat * 1000).toISOString(), String(decodedRefreshToken?.userId), new Date(decodedRefreshToken?.exp * 1000).toISOString())
     } catch (error) {
         throw new Error('Error')
     }

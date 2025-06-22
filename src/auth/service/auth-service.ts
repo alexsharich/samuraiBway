@@ -44,7 +44,7 @@ export const authService = {
         const createResult = await usersRepository.createUser(user)
 
         try {
-            await emailManager.sendEmailConfirmationMessage(user.accountData.email, user.emailConfirmation.confirmationCode)
+            emailManager.sendEmailConfirmationMessage(user.accountData.email, user.emailConfirmation.confirmationCode)
         } catch (error) {
             console.error(error)
             return null
@@ -67,19 +67,7 @@ export const authService = {
         }
         await usersRepository.updateCode(user._id)
         const updatedUser = await usersRepository.findUserWithEmailOrLogin(email)
-        await businessServis.sendEmail(updatedUser!.accountData.email, 'Resending email', ' Resending message', updatedUser?.emailConfirmation.confirmationCode)
+        businessServis.sendEmail(updatedUser!.accountData.email, 'Resending email', ' Resending message', updatedUser?.emailConfirmation.confirmationCode)
         return true
     },
-    async addTokenToBlackList(oldRefreshToken: string) {
-        return await usersRepository.tokenToBlackList(oldRefreshToken)
-    },
-    async isPasswordCorrect(password: string, hash: string) {
-        const isEqual = await bcrypt.compare(password, hash)
-        if (!isEqual) {
-            return null
-        }
-    },
-    async checkTokenInBlackList(refreshToken: string) {
-        return await usersRepository.checkTokenInBlackList(refreshToken)
-    }
 }

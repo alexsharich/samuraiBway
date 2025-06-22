@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {jwtServise} from "../application/jwtService";
-import {authService} from "../auth/service/auth-service";
+import {devicesRepository} from "../devices/repositories/devices-repository";
 
 
 export const authRefreshMiddleware = async (req: Request, res: Response, next: NextFunction) => {
@@ -17,12 +17,27 @@ export const authRefreshMiddleware = async (req: Request, res: Response, next: N
     }
     const userId = token.userId
     const deviceId = token.deviceId
-    const checkNewTokenInBlackList = await authService.checkTokenInBlackList(refreshToken)
-    if (checkNewTokenInBlackList) {
+    const iat = token.iat
+
+    const device = await devicesRepository.getDeviceById(deviceId)
+
+
+    if (!device) {
         res.sendStatus(401)
         return
     }
+
+    if (device.userId !== userId) {
+        res.sendStatus(401)
+        return
+    }
+
+    if (device.createdAt !== new Date(iat * 1000).toISOString()) {
+        res.sendStatus(401)
+        return
+    }
+
     req.userId = userId
-    req.deviceId = token.deviceId
+    req.deviceId = deviceId
     next()
 }

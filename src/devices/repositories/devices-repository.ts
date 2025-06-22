@@ -28,7 +28,4 @@ export const devicesRepository = {
     async getDeviceById(deviceId: string) {
         return devicesCollection.findOne({_id: new ObjectId(deviceId)})
     },
-    async getExistingDevice(userId: string, deviceName: string) {
-        return devicesCollection.findOne({userId, deviceName})
-    },
 }
