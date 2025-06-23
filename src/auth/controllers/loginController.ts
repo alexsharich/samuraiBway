@@ -5,7 +5,7 @@ import {daysToMs} from "../../helpers/daysToMs";
 import {ObjectId} from "mongodb";
 import {devicesService} from "../../devices/service/devices-service";
 import {devicesCollection} from "../../repositories/DB";
-import {devicesRepository} from "../../devices/repositories/devices-repository";
+import {UAParser} from "ua-parser-js";
 
 export type LoginInputType = {
     loginOrEmail: string,
@@ -29,12 +29,16 @@ export const loginController = async (req: Request<any, any, LoginInputType>, re
     const _id = new ObjectId()
     const {accessToken, refreshToken} = jwtServise.createToken(userId, String(_id))
     const decodedRefreshToken = jwtServise.decodeToken(refreshToken)
-// TODO
+
     const ip = req.ip || '1'
-    const deviceName = '2' /// uaparser
+
+    const uap = new UAParser()
+    const userAgent = navigator.userAgent
+    const deviceName = uap.setUA(userAgent).getDevice().model || ''
+
 
     try {
-        await devicesService.saveDevice(_id, ip, deviceName, new Date(decodedRefreshToken?.iat * 1000).toISOString(), String(decodedRefreshToken?.userId), new Date(decodedRefreshToken?.exp * 1000).toISOString())
+        await devicesService.saveDevice(_id, ip, deviceName, new Date(decodedRefreshToken?.iat! * 1000).toISOString(), String(decodedRefreshToken?.userId), new Date(decodedRefreshToken?.exp! * 1000).toISOString())
     } catch (error) {
         throw new Error('Error')
     }

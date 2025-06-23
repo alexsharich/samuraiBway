@@ -32,7 +32,7 @@ export const authRefreshMiddleware = async (req: Request, res: Response, next: N
         return
     }
 
-    if (device.createdAt !== new Date(iat * 1000).toISOString()) {
+    if (device.createdAt !== new Date(iat! * 1000).toISOString()) {
         res.sendStatus(401)
         return
     }

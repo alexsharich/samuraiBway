@@ -20,7 +20,7 @@ export const refreshTokenController = async (req: Request, res: Response) => {
         res.sendStatus(401)
         return
     }
-    await devicesService.updateDevice(new ObjectId(deviceId!), new Date(tokenDecoded?.exp * 1000).toISOString(), new Date(tokenDecoded?.iat * 1000).toISOString())
+    await devicesService.updateDevice(new ObjectId(deviceId!), new Date(tokenDecoded?.exp! * 1000).toISOString(), new Date(tokenDecoded?.iat! * 1000).toISOString())
 
     res.cookie('refreshToken', refreshToken, {
         maxAge: (daysToMs(3)),
