@@ -18,7 +18,6 @@ export const authService = {
         if (!match) {
             return null
         }
-        console.log('Login successful!');
         return String(user._id)
     },
     async createUser(login: string, email: string, password: string) {

@@ -1,8 +1,7 @@
 import {body} from "express-validator";
 import {inputCheckErrorsMiddleware} from "../../global-middleware/inputCheckErrorsMiddleware";
 import {usersRepository} from "../../users/repositories/users-repository";
-import {Request, Response} from "express";
-import {NextFunction} from "express";
+import {Request, Response, NextFunction} from "express";
 import {InputUserType} from "../../input-output-types/userType";
 
 export const emailOrLoginValidator = body('loginOrEmail').trim().notEmpty().isString()
@@ -27,7 +26,7 @@ export const isCreatedUserValidator = async (req: Request<any, any, InputUserTyp
         const field = isCreatedUser.accountData.email === req.body.email ? 'email' : 'login'
         res
             .status(400)
-            .json({ errorsMessages: [{ message:'123123', field:field }] })
+            .json({errorsMessages: [{message: '123123', field: field}]})
         return
     }
     next()

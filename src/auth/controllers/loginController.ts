@@ -5,14 +5,15 @@ import {daysToMs} from "../../helpers/daysToMs";
 import {ObjectId} from "mongodb";
 import {devicesService} from "../../devices/service/devices-service";
 import {devicesCollection} from "../../repositories/DB";
-import {UAParser} from "ua-parser-js";
+import {UAParser} from 'ua-parser-js';
+
 
 export type LoginInputType = {
     loginOrEmail: string,
     password: string
 }
 
-export const loginController = async (req: Request<any, any, LoginInputType>, res: Response) => {
+export const loginController = async (req: Request<{},{}, LoginInputType,{}>, res: Response) => {
     const userId = await authService.loginWithEmailOrLogin(req.body)
     if (!userId) {
         res.sendStatus(401)
@@ -32,9 +33,9 @@ export const loginController = async (req: Request<any, any, LoginInputType>, re
 
     const ip = req.ip || '1'
 
-    const uap = new UAParser()
-    const userAgent = navigator.userAgent
-    const deviceName = uap.setUA(userAgent).getDevice().model || ''
+    const {browser, device} = UAParser(req.headers['user-agent']);
+
+    const deviceName = device.model || '' + browser.name || ''
 
 
     try {
@@ -43,7 +44,6 @@ export const loginController = async (req: Request<any, any, LoginInputType>, re
         throw new Error('Error')
     }
 
-    console.log('DEVICES : ', await devicesCollection.find().toArray())
     res.cookie('refreshToken', refreshToken, {
         maxAge: (daysToMs(3)),
         httpOnly: true,

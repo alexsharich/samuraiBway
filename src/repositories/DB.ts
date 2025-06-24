@@ -6,6 +6,7 @@ import {UserAccountDBType} from "../db/user-db-type";
 import {CommentDBType} from "../db/comment-db-type";
 import {BlackListDBType} from "../db/black_list-db-type";
 import {Device} from "../db/devices-db-type";
+import {ApiRequest} from "../db/api-requests";
 
 dotenv.config()
 
@@ -21,6 +22,8 @@ export const usersCollection = DB.collection<UserAccountDBType>('users')
 export const commentsCollection = DB.collection<CommentDBType>('comment')
 export const blackListCollection = DB.collection<BlackListDBType>('blackList')
 export const devicesCollection = DB.collection<Device>('devices')
+
+export const apiRequestCollection = DB.collection<ApiRequest>('apiRequests')
 
 export async function runDb() {
     try {

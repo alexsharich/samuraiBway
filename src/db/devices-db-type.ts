@@ -1,5 +1,3 @@
-export const DevicesDBType = {}
-
 export class Device {
     ip: string
     deviceName: string
