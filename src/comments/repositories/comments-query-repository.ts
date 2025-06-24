@@ -1,22 +1,21 @@
-import { commentsCollection} from "../../repositories/DB";
+import {commentsCollection} from "../../repositories/DB";
 import {ObjectId, WithId} from "mongodb";
 
 import {CommentDBType} from "../../db/comment-db-type";
 import {SortMongoType} from "../../blogs/repositories/blogs-query-repository";
-import { PaginationQueriesCommentType} from "../../helpers/pagination_values";
+import {PaginationQueriesCommentType} from "../../helpers/pagination_values";
 
 export const mapToOutputComment = (comment: WithId<CommentDBType>): any => {
     return {
-      id: comment._id.toString(),
-      content: comment.content,
-      commentatorInfo: {
-         userId: comment.commentatorInfo.userId,
-         userLogin: comment.commentatorInfo.userLogin,
-  },
-      createdAt: comment.createdAt
+        id: comment._id.toString(),
+        content: comment.content,
+        commentatorInfo: {
+            userId: comment.commentatorInfo.userId,
+            userLogin: comment.commentatorInfo.userLogin,
+        },
+        createdAt: comment.createdAt
     }
 }
-
 
 
 export const commentsQueryRepository = {
@@ -31,7 +30,7 @@ export const commentsQueryRepository = {
             return null
         }
     },
-    async getComments (query:PaginationQueriesCommentType,postId:string){
+    async getComments(query: PaginationQueriesCommentType, postId: string) {
         try {
             const pageNumber = +query.pageNumber
             const pageSize = +query.pageSize
@@ -53,7 +52,7 @@ export const commentsQueryRepository = {
                 page: query.pageNumber,
                 pageSize: query.pageSize,
                 totalCount: totalCount,
-                items:comments.map(comment=>mapToOutputComment(comment))
+                items: comments.map(comment => mapToOutputComment(comment))
             }
         } catch (e) {
 
