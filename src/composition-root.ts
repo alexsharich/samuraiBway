@@ -1,6 +1,5 @@
 import {UsersRepository} from "./users/repositories/users-repository";
 import {UsersService} from "./users/service/users-service";
-import {AuthService} from "./auth/service/auth-service";
 import {EmailManager} from "./managers/emailManager";
 import {BusinessService} from "./domain/businessServis";
 import {DevicesService} from "./devices/service/devices-service";
@@ -14,13 +13,17 @@ import {PostsRepository} from "./posts/repositories/posts-repository";
 import {PostsQueryRepository} from "./posts/repositories/post-query-repository";
 import {BlogsService} from "./blogs/service/blogs-service";
 import {PostsService} from "./posts/service/posts-service";
-import {BlogsController} from "./blogs/controllers/blogsController";
 import {UsersQueryRepository} from "./users/repositories/users-query-repository";
 import {CommentsRepository} from "./comments/repositories/comments-repository";
 import {CommentsQueryRepository} from "./comments/repositories/comments-query-repository";
 import {CommentsService} from "./comments/service/comments-service";
-import {PostsController} from "./posts/controllers/postsController";
-import {CommentsController} from "./comments/controllers/commentsController";
+
+import {AuthController} from "./auth/controllers/auth.controller";
+import {AuthService} from "./auth/service/auth-service";
+import {UsersController} from "./users/controllers/users.controller";
+import {CommentsController} from "./comments/controllers/comments.controller";
+import {BlogsController} from "./blogs/controllers/blogs.controller";
+import {PostsController} from "./posts/controllers/posts.controller";
 
 export const usersRepository = new UsersRepository()
 export const usersQueryRepository = new UsersQueryRepository()
@@ -42,10 +45,12 @@ export const usersService = new UsersService(usersRepository)
 export const authService = new AuthService(usersRepository, emailService, businessService)
 export const postsService = new PostsService(postsRepository, blogsQueryRepository)
 export const blogsService = new BlogsService(blogsRepository, postsRepository, blogsQueryRepository)
-export const commentsService = new CommentsService(commentsRepository, commentsQueryRepository, PostsService)
+export const commentsService = new CommentsService(commentsRepository, commentsQueryRepository,postsService)
 
 
+export const authController = new AuthController(authService, jwtService, devicesService, usersQueryRepository)
 export const deviceController = new DeviceController(devicesService)
-export const commentsController = new CommentsController(commentsService,commentsQueryRepository)
+export const usersController = new UsersController(usersQueryRepository)
+export const commentsController = new CommentsController(commentsService, commentsQueryRepository)
 export const blogsController = new BlogsController(blogsService, blogsQueryRepository, postsQueryRepository)
-export const postsController = new PostsController(postsQueryRepository, usersQueryRepository, postsService, commentsQueryRepository)
+export const postsController = new PostsController(postsQueryRepository, usersQueryRepository, postsService, commentsQueryRepository, commentsService)

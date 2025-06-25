@@ -1,7 +1,7 @@
 import {Router} from 'express'
-import {clearData} from "../posts/controllers/clearData";
+import {postsController} from "../composition-root";
 export const testingRouter = Router()
 
-testingRouter.delete('/all-data',clearData)
+testingRouter.delete('/all-data',postsController.clearData)
 
 

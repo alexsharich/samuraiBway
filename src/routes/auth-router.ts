@@ -1,34 +1,26 @@
 import {Router} from "express";
-import {loginController} from "../auth/controllers/loginController";
 import {
     authValidator, emailCodeResendingValidator, emailValidation,
     isCreatedUserValidator, passwordValidator,
     registrationValidator
 } from "../auth/middlewares/authValidator";
-import {meController} from "../auth/controllers/meController";
 import {authMiddleware} from "../global-middleware/auth-middleware";
-import {registrationEmailController} from "../auth/controllers/resendRegistrationCodeController";
-import {registerController} from "../auth/controllers/registerController";
-import {registrationConfirmationController} from "../auth/controllers/registrationConfirmationController";
-import {refreshTokenController} from "../auth/controllers/refreshTokenController";
-import {logoutController} from "../auth/controllers/logoutController";
+
 import {authRefreshMiddleware} from "../global-middleware/auth-refresh-middleware";
 import {apiRequestMiddleware} from "../devices/middlewares/devices-middleware";
-import {inputCheckErrorsMiddleware} from "../global-middleware/inputCheckErrorsMiddleware";
-import {passwordRecoveryController} from "../auth/controllers/passwordRecoveryController";
-import {newPasswordController} from "../auth/controllers/newPasswordController";
 import {emailValidator} from "../users/middlewares/usersValidator";
+import {authController} from "../composition-root";
 
 export const authRouter = Router()
 
-authRouter.post('/registration', registrationValidator, apiRequestMiddleware, isCreatedUserValidator, registerController)
-authRouter.post('/registration-confirmation', emailCodeResendingValidator, apiRequestMiddleware, registrationConfirmationController)
-authRouter.post('/registration-email-resending', emailValidation, apiRequestMiddleware, registrationEmailController)
-authRouter.post('/login', apiRequestMiddleware, ...authValidator, loginController) /// TODO
-authRouter.post('/logout', authRefreshMiddleware, logoutController)
-authRouter.get('/me', authMiddleware, meController)
-authRouter.post('/refresh-token', authRefreshMiddleware, refreshTokenController)
+authRouter.post('/registration', registrationValidator, apiRequestMiddleware, isCreatedUserValidator, authController.register)
+authRouter.post('/registration-confirmation', emailCodeResendingValidator, apiRequestMiddleware, authController.registrationConfirmation)
+authRouter.post('/registration-email-resending', emailValidation, apiRequestMiddleware, authController.resendRegistrationCode)
+authRouter.post('/login', apiRequestMiddleware, ...authValidator, authController.login) /// TODO
+authRouter.post('/logout', authRefreshMiddleware, authController.logout)
+authRouter.get('/me', authMiddleware, authController.me)
+authRouter.post('/refresh-token', authRefreshMiddleware, authController.refreshToken)
 
-authRouter.post('/password-recovery,', emailValidator,apiRequestMiddleware, passwordRecoveryController)
-authRouter.post('/new-password', passwordValidator, newPasswordController)
+authRouter.post('/password-recovery,', emailValidator, apiRequestMiddleware, authController.passwordRecovery)
+authRouter.post('/new-password', passwordValidator, authController.newPassword)
 

@@ -1,4 +1,3 @@
-import {LoginInputType} from "../controllers/loginController";
 import bcrypt from "bcrypt";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
@@ -6,6 +5,7 @@ import {add} from "date-fns/add";
 import {UsersRepository} from "../../users/repositories/users-repository";
 import {EmailManager} from "../../managers/emailManager";
 import {BusinessService} from "../../domain/businessServis";
+import {LoginInputType} from "../controllers/auth.controller";
 
 export class AuthService  {
 

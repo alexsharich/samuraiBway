@@ -1,6 +1,5 @@
 import {Request, Response} from "express";
 import {InputCommentType} from "../../input-output-types/comment-types";
-import {commentsService} from "../../comments/service/comments-service";
 import {InputPostType} from "../../input-output-types/post-types";
 import {
     paginationQueries,
@@ -17,9 +16,12 @@ import {
 } from "../../repositories/DB";
 import {PostsQueryRepository} from "../repositories/post-query-repository";
 import {PostsService} from "../service/posts-service";
+import {UsersQueryRepository} from "../../users/repositories/users-query-repository";
+import {CommentsQueryRepository} from "../../comments/repositories/comments-query-repository";
+import {CommentsService} from "../../comments/service/comments-service";
 
 export class PostsController {
-    constructor(private postsQueryRepository:PostsQueryRepository, private usersQueryRepository: UsersQueryRepository,private postsService:PostsService, private commentsQueryRepository: CommentsQueryRepository) {
+    constructor(private postsQueryRepository: PostsQueryRepository, private usersQueryRepository: UsersQueryRepository, private postsService: PostsService, private commentsQueryRepository: CommentsQueryRepository, private commentsService: CommentsService) {
 
     }
 
@@ -35,7 +37,7 @@ export class PostsController {
         if (userId) {
             const user = await this.usersQueryRepository.findUser(userId)
             if (user !== null) {
-                const createdComment = await commentsService.createComment({
+                const createdComment = await this.commentsService.createComment({
                     userId: userId,
                     userLogin: user.login,
                     postId: req.params.id,

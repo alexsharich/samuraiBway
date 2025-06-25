@@ -3,7 +3,6 @@ import {PostDBType} from "../../db/post-db-type";
 import {ObjectId} from "mongodb";
 import {postsCollection} from "../../repositories/DB";
 import {mapToOutputPost} from "../repositories/post-query-repository";
-import {BlogsService} from "../../blogs/service/blogs-service";
 import {BlogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 import {PostsRepository} from "../repositories/posts-repository";
 

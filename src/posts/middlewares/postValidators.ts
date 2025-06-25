@@ -2,7 +2,7 @@ import {body, param} from 'express-validator'
 import {NextFunction, Request, Response} from 'express'
 import {adminMiddleware} from "../../global-middleware/admin-middleware";
 import {inputCheckErrorsMiddleware} from "../../global-middleware/inputCheckErrorsMiddleware";
-import {blogsQueryRepository} from "../../composition-root";
+import {blogsQueryRepository, postsQueryRepository} from "../../composition-root";
 
 
 export const titleValidator = body('title').isString().withMessage('not string')
@@ -12,18 +12,18 @@ export const shortDescriptionValidator = body('shortDescription').isString().wit
 export const contentValidator = body('content').isString().withMessage('not string')
     .trim().isLength({min: 1, max: 1000}).withMessage('more then 1000 or 0')
 export const blogIdValidator = body('blogId').isString().withMessage('not string')
-    .trim().custom(async(blogId:string) => {
+    .trim().custom(async (blogId: string) => {
         const blog = await blogsQueryRepository.findBlog(blogId)
-        if(!blog){
+        if (!blog) {
             throw new Error('blog not found !')
         }
         return true
     }).withMessage('no blog')
 
 export const blogIdInParamsValidator = param('id').isString().withMessage('not string')
-    .trim().custom(async(blogId:string) => {
+    .trim().custom(async (blogId: string) => {
         const blog = await blogsQueryRepository.findBlog(blogId)
-        if(!blog){
+        if (!blog) {
             throw new Error('blog not found !')
         }
         return true
@@ -53,7 +53,7 @@ export const postValidators = [
 
     inputCheckErrorsMiddleware,
 ]
-export const postForBlogValidator =[
+export const postForBlogValidator = [
     adminMiddleware,
 
     titleValidator,

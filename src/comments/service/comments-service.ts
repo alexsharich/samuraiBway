@@ -14,7 +14,7 @@ export type CommentType = {
 
 export class CommentsService {
 
-    constructor(private commentsRepository: CommentsRepository ,private commentsQueryRepository:CommentsQueryRepository, private postsService: PostsService) {
+    constructor(private commentsRepository: CommentsRepository, private commentsQueryRepository: CommentsQueryRepository, private postsService: PostsService) {
 
     }
 
