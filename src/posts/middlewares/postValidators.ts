@@ -2,8 +2,7 @@ import {body, param} from 'express-validator'
 import {NextFunction, Request, Response} from 'express'
 import {adminMiddleware} from "../../global-middleware/admin-middleware";
 import {inputCheckErrorsMiddleware} from "../../global-middleware/inputCheckErrorsMiddleware";
-import {postsQueryRepository} from "../repositories/post-query-repository";
-import {blogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
+import {blogsQueryRepository} from "../../composition-root";
 
 
 export const titleValidator = body('title').isString().withMessage('not string')

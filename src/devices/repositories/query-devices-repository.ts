@@ -1,6 +1,6 @@
 import {devicesCollection} from "../../repositories/DB";
 
-export const queryDevicesRepository = {
+export class QueryDevicesRepository {
     async getDevices(userId: string) {
         const result = await devicesCollection.find({userId}).toArray()
         return result.map((res) => ({

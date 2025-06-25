@@ -1,11 +1,8 @@
 import {Request, Response} from 'express'
-import {authService} from "../service/auth-service";
-import {jwtServise} from "../../application/jwtService";
 import {daysToMs} from "../../helpers/daysToMs";
 import {ObjectId} from "mongodb";
-import {devicesService} from "../../devices/service/devices-service";
-import {devicesCollection} from "../../repositories/DB";
 import {UAParser} from 'ua-parser-js';
+import {authService, devicesService, jwtService} from "../../composition-root";
 
 
 export type LoginInputType = {
@@ -13,7 +10,7 @@ export type LoginInputType = {
     password: string
 }
 
-export const loginController = async (req: Request<{},{}, LoginInputType,{}>, res: Response) => {
+export const loginController = async (req: Request<{}, {}, LoginInputType, {}>, res: Response) => {
     const userId = await authService.loginWithEmailOrLogin(req.body)
     if (!userId) {
         res.sendStatus(401)
@@ -28,8 +25,8 @@ export const loginController = async (req: Request<{},{}, LoginInputType,{}>, re
           return
       }*/
     const _id = new ObjectId()
-    const {accessToken, refreshToken} = jwtServise.createToken(userId, String(_id))
-    const decodedRefreshToken = jwtServise.decodeToken(refreshToken)
+    const {accessToken, refreshToken} = jwtService.createToken(userId, String(_id))
+    const decodedRefreshToken = jwtService.decodeToken(refreshToken)
 
     const ip = req.ip || '1'
 

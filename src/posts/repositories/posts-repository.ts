@@ -3,7 +3,7 @@ import {postsCollection} from "../../repositories/DB";
 import {PostType} from "../service/posts-service";
 
 
-export const postsRepository = {
+export class PostsRepository {
 
 
     async deletePost(id: string) {
@@ -11,11 +11,13 @@ export const postsRepository = {
         const result = await postsCollection.deleteOne({_id: postId})
         if (result.deletedCount === 1) return true
         return false
-    },
+    }
+
     async createPost(newPost: PostType): Promise<string> {
         const createdPost = await postsCollection.insertOne(newPost)
         return createdPost.insertedId.toHexString()
-    },
+    }
+
     async updatePost({params, body}: any): Promise<any> {
         const postId = new ObjectId(params)
         const result = await postsCollection.updateOne({_id: postId}, {

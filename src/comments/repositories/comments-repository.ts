@@ -2,7 +2,7 @@ import {ObjectId} from "mongodb";
 import {commentsCollection} from "../../repositories/DB";
 import {CommentType} from "../service/comments-service";
 
-export const commentsRepository = {
+export class CommentsRepository {
     async findById(id: string) {
         try {
             const commentId = new ObjectId(id)
@@ -14,7 +14,7 @@ export const commentsRepository = {
         } catch (error) {
             return null
         }
-    },
+    }
 
     async deleteComment(id: string) {
         try {
@@ -25,14 +25,16 @@ export const commentsRepository = {
         } catch (e) {
             return false
         }
-    },
+    }
+
     async deleteAllComments() {
         try {
             await commentsCollection.deleteMany({})
         } catch (e) {
             throw new Error('Delete... Something wrong')
         }
-    },
+    }
+
     async createComment(newComment: CommentType): Promise<any> {
         try {
             const createdComment = await commentsCollection.insertOne(newComment)
@@ -42,7 +44,8 @@ export const commentsRepository = {
             console.log('Create blog error : ', error)
             return null
         }
-    },
+    }
+
     async updateComment(commentId: string, content: string): Promise<any> {
         try {
             const id = new ObjectId(commentId)
@@ -56,5 +59,5 @@ export const commentsRepository = {
         } catch (e) {
             return null
         }
-    },
+    }
 }

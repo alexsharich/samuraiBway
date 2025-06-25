@@ -1,8 +1,8 @@
 import {Device} from "../../db/devices-db-type";
-import {devicesRepository} from "../repositories/devices-repository";
 import {ObjectId} from "mongodb";
 import {devicesCollection} from "../../repositories/DB";
-import {queryDevicesRepository} from "../repositories/query-devices-repository";
+import {DevicesRepository} from "../repositories/devices-repository";
+import {QueryDevicesRepository} from "../repositories/query-devices-repository";
 
 enum STATUS_CODE_DEVICES {
     NO_CONTENT = 204,
@@ -10,14 +10,17 @@ enum STATUS_CODE_DEVICES {
     FORBIDDEN = 403
 }
 
-export const devicesService = {
+export class DevicesService  {
+    constructor(private devicesRepository:DevicesRepository, private queryDevicesRepository: QueryDevicesRepository){
+
+    }
     async saveDevice(_id: ObjectId, ip: string, deviceName: string, createdAt: string, userId: string, expAt: string) {
         const device = new Device(ip, deviceName, createdAt, userId, expAt)
-        await devicesRepository.createDevice(_id, device)
+        await this.devicesRepository.createDevice(_id, device)
         return
-    },
+    }
     async deleteDeviceById(deviceId: string, userId: string): Promise<STATUS_CODE_DEVICES> {
-        const device = await devicesRepository.getDeviceById(deviceId)
+        const device = await this.devicesRepository.getDeviceById(deviceId)
         if (!device) {
             return STATUS_CODE_DEVICES.NOT_FOUND
         }
@@ -26,15 +29,15 @@ export const devicesService = {
         }
         await devicesCollection.deleteOne({_id: new ObjectId(deviceId)})
         return STATUS_CODE_DEVICES.NO_CONTENT
-    },
+    }
     async deleteDevices(deviceId: string, userId: string): Promise<boolean> {
-        const result = await devicesRepository.deleteDevices(userId, deviceId)
+        const result = await this.devicesRepository.deleteDevices(userId, deviceId)
         return result
-    },
+    }
     async updateDevice(deviceId: ObjectId, expAt: string, createdAt: string) {
-        await devicesRepository.updateDevice(deviceId, expAt, createdAt)
-    },
+        await this.devicesRepository.updateDevice(deviceId, expAt, createdAt)
+    }
     async getDevices(userId: string) {
-        return await queryDevicesRepository.getDevices(userId)
+        return await this.queryDevicesRepository.getDevices(userId)
     }
 }

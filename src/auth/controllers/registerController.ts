@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {authService} from "../service/auth-service";
+import {authService} from "../../composition-root";
 
 export const registerController = async (req:Request,res:Response)=>{
     const user = await authService.createUser(req.body.login,req.body.email,req.body.password)

@@ -1,15 +1,19 @@
 import {LoginInputType} from "../controllers/loginController";
-import {usersRepository} from "../../users/repositories/users-repository";
 import bcrypt from "bcrypt";
-import {emailManager} from "../../managers/emailManager";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid'
 import {add} from "date-fns/add";
-import {businessServis} from "../../domain/businessServis";
+import {UsersRepository} from "../../users/repositories/users-repository";
+import {EmailManager} from "../../managers/emailManager";
+import {BusinessService} from "../../domain/businessServis";
 
-export const authService = {
+export class AuthService  {
+
+    constructor(private usersRepository: UsersRepository,private emailManager: EmailManager,private businessService:BusinessService){
+
+    }
     async loginWithEmailOrLogin({loginOrEmail, password}: LoginInputType): Promise<string | null> {
-        const user = await usersRepository.findUserWithEmailOrLogin(loginOrEmail)
+        const user = await this.usersRepository.findUserWithEmailOrLogin(loginOrEmail)
         if (!user) {
             console.log('User not found.');
             return null
@@ -19,7 +23,7 @@ export const authService = {
             return null
         }
         return String(user._id)
-    },
+    }
     async createUser(login: string, email: string, password: string) {
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt)
@@ -40,33 +44,33 @@ export const authService = {
                 isConfirmed: false
             }
         }
-        const createResult = await usersRepository.createUser(user)
+        const createResult = await this.usersRepository.createUser(user)
 
         try {
-            emailManager.sendEmailConfirmationMessage(user.accountData.email, user.emailConfirmation.confirmationCode)
+            this.emailManager.sendEmailConfirmationMessage(user.accountData.email, user.emailConfirmation.confirmationCode)
         } catch (error) {
             console.error(error)
             return null
         }
         return createResult
-    },
+    }
     async confirmEmail(code: string) {
-        let user = await usersRepository.findUserByConfirmationCode(code)
+        let user = await this.usersRepository.findUserByConfirmationCode(code)
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
         if (user.emailConfirmation.confirmationCode !== code) return false
         if (user.emailConfirmation.expirationDate < new Date()) return false
-        let result = await usersRepository.updateConfirmation(user._id)
+        let result = await this.usersRepository.updateConfirmation(user._id)
         return result
-    },
+    }
     async resendingEmail(email: string) {
-        const user = await usersRepository.findUserWithEmailOrLogin(email)
+        const user = await this.usersRepository.findUserWithEmailOrLogin(email)
         if (!user || user.emailConfirmation.isConfirmed) {
             return null
         }
-        await usersRepository.updateCode(user._id)
-        const updatedUser = await usersRepository.findUserWithEmailOrLogin(email)
-        businessServis.sendEmail(updatedUser!.accountData.email, 'Resending email', ' Resending message', updatedUser?.emailConfirmation.confirmationCode)
+        await this.usersRepository.updateCode(user._id)
+        const updatedUser = await this.usersRepository.findUserWithEmailOrLogin(email)
+        this.businessService.sendEmail(updatedUser!.accountData.email, 'Resending email', ' Resending message', updatedUser?.emailConfirmation.confirmationCode)
         return true
-    },
+    }
 }

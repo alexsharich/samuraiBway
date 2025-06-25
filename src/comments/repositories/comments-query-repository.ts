@@ -18,7 +18,7 @@ export const mapToOutputComment = (comment: WithId<CommentDBType>): any => {
 }
 
 
-export const commentsQueryRepository = {
+export class CommentsQueryRepository {
     async findComment(id: string) {
 
         try {
@@ -29,7 +29,8 @@ export const commentsQueryRepository = {
         } catch (e) {
             return null
         }
-    },
+    }
+
     async getComments(query: PaginationQueriesCommentType, postId: string) {
         try {
             const pageNumber = +query.pageNumber

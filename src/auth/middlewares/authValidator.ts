@@ -1,8 +1,8 @@
 import {body} from "express-validator";
 import {inputCheckErrorsMiddleware} from "../../global-middleware/inputCheckErrorsMiddleware";
-import {usersRepository} from "../../users/repositories/users-repository";
 import {Request, Response, NextFunction} from "express";
 import {InputUserType} from "../../input-output-types/userType";
+import {usersRepository} from "../../composition-root";
 
 export const emailOrLoginValidator = body('loginOrEmail').trim().notEmpty().isString()
 const emailValidator = body('email').trim().notEmpty().isString().isEmail().withMessage('Invalid email format')

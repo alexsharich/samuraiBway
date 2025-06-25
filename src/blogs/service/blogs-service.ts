@@ -1,9 +1,10 @@
 import {InputBlogType} from "../../input-output-types/blog-types";
 import {PostType} from "../../posts/service/posts-service";
-import {blogsRepository} from "../repositories/blogs-repository";
-import {postsRepository} from "../../posts/repositories/posts-repository";
-import {blogsQueryRepository} from "../repositories/blogs-query-repository";
+
 import {InputPostForBlogType} from "../../input-output-types/post-types";
+import {BlogsRepository} from "../repositories/blogs-repository";
+import {BlogsQueryRepository} from "../repositories/blogs-query-repository";
+import {PostsRepository} from "../../posts/repositories/posts-repository";
 
 export type BlogType = {
     name: string,
@@ -11,11 +12,19 @@ export type BlogType = {
     websiteUrl: string,
     isMembership: boolean,
     createdAt: string
+
+
 }
-export const blogsService = {
+
+export class BlogsService {
+    constructor(private blogsRepository: BlogsRepository, private postsRepository: PostsRepository, private blogsQueryRepository: BlogsQueryRepository) {
+
+    }
+
     async deleteBlog(id: string): Promise<boolean> {
-        return await blogsRepository.deleteBlog(id)
-    },
+        return await this.blogsRepository.deleteBlog(id)
+    }
+
     async createBlog({name, description, websiteUrl}: InputBlogType): Promise<string | null> {
 
         const newBlog: BlogType = {
@@ -26,13 +35,15 @@ export const blogsService = {
             createdAt: (new Date().toISOString())
         }
 
-        return await blogsRepository.createBlog(newBlog)
-    },
+        return await this.blogsRepository.createBlog(newBlog)
+    }
+
     async updateBlog({params, body}: any) {
-        return await blogsRepository.updateBlog({params, body})
-    },
-    async createPostForSelectedBlog({blogId, body}:{blogId:string,body:InputPostForBlogType}) {
-        const existBlog = await blogsQueryRepository.findBlog(blogId)
+        return await this.blogsRepository.updateBlog({params, body})
+    }
+
+    async createPostForSelectedBlog({blogId, body}: { blogId: string, body: InputPostForBlogType }) {
+        const existBlog = await this.blogsQueryRepository.findBlog(blogId)
         if (existBlog) {
             const newPost: PostType = {
                 title: body.title,
@@ -42,9 +53,9 @@ export const blogsService = {
                 blogName: existBlog.name,
                 createdAt: (new Date().toISOString()), //existBlog.createdAt
             }
-            return await postsRepository.createPost(newPost)
+            return await this.postsRepository.createPost(newPost)
         } else {
             return null
         }
-    },
+    }
 }

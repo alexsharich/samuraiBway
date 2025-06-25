@@ -1,5 +1,5 @@
-import {authService} from "../service/auth-service";
 import {Request, Response} from "express";
+import {authService} from "../../composition-root";
 
 export const registrationConfirmationController = async (req: Request, res: Response) => {
     const result = await authService.confirmEmail(req.body.code)

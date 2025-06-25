@@ -1,5 +1,4 @@
 import {Request, Response} from "express";
-import {usersQueryRepository} from "../repositories/users-query-repository";
 import {
     paginationQueriesForUsers,
     PaginationQueriesUsersType

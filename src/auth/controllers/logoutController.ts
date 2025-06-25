@@ -1,6 +1,5 @@
 import {Request, Response} from "express";
-import {authService} from "../service/auth-service";
-import {devicesService} from "../../devices/service/devices-service";
+import {devicesService} from "../../composition-root";
 
 export const logoutController = async (req: Request, res: Response) => {
     const deviceId = req.deviceId

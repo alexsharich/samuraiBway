@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {jwtServise} from "../application/jwtService";
+import {jwtService} from "../composition-root";
 
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
@@ -10,7 +10,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         return
     }
     const token = auth.split(' ')[1]
-    const payload = jwtServise.verifyToken(token)
+    const payload = jwtService.verifyToken(token)
     console.log(payload)
     if (!payload) {
         res.sendStatus(401)

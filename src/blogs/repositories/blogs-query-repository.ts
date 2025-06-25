@@ -20,17 +20,17 @@ export type SortMongoType = {
     [key: string]: 1 | -1
 }
 
-export const blogsQueryRepository = {
+export class BlogsQueryRepository {
     async getBlogs(query: PaginationQueriesType): Promise<any> {
         try {
             const pageNumber = query.pageNumber
             const pageSize = query.pageSize
             const sortBy = query.sortBy
-            const sortDirection = query.sortDirection  === 'asc' ? 1 : -1
+            const sortDirection = query.sortDirection === 'asc' ? 1 : -1
             const searchNameTerm = query.searchNameTerm
             let filter = {}
             if (searchNameTerm) {
-                filter = {name:{$regex: searchNameTerm, $options: 'i'}}
+                filter = {name: {$regex: searchNameTerm, $options: 'i'}}
             }
 
             const sortFilter: SortMongoType = {[sortBy]: sortDirection} as SortMongoType
@@ -46,18 +46,18 @@ export const blogsQueryRepository = {
                 page: query.pageNumber,
                 pageSize: query.pageSize,
                 totalCount: totalCount,
-                items: blogs.map((blog: WithId<BlogDBType>)=>mapToOutputBlog(blog))
+                items: blogs.map((blog: WithId<BlogDBType>) => mapToOutputBlog(blog))
             }
         } catch (e) {
-            console.log('blogs query repo / get blogs : ',e)
+            console.log('blogs query repo / get blogs : ', e)
             throw new Error('Blogs not found')
         }
-    },
+    }
 
     async findBlog(id: string): Promise<BlogDBType | null> {
-            const blogId = new ObjectId(id)
-            const blog = await blogsCollection.findOne({_id: blogId})
-            if (blog) return mapToOutputBlog(blog)
-            return null
-    },
+        const blogId = new ObjectId(id)
+        const blog = await blogsCollection.findOne({_id: blogId})
+        if (blog) return mapToOutputBlog(blog)
+        return null
+    }
 }

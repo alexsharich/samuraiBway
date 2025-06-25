@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
-import {usersService} from "../service/users-service";
 import {usersQueryRepository} from "../repositories/users-query-repository";
 import {InputUserType} from "../../input-output-types/userType";
+import {usersService} from "../../composition-root";
 
 export const createUserController = async (req: Request<any,any,InputUserType>, res: Response) => {
 

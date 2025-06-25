@@ -1,6 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {jwtServise} from "../application/jwtService";
-import {devicesRepository} from "../devices/repositories/devices-repository";
+import {devicesRepository, jwtService} from "../composition-root";
 
 
 export const authRefreshMiddleware = async (req: Request, res: Response, next: NextFunction) => {
@@ -10,7 +9,7 @@ export const authRefreshMiddleware = async (req: Request, res: Response, next: N
         res.sendStatus(401)
         return
     }
-    const token = jwtServise.verifyRefreshToken(refreshToken)
+    const token = jwtService.verifyRefreshToken(refreshToken)
     if (!token?.userId || !token.deviceId) {
         res.sendStatus(401)
         return

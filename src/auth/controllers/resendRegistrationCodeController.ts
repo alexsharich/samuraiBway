@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {authService} from "../service/auth-service";
+import {authService} from "../../composition-root";
 
 export const registrationEmailController = async (req: Request, res: Response) => {
     const user = await authService.resendingEmail(req.body.email)

@@ -1,10 +1,11 @@
 import {InputPostType} from "../../input-output-types/post-types";
-import {postsRepository} from "../repositories/posts-repository";
-import {blogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 import {PostDBType} from "../../db/post-db-type";
 import {ObjectId} from "mongodb";
 import {postsCollection} from "../../repositories/DB";
 import {mapToOutputPost} from "../repositories/post-query-repository";
+import {BlogsService} from "../../blogs/service/blogs-service";
+import {BlogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
+import {PostsRepository} from "../repositories/posts-repository";
 
 
 export type PostType = {
@@ -16,12 +17,17 @@ export type PostType = {
     createdAt: string
 }
 
-export const postsService = {
+export class PostsService {
+    constructor(private postsRepository: PostsRepository, private blogsQueryRepository: BlogsQueryRepository) {
+
+    }
+
     async deletePost(id: string) {
-        return await postsRepository.deletePost(id)
-    },
+        return await this.postsRepository.deletePost(id)
+    }
+
     async createPost(body: InputPostType): Promise<string | null> {
-        const existBlog = await blogsQueryRepository.findBlog(body.blogId)///к сервису или репе
+        const existBlog = await this.blogsQueryRepository.findBlog(body.blogId)///к сервису или репе
         if (existBlog) {
             const newPost: PostType = {
                 title: body.title,
@@ -31,14 +37,16 @@ export const postsService = {
                 blogName: existBlog.name,
                 createdAt: (new Date().toISOString())
             }
-            return await postsRepository.createPost(newPost)
+            return await this.postsRepository.createPost(newPost)
         } else {
             return null
         }
-    },
+    }
+
     async updatePost({params, body}: any): Promise<any> {
-        return await postsRepository.updatePost({params, body})
-    },
+        return await this.postsRepository.updatePost({params, body})
+    }
+
     async findPost(id: string): Promise<PostDBType | null> {
 
         const postId = new ObjectId(id)
@@ -46,5 +54,5 @@ export const postsService = {
         if (post) return mapToOutputPost(post)
         return null
 
-    },
+    }
 }

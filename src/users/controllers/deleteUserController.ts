@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {usersService} from "../service/users-service";
+import {usersService} from "../../composition-root";
 
 export const deleteUserController = async (req: Request<{id:string}>, res: Response) => {
     const isDeleted = await usersService.deleteUser(req.params.id)

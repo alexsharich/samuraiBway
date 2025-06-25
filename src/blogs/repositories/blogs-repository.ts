@@ -2,7 +2,7 @@ import {ObjectId} from "mongodb";
 import {blogsCollection} from "../../repositories/DB";
 import {BlogType} from "../service/blogs-service";
 
-export const blogsRepository = {
+export class BlogsRepository {
     async deleteBlog(id: string): Promise<boolean> {
         try {
             const blogId = new ObjectId(id)
@@ -12,7 +12,8 @@ export const blogsRepository = {
         } catch (e) {
             return false
         }
-    },
+    }
+
     async createBlog(newBlog: BlogType): Promise<string | null> {
         try {
             const createdBlog = await blogsCollection.insertOne(newBlog)
@@ -22,7 +23,8 @@ export const blogsRepository = {
             console.log('Create blog error : ', e)
             return null
         }
-    },
+    }
+
     async updateBlog({params, body}: any) {
         try {
             const blogId = new ObjectId(params)

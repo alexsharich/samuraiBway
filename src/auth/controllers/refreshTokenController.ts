@@ -1,8 +1,7 @@
 import {Request, Response} from "express";
-import {jwtServise} from "../../application/jwtService";
 import {daysToMs} from "../../helpers/daysToMs";
-import {devicesService} from "../../devices/service/devices-service";
 import {ObjectId} from "mongodb";
+import {devicesService, jwtService} from "../../composition-root";
 
 export const refreshTokenController = async (req: Request, res: Response) => {
     const userId = req.userId
@@ -13,8 +12,8 @@ export const refreshTokenController = async (req: Request, res: Response) => {
     }
 
 
-    const {accessToken, refreshToken} = jwtServise.createToken(userId, String(deviceId))
-    const tokenDecoded = jwtServise.decodeToken(refreshToken)
+    const {accessToken, refreshToken} = jwtService.createToken(userId, String(deviceId))
+    const tokenDecoded = jwtService.decodeToken(refreshToken)
 
     if (!tokenDecoded) {
         res.sendStatus(401)

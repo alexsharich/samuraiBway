@@ -1,17 +1,22 @@
-import {usersRepository} from "../repositories/users-repository";
 import {InputUserType} from "../../input-output-types/userType";
 import bcrypt from 'bcrypt'
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from "uuid";
 import {add} from "date-fns/add";
+import {UsersRepository} from "../repositories/users-repository";
 
-export const usersService = {
+export class UsersService {
+    usersRepository: UsersRepository
+
+    constructor(usersRepository: UsersRepository) {
+        this.usersRepository = usersRepository
+    }
+
     async createUser(user: InputUserType, isAdmin: boolean = false) {
 
 
-
         const errors = []
-        const isUnique = await usersRepository.checkUniqUserWithEmailOrLogin(user.login, user.email)
+        const isUnique = await this.usersRepository.checkUniqUserWithEmailOrLogin(user.login, user.email)
         if (isUnique) {
             if (isUnique.accountData.email === user.email) {
                 errors.push({field: 'email', message: 'email should be unique'})
@@ -41,9 +46,10 @@ export const usersService = {
                 isConfirmed: isAdmin ? true : false
             }
         }
-        return await usersRepository.createUser(newUser)
-    },
+        return await this.usersRepository.createUser(newUser)
+    }
+
     async deleteUser(id: string): Promise<boolean> {
-        return await usersRepository.deleteUser(id)
+        return await this.usersRepository.deleteUser(id)
     }
 }
