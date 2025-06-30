@@ -21,6 +21,6 @@ authRouter.post('/logout', authRefreshMiddleware, authController.logout)
 authRouter.get('/me', authMiddleware, authController.me)
 authRouter.post('/refresh-token', authRefreshMiddleware, authController.refreshToken)
 
-authRouter.post('/password-recovery,', emailValidator, apiRequestMiddleware, authController.passwordRecovery)
+authRouter.post('/password-recovery', emailValidator, apiRequestMiddleware, authController.passwordRecovery)
 authRouter.post('/new-password', passwordValidator, authController.newPassword)
 
