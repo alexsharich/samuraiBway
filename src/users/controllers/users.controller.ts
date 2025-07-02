@@ -45,8 +45,6 @@ export class UsersController {
             res.status(201).json(newUser)
             return
         }
-
-
         res.sendStatus(404)
     }
 }

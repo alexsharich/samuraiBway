@@ -45,10 +45,10 @@ export const usersService = new UsersService(usersRepository)
 export const authService = new AuthService(usersRepository, emailService, businessService)
 export const postsService = new PostsService(postsRepository, blogsQueryRepository)
 export const blogsService = new BlogsService(blogsRepository, postsRepository, blogsQueryRepository)
-export const commentsService = new CommentsService(commentsRepository, commentsQueryRepository,postsService)
+export const commentsService = new CommentsService(commentsRepository, commentsQueryRepository, postsService)
 
 
-export const authController = new AuthController(authService, jwtService, devicesService, usersQueryRepository)
+export const authController = new AuthController(authService, jwtService, devicesService, usersQueryRepository, usersRepository)
 export const deviceController = new DeviceController(devicesService)
 export const usersController = new UsersController(usersQueryRepository)
 export const commentsController = new CommentsController(commentsService, commentsQueryRepository)

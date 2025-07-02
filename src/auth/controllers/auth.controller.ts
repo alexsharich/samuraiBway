@@ -1,5 +1,4 @@
 import {Request, Response} from "express";
-import {authService, devicesService, jwtService} from "../../composition-root";
 import {ObjectId} from "mongodb";
 import {UAParser} from "ua-parser-js";
 import {daysToMs} from "../../helpers/daysToMs";
@@ -7,6 +6,7 @@ import {JwtService} from "../../application/jwtService";
 import {AuthService} from "../service/auth-service";
 import {DevicesService} from "../../devices/service/devices-service";
 import {UsersQueryRepository} from "../../users/repositories/users-query-repository";
+import {UsersRepository} from "../../users/repositories/users-repository";
 
 export type LoginInputType = {
     loginOrEmail: string,
@@ -14,7 +14,7 @@ export type LoginInputType = {
 }
 
 export class AuthController {
-    constructor(private authService: AuthService, private jwtService: JwtService, private devicesService: DevicesService, private usersQueryRepository: UsersQueryRepository) {
+    constructor(private authService: AuthService, private jwtService: JwtService, private devicesService: DevicesService, private usersQueryRepository: UsersQueryRepository, private usersRepository: UsersRepository) {
 
     }
 
@@ -24,14 +24,6 @@ export class AuthController {
             res.sendStatus(401)
             return
         }
-        /*  if (req.cookies.refreshToken) {
-              res.clearCookie('refreshToken', {
-                  httpOnly: true,
-                  secure: true,
-              })
-              res.sendStatus(401)
-              return
-          }*/
         const _id = new ObjectId()
         const {accessToken, refreshToken} = this.jwtService.createToken(userId, String(_id))
         const decodedRefreshToken = this.jwtService.decodeToken(refreshToken)
@@ -85,14 +77,27 @@ export class AuthController {
     }
 
     async newPassword(req: Request<{}, {}, {
-        newPassword: string,
+        password: string,
         recoveryCode: string
     }>, res: Response) {
-
+        const result = await this.authService.newPassword(req.body.password, req.body.recoveryCode)
+        if (!result) {
+            res.status(400).send({
+                errorsMessages:
+                    [{
+                        message: "Recovery code incorrect", field: "recoveryCode",
+                    },],
+            })
+            return
+        }
+        res.sendStatus(204)
     }
 
     async passwordRecovery(req: Request<{}, {}, { email: string }, {}>, res: Response) {
-
+        const user = await this.usersRepository.findUserWithEmailOrLogin(req.body.email)
+        if (user) {
+            await this.authService.recoveryCode(user._id, req.body.email)
+        }
         res.sendStatus(204)
     }
 
@@ -125,11 +130,11 @@ export class AuthController {
 
     async register(req: Request, res: Response) {
         const user = await this.authService.createUser(req.body.login, req.body.email, req.body.password)
-        if (user) {
-            res.status(204).send()
-        } else {
+        if (!user) {
             res.status(400).send({errorsMessages: [{message: "Email error", field: "email"}]})
+            return
         }
+        res.status(204).send()
     }
 
     async registrationConfirmation(req: Request, res: Response) {
@@ -144,9 +149,8 @@ export class AuthController {
                 ]
             })
             return
-        } else {
-            res.status(204).send()
         }
+        res.status(204).send()
     }
 
     async resendRegistrationCode(req: Request, res: Response) {

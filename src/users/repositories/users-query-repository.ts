@@ -24,7 +24,10 @@ export class UsersQueryRepository {
         const user = await usersCollection.findOne({_id: userId})
         if (user) return mapToOutputUser(user)
         return null
+    }
 
+    async findUserByRecoveryCode(passwordRecovery: string) {
+        return await usersCollection.findOne({passwordRecovery})
     }
 
     async getUsers(query: PaginationQueriesUsersType) {

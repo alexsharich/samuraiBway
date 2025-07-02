@@ -8,7 +8,6 @@ import bodyParser from 'body-parser'
 import {usersRouter} from "./routes/users-router";
 import {authRouter} from "./routes/auth-router";
 import {commentsRouter} from "./routes/comments-router";
-import {emailRouter} from "./routes/email-router";
 import cookieParser from "cookie-parser";
 import {devicesRouter} from "./routes/devices-router";
 
@@ -27,5 +26,4 @@ app.use(SETTINGS.PATH.BLOGS, blogsRouter)
 app.use(SETTINGS.PATH.USERS, usersRouter)
 app.use(SETTINGS.PATH.AUTH, authRouter)
 app.use(SETTINGS.PATH.COMMENTS, commentsRouter)
-app.use(SETTINGS.PATH.EMAIL, emailRouter)
 app.use(SETTINGS.PATH.DEVICES, devicesRouter)

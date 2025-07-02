@@ -5,5 +5,5 @@ import {usersController} from "../composition-root";
 
 export const usersRouter = Router()
 usersRouter.get('/', usersController.getUsers)
-usersRouter.post('/', adminMiddleware, ...usersValidator, usersController.createUser)
+usersRouter.post('/', adminMiddleware, ...usersValidator, usersController.createUser.bind(usersController))
 usersRouter.delete('/:id', adminMiddleware, usersController.deleteUser)

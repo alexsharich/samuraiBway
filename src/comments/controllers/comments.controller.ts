@@ -39,12 +39,12 @@ export class CommentsController {
         const content = req.body.content
 
 
-        const isСommentUpdated = await this.commentsService.updateComment(userId, commentId, content)
-        if (isСommentUpdated === "not found") {
+        const isCommentUpdated = await this.commentsService.updateComment(userId, commentId, content)
+        if (isCommentUpdated === "not found") {
             res.sendStatus(404)
             return
         }
-        if (isСommentUpdated === 'forbidden') {
+        if (isCommentUpdated === 'forbidden') {
             res.sendStatus(403)
             return
         }

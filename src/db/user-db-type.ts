@@ -10,6 +10,7 @@ export type UserDBType = {
 export type UserAccountDBType = WithId<{
     accountData: UserAccountType
     emailConfirmation: EmailConfirmationType
+    passwordRecovery?: string
 }>
 
 type UserAccountType = {

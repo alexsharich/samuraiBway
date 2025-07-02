@@ -20,7 +20,6 @@ export class BlogsController {
                 return
             }
         }
-
         res.sendStatus(404)
     }
 
@@ -64,7 +63,7 @@ export class BlogsController {
     async getBlog(req: Request<{}, {}, {}, PaginationQueriesType>, res: Response<MapToOutputWithPagination>) {
         const sortFilter = paginationQueries(req.query)
         const blogs = await this.blogsQueryRepository.getBlogs(sortFilter)
-        if (blogs) {
+        if (blogs) { // TODO
             res.status(200).send(blogs)
         }
     }

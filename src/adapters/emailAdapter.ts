@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 
 export const emailAdapter = {
-    async sendEmail(email: string, subject: string, message: string, code?: string) {
+    async sendEmail(email: string, subject: string, message: string, html?: string) {
 
         const transporter = nodemailer.createTransport({
             host: 'smtp.yandex.ru',
@@ -20,7 +20,7 @@ export const emailAdapter = {
             to: email,
             subject: subject,
             text: message,
-            html: `<b>Привет!</b> Пройди по ссылке <a href='https://somesite.com/confirm-email?code=${code}'>чтобы подтвердить регистрацию  </a> через <u>Яндекс</u>.`
+            html
         };
 
         transporter.sendMail(mailOptions, (error, info) => {

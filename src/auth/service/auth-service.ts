@@ -6,12 +6,16 @@ import {UsersRepository} from "../../users/repositories/users-repository";
 import {EmailManager} from "../../managers/emailManager";
 import {BusinessService} from "../../domain/businessServis";
 import {LoginInputType} from "../controllers/auth.controller";
+import {UserAccountDBType} from "../../db/user-db-type";
+import {emailExamples} from "../../helpers/emailTemplates";
+import {usersQueryRepository, usersRepository} from "../../composition-root";
 
-export class AuthService  {
+export class AuthService {
 
-    constructor(private usersRepository: UsersRepository,private emailManager: EmailManager,private businessService:BusinessService){
+    constructor(private usersRepository: UsersRepository, private emailManager: EmailManager, private businessService: BusinessService) {
 
     }
+
     async loginWithEmailOrLogin({loginOrEmail, password}: LoginInputType): Promise<string | null> {
         const user = await this.usersRepository.findUserWithEmailOrLogin(loginOrEmail)
         if (!user) {
@@ -24,11 +28,12 @@ export class AuthService  {
         }
         return String(user._id)
     }
+
     async createUser(login: string, email: string, password: string) {
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt)
         const now = new Date()
-        const user = {
+        const user: UserAccountDBType = {
             _id: new ObjectId(),
             accountData: {
                 userName: login,
@@ -54,6 +59,24 @@ export class AuthService  {
         }
         return createResult
     }
+
+    async newPassword(newPassword: string, recoveryCode: string) {
+
+        const user = await usersQueryRepository.findUserByRecoveryCode(recoveryCode)
+        if (!user) {
+            return false
+        }
+        const salt = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(newPassword, salt)
+        return await usersRepository.newPassword(user._id, passwordHash)
+    }
+
+    async recoveryCode(userId: ObjectId, email: string) {
+        const codeRecovrey = uuidv4()
+        await this.usersRepository.addRecoveryCode(userId, codeRecovrey)
+        await this.businessService.sendEmail(email, 'recovery', 'recovery text message', emailExamples.passwordRecoveryEmail(codeRecovrey))
+    }
+
     async confirmEmail(code: string) {
         let user = await this.usersRepository.findUserByConfirmationCode(code)
         if (!user) return false
@@ -63,6 +86,7 @@ export class AuthService  {
         let result = await this.usersRepository.updateConfirmation(user._id)
         return result
     }
+
     async resendingEmail(email: string) {
         const user = await this.usersRepository.findUserWithEmailOrLogin(email)
         if (!user || user.emailConfirmation.isConfirmed) {
@@ -70,7 +94,7 @@ export class AuthService  {
         }
         await this.usersRepository.updateCode(user._id)
         const updatedUser = await this.usersRepository.findUserWithEmailOrLogin(email)
-        this.businessService.sendEmail(updatedUser!.accountData.email, 'Resending email', ' Resending message', updatedUser?.emailConfirmation.confirmationCode)
+        this.businessService.sendEmail(updatedUser!.accountData.email, 'Resending email', ' Resending message', emailExamples.registrationEmail(updatedUser?.emailConfirmation.confirmationCode))
         return true
     }
 }

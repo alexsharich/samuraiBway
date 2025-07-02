@@ -22,7 +22,7 @@ export class UsersService {
                 errors.push({field: 'email', message: 'email should be unique'})
             }
             if (isUnique.accountData.userName === user.login) {
-                errors.push({field: 'email', message: 'login should be unique'})
+                errors.push({field: 'login', message: 'login should be unique'})
             }
             return errors
         }

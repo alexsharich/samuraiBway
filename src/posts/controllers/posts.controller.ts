@@ -54,12 +54,12 @@ export class PostsController {
     async createPost(req: Request<any, any, InputPostType>, res: any) {
         const newPostCreated = await this.postsService.createPost(req.body)
 
-        if (newPostCreated) {
-            const newPost = await this.postsQueryRepository.findPost(newPostCreated)
-            res.status(201).json(newPost)
+        if (!newPostCreated) {
+            res.sendStatus(404)
             return
         }
-        res.sendStatus(404)
+        const newPost = await this.postsQueryRepository.findPost(newPostCreated)
+        res.status(201).json(newPost)
     }
 
     async deletePost(req: Request<{ id: string }>, res: Response) {
@@ -80,36 +80,22 @@ export class PostsController {
         res.status(200).json(foundPost)
     }
 
-    async getCommentsForPost(req: Request<{ id: string }, {}, {}, PaginationQueriesCommentType>, res: any) {
-        const postId = req.params.id
-        const isPostExist = await this.postsQueryRepository.findPost(postId)
-        if (!isPostExist) {
-            res.sendStatus(404)
-            return
-        }
-        const sortFilter = paginationQueriesComment(req.query)
-        const posts = await this.commentsQueryRepository.getComments(sortFilter, postId)
-        if (posts) {
-            res.status(200).json(posts)
-            return
-        }
-    }
 
     async getPost(req: Request<{}, {}, {}, PaginationQueriesType>, res: Response) {
         const sortFilter = paginationQueries(req.query)
         const posts = await this.postsQueryRepository.getAllPosts(sortFilter)
-        if (posts) {
+        if (posts) { //TODO
             res.status(200).json(posts)
         }
     }
 
     async updatePost(req: Request<{ id: string }, any, InputPostType>, res: any) {
         const isPostUpdated = await this.postsService.updatePost({params: req.params.id, body: req.body})
-        if (isPostUpdated) {
-            res.status(204).send(isPostUpdated)
+        if (!isPostUpdated) {
+            res.sendStatus(404)
             return
         }
-        res.sendStatus(404)
+        res.status(204).send(isPostUpdated)
     }
 
     async clearData(req: Request, res: Response) {
