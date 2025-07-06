@@ -5,6 +5,6 @@ import {deviceController} from "../composition-root";
 
 export const devicesRouter = Router()
 // Потеря контекста
-devicesRouter.get('/devices', authRefreshMiddleware, deviceController.getDevice)
-devicesRouter.delete('/devices', authRefreshMiddleware, deviceController.deleteDevice)
-devicesRouter.delete('/devices/:deviceId', authRefreshMiddleware, deviceController.deleteDeviceById)
+devicesRouter.get('/devices', authRefreshMiddleware, deviceController.getDevice.bind(deviceController))
+devicesRouter.delete('/devices', authRefreshMiddleware, deviceController.deleteDevice.bind(deviceController))
+devicesRouter.delete('/devices/:deviceId', authRefreshMiddleware, deviceController.deleteDeviceById.bind(deviceController))

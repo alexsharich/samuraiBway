@@ -6,8 +6,8 @@ import {commentsController} from "../composition-root";
 export const commentsRouter = Router()
 
 
-commentsRouter.get('/:id', commentsController.getComment)
-commentsRouter.delete('/:commentId', authMiddleware, commentsController.deleteComment)
-commentsRouter.put('/:commentId', authMiddleware, ...commentContentValidator, commentsController.updateComment)
+commentsRouter.get('/:id', commentsController.getComment.bind(commentsController))
+commentsRouter.delete('/:commentId', authMiddleware, commentsController.deleteComment.bind(commentsController))
+commentsRouter.put('/:commentId', authMiddleware, ...commentContentValidator, commentsController.updateComment.bind(commentsController))
 
 

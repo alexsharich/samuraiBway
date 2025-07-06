@@ -14,13 +14,13 @@ import {inputCheckErrorsMiddleware} from "../global-middleware/inputCheckErrorsM
 
 export const authRouter = Router()
 
-authRouter.post('/registration', registrationValidator, apiRequestMiddleware, isCreatedUserValidator, authController.register)
-authRouter.post('/registration-confirmation', emailCodeResendingValidator, apiRequestMiddleware, authController.registrationConfirmation)
-authRouter.post('/registration-email-resending', emailValidation, apiRequestMiddleware, authController.resendRegistrationCode)
+authRouter.post('/registration', registrationValidator, apiRequestMiddleware, isCreatedUserValidator, authController.register.bind(authController))
+authRouter.post('/registration-confirmation', emailCodeResendingValidator, apiRequestMiddleware, authController.registrationConfirmation.bind(authController))
+authRouter.post('/registration-email-resending', emailValidation, apiRequestMiddleware, authController.resendRegistrationCode.bind(authController))
 authRouter.post('/login', apiRequestMiddleware, ...authValidator, authController.login.bind(authController))
-authRouter.post('/logout', authRefreshMiddleware, authController.logout)
+authRouter.post('/logout', authRefreshMiddleware, authController.logout.bind(authController))
 authRouter.get('/me', authMiddleware, authController.me)
-authRouter.post('/refresh-token', authRefreshMiddleware, authController.refreshToken)
+authRouter.post('/refresh-token', authRefreshMiddleware, authController.refreshToken.bind(authController))
 
 authRouter.post('/password-recovery', emailValidator, inputCheckErrorsMiddleware, apiRequestMiddleware, authController.passwordRecovery.bind(authController))
 authRouter.post('/new-password', passwordValidator, inputCheckErrorsMiddleware, authController.newPassword.bind(authController))
