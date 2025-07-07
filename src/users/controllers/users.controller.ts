@@ -1,12 +1,14 @@
 import {Request, Response} from "express";
 import {paginationQueriesForUsers, PaginationQueriesUsersType} from "../../helpers/pagination_values";
 import {UsersQueryRepository} from "../repositories/users-query-repository";
-import {usersService} from "../../composition-root";
 import {InputUserType} from "../../input-output-types/userType";
+import {inject, injectable} from "inversify";
+import {UsersService} from "../service/users-service";
 
+@injectable()
 export class UsersController {
 
-    constructor(private usersQueryRepository: UsersQueryRepository) {
+    constructor(@inject(UsersQueryRepository) private usersQueryRepository: UsersQueryRepository, @inject(UsersService) private usersService: UsersService) {
 
     }
 
@@ -20,7 +22,7 @@ export class UsersController {
     }
 
     async deleteUser(req: Request<{ id: string }>, res: Response) {
-        const isDeleted = await usersService.deleteUser(req.params.id)
+        const isDeleted = await this.usersService.deleteUser(req.params.id)
         if (!isDeleted) {
             res.sendStatus(404)
             return
@@ -30,7 +32,7 @@ export class UsersController {
 
     async createUser(req: Request<any, any, InputUserType>, res: Response) {
 
-        const isNewUserCreated = await usersService.createUser(req.body)
+        const isNewUserCreated = await this.usersService.createUser(req.body)
 
         if (Array.isArray(isNewUserCreated)) {
             res.status(400).json({

@@ -2,8 +2,10 @@ import {body} from "express-validator";
 import {inputCheckErrorsMiddleware} from "../../global-middleware/inputCheckErrorsMiddleware";
 import {Request, Response, NextFunction} from "express";
 import {InputUserType} from "../../input-output-types/userType";
-import {usersRepository} from "../../composition-root";
+import {container} from "../../composition-root";
+import {UsersRepository} from "../../users/repositories/users-repository";
 
+const usersRepository = container.get(UsersRepository)
 export const emailOrLoginValidator = body('loginOrEmail').trim().notEmpty().isString()
 const emailValidator = body('email').trim().notEmpty().isString().isEmail().withMessage('Invalid email format')
     .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/).withMessage('Email must match the specified pattern')
@@ -13,6 +15,10 @@ const loginValidator = body('login').trim().notEmpty().isString().isLength({
 }).withMessage('more then 10 or 2')
 
 export const passwordValidator = body('password').trim().notEmpty().isString().isLength({
+    min: 6,
+    max: 20
+}).withMessage('more then 20 or 5')
+export const newPasswordValidator = body('newPassword').trim().notEmpty().isString().isLength({
     min: 6,
     max: 20
 }).withMessage('more then 20 or 5')

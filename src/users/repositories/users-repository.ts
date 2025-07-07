@@ -1,10 +1,13 @@
 import {ObjectId} from "mongodb";
-import { usersCollection} from "../../repositories/DB";
+import {usersCollection} from "../../repositories/DB";
 import {UserAccountDBType} from "../../db/user-db-type";
 import {add} from "date-fns/add";
 import {v4 as uuidv4} from 'uuid'
+import {injectable} from "inversify";
 
+@injectable()
 export class UsersRepository {
+
     async findUserWithEmailOrLogin(loginOrEmail: string) {
         return await usersCollection.findOne({$or: [{'accountData.userName': loginOrEmail}, {'accountData.email': loginOrEmail}]})
     }
@@ -23,8 +26,8 @@ export class UsersRepository {
         }
     }
 
-    async newPassword(_id: ObjectId, newPassword: string) {
-        const result = await usersCollection.updateOne({_id}, {$set: {'accountData.passwordHash': newPassword}})
+    async newPassword(id: ObjectId, newPassword: string) {
+        const result = await usersCollection.updateOne({_id:id}, {$set: {'accountData.passwordHash': newPassword}})
         return result.modifiedCount === 1
     }
 

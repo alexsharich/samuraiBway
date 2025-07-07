@@ -1,6 +1,7 @@
 import {CommentsRepository} from "../repositories/comments-repository";
 import {CommentsQueryRepository} from "../repositories/comments-query-repository";
 import {PostsService} from "../../posts/service/posts-service";
+import {inject, injectable} from "inversify";
 
 export type CommentType = {
     postId: "string",
@@ -12,9 +13,10 @@ export type CommentType = {
     createdAt: string
 }
 
+@injectable()
 export class CommentsService {
 
-    constructor(private commentsRepository: CommentsRepository, private commentsQueryRepository: CommentsQueryRepository, private postsService: PostsService) {
+    constructor(@inject(CommentsRepository) private commentsRepository: CommentsRepository, @inject(CommentsQueryRepository) private commentsQueryRepository: CommentsQueryRepository, @inject(PostsService) private postsService: PostsService) {
 
     }
 

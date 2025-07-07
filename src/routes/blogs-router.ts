@@ -2,8 +2,11 @@ import {Router} from 'express'
 import {blogValidators, findBlogValidator} from "../blogs/middlewares/blogValidators";
 import {adminMiddleware} from "../global-middleware/admin-middleware";
 import {postForBlogValidator} from "../posts/middlewares/postValidators";
-import {blogsController} from "../composition-root";
+import {container} from "../composition-root";
+import {UsersController} from "../users/controllers/users.controller";
+import {BlogsController} from "../blogs/controllers/blogs.controller";
 
+const blogsController = container.get(BlogsController)
 export const blogsRouter = Router()
 
 blogsRouter.post('/', ...blogValidators, blogsController.createBlog.bind(blogsController))

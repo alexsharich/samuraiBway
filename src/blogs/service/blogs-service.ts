@@ -5,6 +5,7 @@ import {InputPostForBlogType} from "../../input-output-types/post-types";
 import {BlogsRepository} from "../repositories/blogs-repository";
 import {BlogsQueryRepository} from "../repositories/blogs-query-repository";
 import {PostsRepository} from "../../posts/repositories/posts-repository";
+import {inject, injectable} from "inversify";
 
 export type BlogType = {
     name: string,
@@ -16,8 +17,9 @@ export type BlogType = {
 
 }
 
+@injectable()
 export class BlogsService {
-    constructor(private blogsRepository: BlogsRepository, private postsRepository: PostsRepository, private blogsQueryRepository: BlogsQueryRepository) {
+    constructor(@inject(BlogsRepository) private blogsRepository: BlogsRepository, @inject(PostsRepository) private postsRepository: PostsRepository, @inject(BlogsQueryRepository) private blogsQueryRepository: BlogsQueryRepository) {
 
     }
 

@@ -7,14 +7,17 @@ import {AuthService} from "../service/auth-service";
 import {DevicesService} from "../../devices/service/devices-service";
 import {UsersQueryRepository} from "../../users/repositories/users-query-repository";
 import {UsersRepository} from "../../users/repositories/users-repository";
+import {inject, injectable} from "inversify";
+import "reflect-metadata"
 
 export type LoginInputType = {
     loginOrEmail: string,
     password: string
 }
 
+@injectable()
 export class AuthController {
-    constructor(private authService: AuthService, private jwtService: JwtService, private devicesService: DevicesService, private usersQueryRepository: UsersQueryRepository, private usersRepository: UsersRepository) {
+    constructor(@inject(AuthService) private authService: AuthService, @inject(JwtService) private jwtService: JwtService, @inject(DevicesService) private devicesService: DevicesService, @inject(UsersQueryRepository) private usersQueryRepository: UsersQueryRepository, @inject(UsersRepository) private usersRepository: UsersRepository) {
 
     }
 
@@ -77,10 +80,10 @@ export class AuthController {
     }
 
     async newPassword(req: Request<{}, {}, {
-        password: string,
+        newPassword: string,
         recoveryCode: string
     }>, res: Response) {
-        const result = await this.authService.newPassword(req.body.password, req.body.recoveryCode)
+        const result = await this.authService.newPassword(req.body.newPassword, req.body.recoveryCode)
         if (!result) {
             res.status(400).send({
                 errorsMessages:
@@ -141,10 +144,10 @@ export class AuthController {
         const result = await this.authService.confirmEmail(req.body.code)
         if (!result) {
             res.status(400).send({
-                "errorsMessages": [
+                errorsMessages: [
                     {
-                        "message": "invalid code",
-                        "field": "code"
+                        message: "invalid code",
+                        field: "code"
                     }
                 ]
             })

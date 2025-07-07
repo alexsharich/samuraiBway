@@ -1,10 +1,13 @@
 import {Request, Response} from "express";
 import {DevicesService} from "../service/devices-service";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class DeviceController {
-    constructor(private devicesService: DevicesService) {
+    constructor(@inject(DevicesService) private devicesService: DevicesService) {
 
     }
+
     async getDevice(req: Request, res: Response) {
         const userId = req.userId!
         const devices = await this.devicesService.getDevices(userId)

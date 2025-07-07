@@ -1,8 +1,9 @@
 import {ObjectId} from "mongodb";
 import {postsCollection} from "../../repositories/DB";
 import {PostType} from "../service/posts-service";
+import {injectable} from "inversify";
 
-
+@injectable()
 export class PostsRepository {
 
 

@@ -1,7 +1,9 @@
 import {ObjectId} from "mongodb";
 import {blogsCollection} from "../../repositories/DB";
 import {BlogType} from "../service/blogs-service";
+import {injectable} from "inversify";
 
+@injectable()
 export class BlogsRepository {
     async deleteBlog(id: string): Promise<boolean> {
         try {

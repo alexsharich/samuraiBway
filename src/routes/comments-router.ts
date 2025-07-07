@@ -1,8 +1,10 @@
 import {Router} from 'express'
 import {authMiddleware} from "../global-middleware/auth-middleware";
 import {commentContentValidator} from "../posts/middlewares/postValidators";
-import {commentsController} from "../composition-root";
+import {container} from "../composition-root";
+import {CommentsController} from "../comments/controllers/comments.controller";
 
+const commentsController = container.get(CommentsController)
 export const commentsRouter = Router()
 
 

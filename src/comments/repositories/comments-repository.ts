@@ -1,7 +1,9 @@
 import {ObjectId} from "mongodb";
 import {commentsCollection} from "../../repositories/DB";
 import {CommentType} from "../service/comments-service";
+import {injectable} from "inversify";
 
+@injectable()
 export class CommentsRepository {
     async findById(id: string) {
         try {

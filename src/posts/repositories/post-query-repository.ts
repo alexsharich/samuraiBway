@@ -5,6 +5,7 @@ import {PostDBType} from "../../db/post-db-type";
 import {OutputPostType} from "../../input-output-types/post-types";
 import {OutputBlogType} from "../../input-output-types/blog-types";
 import {SortMongoType} from "../../blogs/repositories/blogs-query-repository";
+import {injectable} from "inversify";
 
 export const mapToOutputPost = (post: WithId<PostDBType>): OutputPostType => {
     return {
@@ -26,6 +27,7 @@ export type MapToOutputWithPagination = {
     "items": Array<OutputPostType> | Array<OutputBlogType>
 }
 
+@injectable()
 export class PostsQueryRepository {
     async getPostsForSelectedBlog({blogId, query}: { blogId: string, query: PaginationQueriesType }): Promise<any> {
 

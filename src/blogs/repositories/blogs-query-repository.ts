@@ -3,6 +3,7 @@ import {BlogDBType} from "../../db/blog-db-type";
 import {ObjectId, WithId} from "mongodb";
 import {blogsCollection} from "../../repositories/DB";
 import {PaginationQueriesType} from "../../helpers/pagination_values";
+import {injectable} from "inversify";
 
 
 export const mapToOutputBlog = (blog: WithId<BlogDBType>): OutputBlogType => {
@@ -20,6 +21,7 @@ export type SortMongoType = {
     [key: string]: 1 | -1
 }
 
+@injectable()
 export class BlogsQueryRepository {
     async getBlogs(query: PaginationQueriesType): Promise<any> {
         try {

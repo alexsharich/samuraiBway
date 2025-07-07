@@ -2,9 +2,11 @@ import {Request} from "express";
 import {InputCommentType} from "../../input-output-types/comment-types";
 import {CommentsService} from "../service/comments-service";
 import {CommentsQueryRepository} from "../repositories/comments-query-repository";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class CommentsController {
-    constructor(private commentsService: CommentsService, private commentsQueryRepository: CommentsQueryRepository) {
+    constructor(@inject(CommentsService) private commentsService: CommentsService, @inject(CommentsQueryRepository) private commentsQueryRepository: CommentsQueryRepository) {
 
     }
 

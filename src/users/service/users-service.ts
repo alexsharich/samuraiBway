@@ -4,12 +4,12 @@ import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from "uuid";
 import {add} from "date-fns/add";
 import {UsersRepository} from "../repositories/users-repository";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class UsersService {
-    usersRepository: UsersRepository
 
-    constructor(usersRepository: UsersRepository) {
-        this.usersRepository = usersRepository
+    constructor(@inject(UsersRepository) private usersRepository: UsersRepository) {
     }
 
     async createUser(user: InputUserType, isAdmin: boolean = false) {

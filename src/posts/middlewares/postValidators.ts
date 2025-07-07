@@ -2,8 +2,12 @@ import {body, param} from 'express-validator'
 import {NextFunction, Request, Response} from 'express'
 import {adminMiddleware} from "../../global-middleware/admin-middleware";
 import {inputCheckErrorsMiddleware} from "../../global-middleware/inputCheckErrorsMiddleware";
-import {blogsQueryRepository, postsQueryRepository} from "../../composition-root";
+import {container} from "../../composition-root";
+import {PostsQueryRepository} from "../repositories/post-query-repository";
+import {BlogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 
+const blogsQueryRepository = container.get(BlogsQueryRepository)
+const postsQueryRepository = container.get(PostsQueryRepository)
 
 export const titleValidator = body('title').isString().withMessage('not string')
     .trim().isLength({min: 1, max: 30}).withMessage('more then 30 or 0')

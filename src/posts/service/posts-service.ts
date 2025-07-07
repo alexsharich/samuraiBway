@@ -5,6 +5,7 @@ import {postsCollection} from "../../repositories/DB";
 import {mapToOutputPost} from "../repositories/post-query-repository";
 import {BlogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 import {PostsRepository} from "../repositories/posts-repository";
+import {inject, injectable} from "inversify";
 
 
 export type PostType = {
@@ -16,8 +17,9 @@ export type PostType = {
     createdAt: string
 }
 
+@injectable()
 export class PostsService {
-    constructor(private postsRepository: PostsRepository, private blogsQueryRepository: BlogsQueryRepository) {
+    constructor(@inject(PostsRepository) private postsRepository: PostsRepository, @inject(BlogsQueryRepository) private blogsQueryRepository: BlogsQueryRepository) {
 
     }
 

@@ -5,9 +5,11 @@ import {MapToOutputWithPagination, PostsQueryRepository} from "../../posts/repos
 import {paginationQueries, PaginationQueriesType} from "../../helpers/pagination_values";
 import {BlogsService} from "../service/blogs-service";
 import {BlogsQueryRepository} from "../repositories/blogs-query-repository";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class BlogsController {
-    constructor(private blogsService: BlogsService, private blogsQueryRepository: BlogsQueryRepository, private postsQueryRepository: PostsQueryRepository) {
+    constructor(@inject(BlogsService) private blogsService: BlogsService, @inject(BlogsQueryRepository) private blogsQueryRepository: BlogsQueryRepository, @inject(PostsQueryRepository) private postsQueryRepository: PostsQueryRepository) {
 
     }
 

@@ -8,12 +8,18 @@ import {BusinessService} from "../../domain/businessServis";
 import {LoginInputType} from "../controllers/auth.controller";
 import {UserAccountDBType} from "../../db/user-db-type";
 import {emailExamples} from "../../helpers/emailTemplates";
-import {usersQueryRepository, usersRepository} from "../../composition-root";
+import {inject, injectable} from "inversify";
+import {UsersService} from "../../users/service/users-service";
+import {UsersQueryRepository} from "../../users/repositories/users-query-repository";
 
+
+@injectable()
 export class AuthService {
 
-    constructor(private usersRepository: UsersRepository, private emailManager: EmailManager, private businessService: BusinessService) {
-
+    constructor(@inject(UsersRepository) private usersRepository: UsersRepository,
+                @inject(EmailManager) private emailManager: EmailManager,
+                @inject(BusinessService) private businessService: BusinessService,
+                @inject(UsersQueryRepository) private usersQueryRepository: UsersQueryRepository) {
     }
 
     async loginWithEmailOrLogin({loginOrEmail, password}: LoginInputType): Promise<string | null> {
@@ -62,13 +68,13 @@ export class AuthService {
 
     async newPassword(newPassword: string, recoveryCode: string) {
 
-        const user = await usersQueryRepository.findUserByRecoveryCode(recoveryCode)
+        const user = await this.usersQueryRepository.findUserByRecoveryCode(recoveryCode)
         if (!user) {
             return false
         }
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(newPassword, salt)
-        return await usersRepository.newPassword(user._id, passwordHash)
+        return await this.usersRepository.newPassword(user._id, passwordHash)
     }
 
     async recoveryCode(userId: ObjectId, email: string) {

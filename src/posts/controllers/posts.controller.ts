@@ -3,8 +3,6 @@ import {InputCommentType} from "../../input-output-types/comment-types";
 import {InputPostType} from "../../input-output-types/post-types";
 import {
     paginationQueries,
-    paginationQueriesComment,
-    PaginationQueriesCommentType,
     PaginationQueriesType
 } from "../../helpers/pagination_values";
 import {
@@ -19,9 +17,11 @@ import {PostsService} from "../service/posts-service";
 import {UsersQueryRepository} from "../../users/repositories/users-query-repository";
 import {CommentsQueryRepository} from "../../comments/repositories/comments-query-repository";
 import {CommentsService} from "../../comments/service/comments-service";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class PostsController {
-    constructor(private postsQueryRepository: PostsQueryRepository, private usersQueryRepository: UsersQueryRepository, private postsService: PostsService, private commentsQueryRepository: CommentsQueryRepository, private commentsService: CommentsService) {
+    constructor(@inject(PostsQueryRepository) private postsQueryRepository: PostsQueryRepository, @inject(UsersQueryRepository) private usersQueryRepository: UsersQueryRepository, @inject(PostsService) private postsService: PostsService, @inject(CommentsQueryRepository) private commentsQueryRepository: CommentsQueryRepository, @inject(CommentsService) private commentsService: CommentsService) {
 
     }
 

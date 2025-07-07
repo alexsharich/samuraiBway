@@ -2,8 +2,10 @@ import {Router} from 'express'
 import {commentContentValidator, postValidators} from "../posts/middlewares/postValidators";
 import {adminMiddleware} from "../global-middleware/admin-middleware";
 import {authMiddleware} from "../global-middleware/auth-middleware";
-import {postsController} from "../composition-root";
+import {container} from "../composition-root";
+import {PostsController} from "../posts/controllers/posts.controller";
 
+const postsController = container.get(PostsController)
 export const postsRouter = Router()
 postsRouter.get('/:id/comments', postsController.createCommentForPost.bind(postsController))
 postsRouter.post('/:id/comments', authMiddleware, ...commentContentValidator, postsController.createCommentForPost.bind(postsController))

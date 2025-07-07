@@ -1,9 +1,10 @@
 import {ObjectId, WithId} from "mongodb";
 import {usersCollection} from "../../repositories/DB";
-import {UserAccountDBType, UserDBType} from "../../db/user-db-type";
+import {UserAccountDBType} from "../../db/user-db-type";
 import {OutputUserType} from "../../input-output-types/userType";
 import {PaginationQueriesUsersType} from "../../helpers/pagination_values";
 import {SortMongoType} from "../../blogs/repositories/blogs-query-repository";
+import {injectable} from "inversify";
 
 const mapToOutputUser = (user: WithId<UserAccountDBType>): OutputUserType => {
     return {
@@ -18,6 +19,7 @@ interface UserFilter {
     $or?: Array<{ [key: string]: any }>
 }
 
+@injectable()
 export class UsersQueryRepository {
     async findUser(id: string): Promise<OutputUserType | null> {
         const userId = new ObjectId(id)
