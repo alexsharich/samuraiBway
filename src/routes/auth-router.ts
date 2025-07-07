@@ -1,7 +1,7 @@
 import {Router} from "express";
 import {
     authValidator, emailCodeResendingValidator, emailValidation,
-    isCreatedUserValidator, newPasswordValidator, passwordValidator,
+    isCreatedUserValidator, newPasswordValidator,
     registrationValidator
 } from "../auth/middlewares/authValidator";
 import {authMiddleware} from "../global-middleware/auth-middleware";

@@ -3,7 +3,6 @@ import {blogValidators, findBlogValidator} from "../blogs/middlewares/blogValida
 import {adminMiddleware} from "../global-middleware/admin-middleware";
 import {postForBlogValidator} from "../posts/middlewares/postValidators";
 import {container} from "../composition-root";
-import {UsersController} from "../users/controllers/users.controller";
 import {BlogsController} from "../blogs/controllers/blogs.controller";
 
 const blogsController = container.get(BlogsController)
