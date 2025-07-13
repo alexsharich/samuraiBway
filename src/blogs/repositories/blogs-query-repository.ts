@@ -1,12 +1,10 @@
 import {OutputBlogType} from "../../input-output-types/blog-types";
-import {BlogDBType} from "../../db/blog-db-type";
-import {ObjectId, WithId} from "mongodb";
-import {blogsCollection} from "../../repositories/DB";
+import {BlogDBType, BlogDocument, BlogModel} from "../../db/blog-db-type";
 import {PaginationQueriesType} from "../../helpers/pagination_values";
 import {injectable} from "inversify";
 
 
-export const mapToOutputBlog = (blog: WithId<BlogDBType>): OutputBlogType => {
+export const mapToOutputBlog = (blog: BlogDocument): OutputBlogType => {
     return {
         id: blog._id.toString(),
         name: blog.name,
@@ -37,18 +35,18 @@ export class BlogsQueryRepository {
 
             const sortFilter: SortMongoType = {[sortBy]: sortDirection} as SortMongoType
 
-            const blogs = await blogsCollection.find(filter)
+            const blogs = await BlogModel.find(filter)
                 .sort(sortFilter)
                 .skip((pageNumber - 1) * pageSize)
                 .limit(pageSize)
-                .toArray()
-            const totalCount = await blogsCollection.countDocuments(filter)
+                .lean().exec()
+            const totalCount = await BlogModel.countDocuments(filter)
             return {
                 pagesCount: Math.ceil(totalCount / query.pageSize),
                 page: query.pageNumber,
                 pageSize: query.pageSize,
                 totalCount: totalCount,
-                items: blogs.map((blog: WithId<BlogDBType>) => mapToOutputBlog(blog))
+                items: blogs.map((blog: BlogDocument) => mapToOutputBlog(blog))
             }
         } catch (e) {
             console.log('blogs query repo / get blogs : ', e)
@@ -57,9 +55,10 @@ export class BlogsQueryRepository {
     }
 
     async findBlog(id: string): Promise<BlogDBType | null> {
-        const blogId = new ObjectId(id)
-        const blog = await blogsCollection.findOne({_id: blogId})
-        if (blog) return mapToOutputBlog(blog)
-        return null
+        const blog = await BlogModel.findById(id).exec()
+        if (!blog) {
+            return null
+        }
+        return mapToOutputBlog(blog)
     }
 }

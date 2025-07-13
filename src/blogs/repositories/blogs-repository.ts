@@ -1,16 +1,13 @@
-import {ObjectId} from "mongodb";
-import {blogsCollection} from "../../repositories/DB";
 import {BlogType} from "../service/blogs-service";
 import {injectable} from "inversify";
+import {BlogModel} from "../../db/blog-db-type";
 
 @injectable()
 export class BlogsRepository {
     async deleteBlog(id: string): Promise<boolean> {
         try {
-            const blogId = new ObjectId(id)
-            const result = await blogsCollection.deleteOne({_id: blogId})
-            if (result.deletedCount === 1) return true
-            return false
+            const result = await BlogModel.deleteOne({_id: id}).exec()
+            return result.deletedCount === 1;
         } catch (e) {
             return false
         }
@@ -18,9 +15,9 @@ export class BlogsRepository {
 
     async createBlog(newBlog: BlogType): Promise<string | null> {
         try {
-            const createdBlog = await blogsCollection.insertOne(newBlog)
-            console.log('CREATE', createdBlog)
-            return createdBlog.insertedId.toHexString()
+            const createdBlog = await BlogModel.insertOne(newBlog)
+            await createdBlog.save()
+            return createdBlog._id.toHexString()
         } catch (e) {
             console.log('Create blog error : ', e)
             return null
@@ -29,18 +26,18 @@ export class BlogsRepository {
 
     async updateBlog({params, body}: any) {
         try {
-            const blogId = new ObjectId(params)
+            const blog = await BlogModel.findById(params).exec()
 
-            const result = await blogsCollection.updateOne({_id: blogId}, {
-                $set: {
-                    name: body.name,
-                    description: body.description,
-                    websiteUrl: body.websiteUrl
-                }
-            })
+            if (!blog) {
+                return null
+            }
 
-            if (result.matchedCount === 1) return true
-            return null
+            blog.name = body.name
+            blog.description = body.description
+            blog.websiteUrl = body.websiteUrl
+
+            await blog.save()
+            return true
 
         } catch (e) {
             return null

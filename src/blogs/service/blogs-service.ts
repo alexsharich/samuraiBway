@@ -1,6 +1,5 @@
 import {InputBlogType} from "../../input-output-types/blog-types";
 import {PostType} from "../../posts/service/posts-service";
-
 import {InputPostForBlogType} from "../../input-output-types/post-types";
 import {BlogsRepository} from "../repositories/blogs-repository";
 import {BlogsQueryRepository} from "../repositories/blogs-query-repository";
@@ -13,8 +12,6 @@ export type BlogType = {
     websiteUrl: string,
     isMembership: boolean,
     createdAt: string
-
-
 }
 
 @injectable()

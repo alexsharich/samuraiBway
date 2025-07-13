@@ -1,7 +1,5 @@
-import {commentsCollection} from "../../repositories/DB";
-import {ObjectId, WithId} from "mongodb";
-
-import {CommentDBType, CommentDocument, CommentModel} from "../../db/comment-db-type";
+import {ObjectId} from "mongodb";
+import {CommentDocument, CommentModel} from "../../db/comment-db-type";
 import {SortMongoType} from "../../blogs/repositories/blogs-query-repository";
 import {PaginationQueriesCommentType} from "../../helpers/pagination_values";
 

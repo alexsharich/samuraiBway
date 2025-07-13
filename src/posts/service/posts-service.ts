@@ -1,7 +1,5 @@
-import {InputPostType} from "../../input-output-types/post-types";
-import {PostDBType} from "../../db/post-db-type";
-import {ObjectId} from "mongodb";
-import {postsCollection} from "../../repositories/DB";
+import {InputPostType, OutputPostType} from "../../input-output-types/post-types";
+import {PostModel} from "../../db/post-db-type";
 import {mapToOutputPost} from "../repositories/post-query-repository";
 import {BlogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 import {PostsRepository} from "../repositories/posts-repository";
@@ -48,12 +46,12 @@ export class PostsService {
         return await this.postsRepository.updatePost({params, body})
     }
 
-    async findPost(id: string): Promise<PostDBType | null> {
+    async findPost(id: string): Promise<OutputPostType | null> {
 
-        const postId = new ObjectId(id)
-        const post = await postsCollection.findOne({_id: postId})
-        if (post) return mapToOutputPost(post)
-        return null
-
+        const post = await PostModel.findById(id)
+        if (!post) {
+            return null
+        }
+        return mapToOutputPost(post)
     }
 }
