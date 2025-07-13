@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {apiRequestCollection} from "../../repositories/DB";
+import {ApiRequestModel} from "../../db/api-requests";
 
 
 export const apiRequestMiddleware = async (req: Request<{},{},{},{}>, res: Response, next: NextFunction) => {
@@ -7,7 +7,7 @@ export const apiRequestMiddleware = async (req: Request<{},{},{},{}>, res: Respo
     const URL =  req.originalUrl
     const currentDate = new Date()
 
-    const recentRequests = await apiRequestCollection.countDocuments({
+    const recentRequests = await ApiRequestModel.countDocuments({
         IP,
         URL,
         date: {$gt: new Date(Date.now() - 10000).toISOString()}
@@ -22,7 +22,7 @@ export const apiRequestMiddleware = async (req: Request<{},{},{},{}>, res: Respo
         URL: req.originalUrl,
         date: new Date().toISOString()
     }
-    await apiRequestCollection.insertOne({...newRequest})
+    await ApiRequestModel.insertOne({...newRequest})
 
     next()
 }

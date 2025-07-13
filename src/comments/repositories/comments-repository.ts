@@ -1,14 +1,12 @@
 import {ObjectId} from "mongodb";
-import {commentsCollection} from "../../repositories/DB";
-import {CommentType} from "../service/comments-service";
 import {injectable} from "inversify";
+import {CommentDocument, CommentModel} from "../../db/comment-db-type";
 
 @injectable()
 export class CommentsRepository {
     async findById(id: string) {
         try {
-            const commentId = new ObjectId(id)
-            const comment = await commentsCollection.findOne({_id: commentId})
+            const comment = await CommentModel.findById(id).exec()
             if (comment) {
                 return comment
             }
@@ -21,8 +19,10 @@ export class CommentsRepository {
     async deleteComment(id: string) {
         try {
             const commentId = new ObjectId(id)
-            const result = await commentsCollection.deleteOne({_id: commentId})
-            if (result.deletedCount === 1) return true
+            const result = await CommentModel.deleteOne({_id: commentId}).exec()
+            if (result.deletedCount === 1) {
+                return true
+            }
             return false
         } catch (e) {
             return false
@@ -31,17 +31,17 @@ export class CommentsRepository {
 
     async deleteAllComments() {
         try {
-            await commentsCollection.deleteMany({})
+            await CommentModel.deleteMany({}).exec()
         } catch (e) {
             throw new Error('Delete... Something wrong')
         }
     }
 
-    async createComment(newComment: CommentType): Promise<any> {
+    async createComment(newComment: CommentDocument): Promise<any> {
         try {
-            const createdComment = await commentsCollection.insertOne(newComment)
-            console.log('CREATED COMMENT : ', createdComment)
-            return createdComment.insertedId.toHexString()
+            const createdComment = await CommentModel.insertOne(newComment)
+            await createdComment.save()
+            return createdComment._id.toString()
         } catch (error) {
             console.log('Create blog error : ', error)
             return null
@@ -50,14 +50,13 @@ export class CommentsRepository {
 
     async updateComment(commentId: string, content: string): Promise<any> {
         try {
-            const id = new ObjectId(commentId)
-            const result = await commentsCollection.updateOne({_id: id}, {
-                $set: {
-                    content: content,
-                }
-            })
-            if (result.matchedCount === 1) return await commentsCollection.findOne({_id: id})
-            return null
+            const comment = await CommentModel.findById(commentId).exec()
+            if (!comment) {
+                return null
+            }
+            comment.content = content
+            await comment.save()
+            await CommentModel.findById(comment._id)
         } catch (e) {
             return null
         }

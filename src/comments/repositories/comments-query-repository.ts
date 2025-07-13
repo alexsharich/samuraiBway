@@ -1,11 +1,11 @@
 import {commentsCollection} from "../../repositories/DB";
 import {ObjectId, WithId} from "mongodb";
 
-import {CommentDBType} from "../../db/comment-db-type";
+import {CommentDBType, CommentDocument, CommentModel} from "../../db/comment-db-type";
 import {SortMongoType} from "../../blogs/repositories/blogs-query-repository";
 import {PaginationQueriesCommentType} from "../../helpers/pagination_values";
 
-export const mapToOutputComment = (comment: WithId<CommentDBType>): any => {
+export const mapToOutputComment = (comment: CommentDocument): any => {
     return {
         id: comment._id.toString(),
         content: comment.content,
@@ -23,7 +23,7 @@ export class CommentsQueryRepository {
 
         try {
             const commentId = new ObjectId(id)
-            const comment = await commentsCollection.findOne({_id: commentId})
+            const comment = await CommentModel.findOne({_id: commentId}).exec()
             if (comment) return mapToOutputComment(comment)
             return null
         } catch (e) {
@@ -40,14 +40,14 @@ export class CommentsQueryRepository {
             let filter = {postId}
 
             const sortFilter: SortMongoType = {[sortBy]: sortDirection} as SortMongoType
-            const comments = await commentsCollection
+            const comments = await CommentModel
                 .find(filter)
                 .sort(sortFilter)
                 .skip((pageNumber - 1) * pageSize)
                 .limit(pageSize)
-                .toArray()
+                .lean().exec()
 
-            const totalCount = await commentsCollection.countDocuments(filter)
+            const totalCount = await CommentModel.countDocuments(filter).exec()
             return {
                 pagesCount: Math.ceil(totalCount / query.pageSize),
                 page: query.pageNumber,

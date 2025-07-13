@@ -1,9 +1,8 @@
-import {Device} from "../../db/devices-db-type";
 import {ObjectId} from "mongodb";
-import {devicesCollection} from "../../repositories/DB";
 import {DevicesRepository} from "../repositories/devices-repository";
 import {QueryDevicesRepository} from "../repositories/query-devices-repository";
 import {inject, injectable} from "inversify";
+import {Device, DeviceModel} from "../../db/devices-db-type";
 
 enum STATUS_CODE_DEVICES {
     NO_CONTENT = 204,
@@ -18,7 +17,8 @@ export class DevicesService {
     }
 
     async saveDevice(_id: ObjectId, ip: string, deviceName: string, createdAt: string, userId: string, expAt: string) {
-        const device = new Device(ip, deviceName, createdAt, userId, expAt)
+
+        const device: Device = {ip: ip, deviceName: deviceName, createdAt: createdAt, userId: userId, expAt: expAt}
         await this.devicesRepository.createDevice(_id, device)
         return
     }
@@ -31,13 +31,14 @@ export class DevicesService {
         if (device.userId !== userId) {
             return STATUS_CODE_DEVICES.FORBIDDEN
         }
-        await devicesCollection.deleteOne({_id: new ObjectId(deviceId)})
+        await DeviceModel.deleteOne({_id: deviceId}).exec()
+
         return STATUS_CODE_DEVICES.NO_CONTENT
     }
 
     async deleteDevices(deviceId: string, userId: string): Promise<boolean> {
-        const result = await this.devicesRepository.deleteDevices(userId, deviceId)
-        return result
+        return await this.devicesRepository.deleteDevices(userId, deviceId)
+
     }
 
     async updateDevice(deviceId: ObjectId, expAt: string, createdAt: string) {

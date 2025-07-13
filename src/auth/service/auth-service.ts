@@ -6,10 +6,9 @@ import {UsersRepository} from "../../users/repositories/users-repository";
 import {EmailManager} from "../../managers/emailManager";
 import {BusinessService} from "../../domain/businessServis";
 import {LoginInputType} from "../controllers/auth.controller";
-import {UserAccountDBType} from "../../db/user-db-type";
+import {UserAccountDBType, UserModel} from "../../db/user-db-type";
 import {emailExamples} from "../../helpers/emailTemplates";
 import {inject, injectable} from "inversify";
-import {UsersService} from "../../users/service/users-service";
 import {UsersQueryRepository} from "../../users/repositories/users-query-repository";
 
 
@@ -40,7 +39,6 @@ export class AuthService {
         const passwordHash = await bcrypt.hash(password, salt)
         const now = new Date()
         const user: UserAccountDBType = {
-            _id: new ObjectId(),
             accountData: {
                 userName: login,
                 email,
@@ -84,13 +82,18 @@ export class AuthService {
     }
 
     async confirmEmail(code: string) {
-        let user = await this.usersRepository.findUserByConfirmationCode(code)
+        //let user = await this.usersRepository.findUserByConfirmationCode(code)
+        const user = await UserModel.findOne({'emailConfirmation.confirmationCode': code}).exec()
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
         if (user.emailConfirmation.confirmationCode !== code) return false
         if (user.emailConfirmation.expirationDate < new Date()) return false
-        let result = await this.usersRepository.updateConfirmation(user._id)
-        return result
+        //return await this.usersRepository.updateConfirmation(user._id)
+        //const result = await usersCollection.updateOne({_id: userId}, {$set: {'emailConfirmation.isConfirmed': true}})
+
+        user.emailConfirmation.isConfirmed = true
+        await this.usersRepository.save(user)
+        return true
     }
 
     async resendingEmail(email: string) {

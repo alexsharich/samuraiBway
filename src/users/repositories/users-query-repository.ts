@@ -1,12 +1,10 @@
-import {ObjectId, WithId} from "mongodb";
-import {usersCollection} from "../../repositories/DB";
-import {UserAccountDBType} from "../../db/user-db-type";
+import {UserDocument, UserModel} from "../../db/user-db-type";
 import {OutputUserType} from "../../input-output-types/userType";
 import {PaginationQueriesUsersType} from "../../helpers/pagination_values";
 import {SortMongoType} from "../../blogs/repositories/blogs-query-repository";
 import {injectable} from "inversify";
 
-const mapToOutputUser = (user: WithId<UserAccountDBType>): OutputUserType => {
+const mapToOutputUser = (user: UserDocument): OutputUserType => {
     return {
         id: user._id.toString(),
         login: user.accountData.userName,
@@ -22,14 +20,15 @@ interface UserFilter {
 @injectable()
 export class UsersQueryRepository {
     async findUser(id: string): Promise<OutputUserType | null> {
-        const userId = new ObjectId(id)
-        const user = await usersCollection.findOne({_id: userId})
-        if (user) return mapToOutputUser(user)
-        return null
+        const user = await UserModel.findById(id).exec()
+        if (!user) {
+            return null
+        }
+        return mapToOutputUser(user)
     }
 
     async findUserByRecoveryCode(passwordRecovery: string) {
-        return await usersCollection.findOne({passwordRecovery})
+        return UserModel.findOne({passwordRecovery}).exec()
     }
 
     async getUsers(query: PaginationQueriesUsersType) {
@@ -57,18 +56,17 @@ export class UsersQueryRepository {
 
         const sortFilter: SortMongoType = {[sortBy]: sortDirection} as SortMongoType
 
-        const users = await usersCollection.find(filter)
+        const users = await UserModel.find(filter)
             .sort(sortFilter)
             .skip((pageNumber - 1) * pageSize)
-            .limit(pageSize)
-            .toArray()
-        const totalCount = await usersCollection.countDocuments(filter)
+            .limit(pageSize).lean().exec()
+        const totalCount = await UserModel.countDocuments(filter).exec()
         return {
             pagesCount: Math.ceil(totalCount / query.pageSize),
             page: query.pageNumber,
             pageSize: query.pageSize,
             totalCount: totalCount,
-            items: users.map((user: WithId<UserAccountDBType>) => mapToOutputUser(user))
+            items: users.map((user: UserDocument) => mapToOutputUser(user))
         }
     }
 }

@@ -2,6 +2,7 @@ import {CommentsRepository} from "../repositories/comments-repository";
 import {CommentsQueryRepository} from "../repositories/comments-query-repository";
 import {PostsService} from "../../posts/service/posts-service";
 import {inject, injectable} from "inversify";
+import {CommentDBType} from "../../db/comment-db-type";
 
 export type CommentType = {
     postId: "string",
@@ -47,7 +48,7 @@ export class CommentsService {
 
         const existPost = await this.postsService.findPost(postId)
         if (existPost) {
-            const newComment: CommentType = {
+            const newComment: CommentDBType = {
                 postId,
                 content: comment,
                 commentatorInfo: {
