@@ -1,16 +1,22 @@
 import {HydratedDocument, model, Model, Schema} from "mongoose";
 
+
+
 export type CommentDBType = {
     postId: string,
     content: string,
     commentatorInfo: CommentatorInfoType,
     createdAt: string
+    likeInfo: {
+        likeCount: number
+        dislikeCount: number
+    }
 }
 export type CommentatorInfoType = {
     userId: string,
     userLogin: string
 }
-
+export type LikeStatus = "None" | "like" | "Dislike"
 
 export type CommentModelType = Model<CommentDBType>
 export type CommentDocument = HydratedDocument<CommentDBType>
@@ -23,6 +29,10 @@ const CommentSchema = new Schema<CommentDBType>({
     postId: {type: String, required: true},
     content: {type: String, required: true},
     commentatorInfo: {type: CommentatorInfoSchema, required: true},
-    createdAt: {type: String, required: true}
+    createdAt: {type: String, required: true},
+    likeInfo: {
+        likeCount: {type: Number, required: true, default: 0},
+        dislikeCount: {type: Number, required: true, default: 0},
+    }
 })
 export const CommentModel = model<CommentDBType, CommentModelType>('comment', CommentSchema)

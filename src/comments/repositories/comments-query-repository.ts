@@ -43,7 +43,7 @@ export class CommentsQueryRepository {
                 .sort(sortFilter)
                 .skip((pageNumber - 1) * pageSize)
                 .limit(pageSize)
-                .lean().exec()
+               .exec()
 
             const totalCount = await CommentModel.countDocuments(filter).exec()
             return {
