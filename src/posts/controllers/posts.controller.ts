@@ -41,7 +41,7 @@ export class PostsController {
                     userId: userId,
                     userLogin: user.login,
                     postId: req.params.id,
-                    comment: req.body.content
+                    content: req.body.content
                 })
                 if (createdComment) {
                     res.status(201).send(createdComment)

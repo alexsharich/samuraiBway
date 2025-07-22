@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 import {injectable} from "inversify";
-import {CommentDBType, CommentDocument, CommentModel, CommentModelType, LikeStatus} from "../../db/comment-db-type";
+import { CommentDocument, CommentModel, LikeStatus} from "../../db/comment-db-type";
 import {LikeModel} from "../../db/like-comment-db-type";
 
 @injectable()
@@ -38,23 +38,15 @@ export class CommentsRepository {
         }
     }
 
-    async createComment(newComment: CommentDBType): Promise<any> {
-        try {
-            const comment = new CommentModel(newComment)
-            await comment.save()
-            // const createdComment = await CommentModel.insertOne(newComment)
-            // // await createdComment.save()
-            return comment._id.toString()
-        } catch (error) {
-            console.log('Create blog error : ', error)
-            return null
-        }
+    async save(comment: CommentDocument) {
+        await comment.save()
+        return comment._id.toString()
     }
 
     async updateLikeStatus(status: LikeStatus, commentId: string, userId: string) {
         const comment = await CommentModel.findById(commentId).exec()
         if (!comment) {
-            throw new Error('Comment not found')
+            return false
         }
 
         const like = await LikeModel.findOne({commentId, userId}).exec()
@@ -99,6 +91,7 @@ export class CommentsRepository {
         like.myStatus = status
 
         await like.save()
+        return true
     }
 
     async updateComment(commentId: string, content: string): Promise<any> {

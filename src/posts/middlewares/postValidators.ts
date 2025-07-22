@@ -5,9 +5,12 @@ import {inputCheckErrorsMiddleware} from "../../global-middleware/inputCheckErro
 import {container} from "../../composition-root";
 import {PostsQueryRepository} from "../repositories/post-query-repository";
 import {BlogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
+import {LikeStatus} from "../../db/comment-db-type";
 
 const blogsQueryRepository = container.get(BlogsQueryRepository)
 const postsQueryRepository = container.get(PostsQueryRepository)
+
+const validStatuses: LikeStatus[] = ['None', 'Like', 'Dislike'] as const;
 
 export const titleValidator = body('title').isString().withMessage('not string')
     .trim().isLength({min: 1, max: 30}).withMessage('more then 30 or 0')
@@ -45,6 +48,8 @@ export const findPostValidator = (req: Request<{ id: string }>, res: Response, n
 
     next()
 }
+
+export const likeStatusValidator = body('likeStatus').isIn(validStatuses).isString().withMessage('incorrect status')
 export const contentForCommentValidator = body('content').isString().withMessage('not string')
     .trim().isLength({min: 20, max: 300}).withMessage('more then 300 or min 20')
 export const postValidators = [

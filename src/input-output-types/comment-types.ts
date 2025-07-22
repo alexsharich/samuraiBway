@@ -1,3 +1,5 @@
+import {LikeStatus} from "../db/comment-db-type";
+
 export type OutputCommentType = {
     id: string,
     content: string,
@@ -5,6 +7,11 @@ export type OutputCommentType = {
         userId: string,
         userLogin: string
     },
+    likesInfo: {
+        likesCount: number,
+        dislikesCount: number,
+        myStatus: LikeStatus
+    }
     createdAt: string
 }
 

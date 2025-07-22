@@ -3,6 +3,7 @@ import {InputCommentType} from "../../input-output-types/comment-types";
 import {CommentsService} from "../service/comments-service";
 import {CommentsQueryRepository} from "../repositories/comments-query-repository";
 import {inject, injectable} from "inversify";
+import {LikeStatus} from "../../db/comment-db-type";
 
 @injectable()
 export class CommentsController {
@@ -27,7 +28,8 @@ export class CommentsController {
     }
 
     async getComment(req: Request<{ id: string }>, res: any) {
-        const comment = await this.commentsQueryRepository.findComment(req.params.id)
+        const userId = req.userId
+        const comment = await this.commentsQueryRepository.findComment(req.params.id, userId)
         if (!comment) {
             res.sendStatus(404)
             return
@@ -48,6 +50,15 @@ export class CommentsController {
         }
         if (isCommentUpdated === 'forbidden') {
             res.sendStatus(403)
+            return
+        }
+        res.sendStatus(204)
+    }
+
+    async updateCommentLikeStatus(req: Request<{ commentId: string }, {}, { likeStatus: LikeStatus }>, res: any) {
+        const isCommentLikeStatusUpdated = await this.commentsService.updateLikeStatus(req.body.likeStatus, req.params.commentId, req.userId)
+        if (!isCommentLikeStatusUpdated) {
+            res.sendStatus(404)
             return
         }
         res.sendStatus(204)

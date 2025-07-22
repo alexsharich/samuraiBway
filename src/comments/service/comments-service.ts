@@ -2,7 +2,7 @@ import {CommentsRepository} from "../repositories/comments-repository";
 import {CommentsQueryRepository} from "../repositories/comments-query-repository";
 import {PostsService} from "../../posts/service/posts-service";
 import {inject, injectable} from "inversify";
-import {CommentDBType} from "../../db/comment-db-type";
+import {CommentDBType, CommentDocument, CommentModel, LikeStatus} from "../../db/comment-db-type";
 
 export type CommentType = {
     postId: "string",
@@ -19,6 +19,10 @@ export class CommentsService {
 
     constructor(@inject(CommentsRepository) private commentsRepository: CommentsRepository, @inject(CommentsQueryRepository) private commentsQueryRepository: CommentsQueryRepository, @inject(PostsService) private postsService: PostsService) {
 
+    }
+
+    async updateLikeStatus(likeStatus: LikeStatus, commentId: string, userId: string) {
+        return await this.commentsRepository.updateLikeStatus(likeStatus, commentId, userId)
     }
 
     async deleteComment(userId: string, commentId: string) {
@@ -44,22 +48,17 @@ export class CommentsService {
         return 'forbidden'
     }
 
-    async createComment({userId, userLogin, postId, comment}: any) {
+    async createComment({userId, userLogin, postId, content}: any) {
 
         const existPost = await this.postsService.findPost(postId)
         if (existPost) {
-            const newComment: CommentDBType = {
-                postId,
-                content: comment,
-                commentatorInfo: {
-                    userId,
-                    userLogin
-                },
-                createdAt: (new Date().toISOString())
-            }
-            const createdCommentId = await this.commentsRepository.createComment(newComment)
+            const newComment: CommentDocument = new CommentModel()
+            newComment.commentatorInfo ={userId,userLogin}
+            newComment.postId = existPost.id
+            newComment.content = content
+            const createdCommentId = await this.commentsRepository.save(newComment)
             if (createdCommentId) {
-                return await this.commentsQueryRepository.findComment(createdCommentId)
+                return await this.commentsQueryRepository.findComment(createdCommentId,"None")
             }
         }
     }
