@@ -38,7 +38,6 @@ export class CommentsService {
 
     async updateComment(userId: string, commentId: string, content: string) {
         const comment = await this.commentsRepository.findById(commentId)
-        console.log('COMMENT :', comment)
         if (!comment) {
             return 'not found'
         }
@@ -58,7 +57,7 @@ export class CommentsService {
             newComment.content = content
             const createdCommentId = await this.commentsRepository.save(newComment)
             if (createdCommentId) {
-                return await this.commentsQueryRepository.findComment(createdCommentId,"None")
+                return await this.commentsQueryRepository.findComment(createdCommentId,userId)
             }
         }
     }

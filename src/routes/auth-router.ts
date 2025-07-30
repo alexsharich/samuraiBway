@@ -17,9 +17,9 @@ import {AuthController} from "../auth/controllers/auth.controller";
 const authController = container.get(AuthController)
 export const authRouter = Router()
 
-authRouter.post('/registration', registrationValidator, apiRequestMiddleware, isCreatedUserValidator, authController.register.bind(authController))
-authRouter.post('/registration-confirmation', emailCodeResendingValidator, apiRequestMiddleware, authController.registrationConfirmation.bind(authController))
-authRouter.post('/registration-email-resending', emailValidation, apiRequestMiddleware, authController.resendRegistrationCode.bind(authController))
+authRouter.post('/registration', ...registrationValidator, apiRequestMiddleware, isCreatedUserValidator, authController.register.bind(authController))
+authRouter.post('/registration-confirmation', ...emailCodeResendingValidator, apiRequestMiddleware, authController.registrationConfirmation.bind(authController))
+authRouter.post('/registration-email-resending', ...emailValidation, apiRequestMiddleware, authController.resendRegistrationCode.bind(authController))
 authRouter.post('/login', apiRequestMiddleware, ...authValidator, authController.login.bind(authController))
 authRouter.post('/logout', authRefreshMiddleware, authController.logout.bind(authController))
 authRouter.get('/me', authMiddleware, authController.me)

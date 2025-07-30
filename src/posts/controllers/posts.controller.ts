@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import {InputCommentType} from "../../input-output-types/comment-types";
 import {InputPostType} from "../../input-output-types/post-types";
 import {
-    paginationQueries,
+    paginationQueries, PaginationQueriesCommentType,
     PaginationQueriesType
 } from "../../helpers/pagination_values";
 import {
@@ -34,21 +34,30 @@ export class PostsController {
             res.sendStatus(404)
             return
         }
-        if (userId) {
-            const user = await this.usersQueryRepository.findUser(userId)
-            if (user !== null) {
-                const createdComment = await this.commentsService.createComment({
-                    userId: userId,
-                    userLogin: user.login,
-                    postId: req.params.id,
-                    content: req.body.content
-                })
-                if (createdComment) {
-                    res.status(201).send(createdComment)
-                    return
-                }
-            }
+        if (!userId) {
+            res.sendStatus(401)
+            return
+
         }
+        const user = await this.usersQueryRepository.findUser(userId)
+        console.log('USER :::: ', user, 'USERID :::', userId)
+        if (!user) {
+            res.sendStatus(401)
+            return
+
+        }
+
+        const createdComment = await this.commentsService.createComment({
+            userId: userId,
+            userLogin: user.login,
+            postId: req.params.id,
+            content: req.body.content
+        })
+        if (!createdComment) {
+            res.sendStatus(500)
+            return
+        }
+        res.status(201).send(createdComment)
     }
 
     async createPost(req: Request<any, any, InputPostType>, res: any) {
@@ -87,6 +96,13 @@ export class PostsController {
         if (posts) { //TODO
             res.status(200).json(posts)
         }
+    }
+
+    async getPostComments(req: Request<{ id: string }, {}, {}, PaginationQueriesType>, res: Response) {
+        const queries = paginationQueries(req.query)
+        const userId = req.userId
+        const result = await this.commentsQueryRepository.getComments(queries, req.params.id, userId)
+        res.status(200).send(result)
     }
 
     async updatePost(req: Request<{ id: string }, any, InputPostType>, res: any) {

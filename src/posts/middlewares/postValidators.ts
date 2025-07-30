@@ -73,6 +73,11 @@ export const postForBlogValidator = [
     inputCheckErrorsMiddleware,
 ]
 
+export const checklikeValidator = [
+    likeStatusValidator,
+    inputCheckErrorsMiddleware
+]
+
 export const commentContentValidator = [
     contentForCommentValidator,
 

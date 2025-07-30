@@ -4,10 +4,11 @@ import {adminMiddleware} from "../global-middleware/admin-middleware";
 import {authMiddleware} from "../global-middleware/auth-middleware";
 import {container} from "../composition-root";
 import {PostsController} from "../posts/controllers/posts.controller";
+import {userIdentificationMiddleware} from "../posts/middlewares/userIdentificationMiddleware";
 
 const postsController = container.get(PostsController)
 export const postsRouter = Router()
-postsRouter.get('/:id/comments', postsController.createCommentForPost.bind(postsController))
+postsRouter.get('/:id/comments',userIdentificationMiddleware, postsController.getPostComments.bind(postsController))
 postsRouter.post('/:id/comments', authMiddleware, ...commentContentValidator, postsController.createCommentForPost.bind(postsController))
 postsRouter.get('/', postsController.getPost.bind(postsController))
 postsRouter.post('/', ...postValidators, postsController.createPost.bind(postsController))

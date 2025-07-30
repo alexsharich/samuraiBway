@@ -5,7 +5,7 @@ import {PaginationQueriesCommentType} from "../../helpers/pagination_values";
 import {LikeModel} from "../../db/like-comment-db-type";
 import {OutputCommentType} from "../../input-output-types/comment-types";
 
-export const mapToOutputComment = (comment: CommentDocument, myStatus: LikeStatus): OutputCommentType => {
+export const mapToOutputComment = (comment: CommentDocument, myStatus: LikeStatus = 'None'): OutputCommentType => {
     return {
         id: comment._id.toString(),
         content: comment.content,
@@ -28,16 +28,16 @@ export class CommentsQueryRepository {
         try {
             const commentId = new ObjectId(id)
             const comment = await CommentModel.findOne({_id: commentId}).exec()
-            const {myStatus} = await LikeModel.findOne({_id: commentId, userId}).exec()
+            const myStatus = await LikeModel.findOne({commentId, userId}).exec()
 
-            if (comment) return mapToOutputComment(comment, myStatus)
+            if (comment) return mapToOutputComment(comment, myStatus?.myStatus)
             return null
         } catch (e) {
             return null
         }
     }
 
-    async getComments(query: PaginationQueriesCommentType, postId: string,userId:string) {
+    async getComments(query: PaginationQueriesCommentType, postId: string, userId?: string) {
         try {
             const pageNumber = +query.pageNumber
             const pageSize = +query.pageSize
@@ -54,7 +54,7 @@ export class CommentsQueryRepository {
                 .exec()
 
             const totalCount = await CommentModel.countDocuments(filter).exec()
-            const myLikes = await LikeModel.find({userId:userId}).exec()
+            const myLikes = await LikeModel.find({userId: userId}).exec()
 
             return {
                 pagesCount: Math.ceil(totalCount / query.pageSize),
@@ -62,13 +62,13 @@ export class CommentsQueryRepository {
                 pageSize: query.pageSize,
                 totalCount: totalCount,
                 items: comments.map(comment => {
-                    const likeStatus  = myLikes?.find(like => like.commentId.toString() === comment._id.toString())
+                    const likeStatus = myLikes?.find(like => like.commentId.toString() === comment._id.toString())
 
-                    return mapToOutputComment(comment,likeStatus.myStatus)})
+                    return mapToOutputComment(comment, likeStatus?.myStatus)
+                })
             }
         } catch (e) {
-
-            console.log('Get posts for selected blog Error')
+            console.log('Get posts for selected blog Error', e)
             return null
         }
     }

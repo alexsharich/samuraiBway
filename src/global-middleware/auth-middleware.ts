@@ -13,7 +13,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     }
     const token = auth.split(' ')[1]
     const payload = jwtService.verifyToken(token)
-    console.log(payload)
+    console.log('payload',payload)
     if (!payload) {
         res.sendStatus(401)
         return

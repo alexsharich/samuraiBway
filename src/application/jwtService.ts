@@ -9,8 +9,8 @@ interface MyJwtPayload extends JwtPayload {
 
 export class JwtService {
     createToken(userId: string, deviceId?: string) {
-        const accessToken = jwt.sign({userId}, SETTINGS.JWT_ACCESS, {expiresIn: '10s'})
-        const refreshToken = jwt.sign({userId, deviceId}, SETTINGS.JWT_REFRESH, {expiresIn: '20s'})
+        const accessToken = jwt.sign({userId}, SETTINGS.JWT_ACCESS, {expiresIn: '300s'})
+        const refreshToken = jwt.sign({userId, deviceId}, SETTINGS.JWT_REFRESH, {expiresIn: '600s'})
         return {accessToken, refreshToken}
     }
 
@@ -35,6 +35,7 @@ export class JwtService {
         try {
             return <MyJwtPayload>jwt.verify(token, SETTINGS.JWT_ACCESS)
         } catch (error) {
+            console.log('ERRRRRROR', error)
             return null
         }
     }

@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 import {injectable} from "inversify";
-import { CommentDocument, CommentModel, LikeStatus} from "../../db/comment-db-type";
+import {CommentDocument, CommentModel, LikeStatus} from "../../db/comment-db-type";
 import {LikeModel} from "../../db/like-comment-db-type";
 
 @injectable()
@@ -50,47 +50,51 @@ export class CommentsRepository {
         }
 
         const like = await LikeModel.findOne({commentId, userId}).exec()
-
         const userLikeStatus = comment.likeInfo
-
-        if (status === "Like") {
-            if (like.myStatus === "Dislike") {
-                userLikeStatus.dislikeCount--
+        console.log("likeeeeeeeeeeeeeee: ", like, status)
+        console.log('USERID ::::: ', userId)
+        if (!like) {
+            if (status === 'None') {
+                return
+            }
+            const newLike = new LikeModel({commentId, userId, myStatus: status})
+            if (status === 'Like') {
                 userLikeStatus.likeCount++
             }
-            if (!like.myStatus) {
+            if (status === 'Dislike') {
+                userLikeStatus.dislikeCount++
+            }
+            await newLike.save()
+            await comment.save()
+            return true
+        }
+
+        if (status === "Like") {
+            if (like?.myStatus === "Dislike") {
+                userLikeStatus.dislikeCount--
                 userLikeStatus.likeCount++
             }
         }
         if (status === "Dislike") {
 
-            if (like.myStatus === "Like") {
+            if (like?.myStatus === "Like") {
                 userLikeStatus.likeCount--
-                userLikeStatus.dislikeCount++
-            }
-            if (!like.myStatus) {
                 userLikeStatus.dislikeCount++
             }
         }
         if (status === "None") {
-            if (like.myStatus === "Like") {
+            if (like?.myStatus === "Like") {
                 userLikeStatus.likeCount--
             }
-            if (like.myStatus === "Dislike") {
+            if (like?.myStatus === "Dislike") {
                 userLikeStatus.dislikeCount--
             }
         }
-        await comment.save()
 
-        if (!like) {
-            const newLike = new LikeModel({commentId, userId, myStatus: status})
-            await newLike.save()
-            return
-        }
 
         like.myStatus = status
-
         await like.save()
+        await comment.save()
         return true
     }
 
