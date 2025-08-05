@@ -1,5 +1,5 @@
 import {InputPostType, OutputPostType} from "../../input-output-types/post-types";
-import {PostModel} from "../../db/post-db-type";
+import {PostDocument, PostEntity, PostModel} from "../../db/post-db-type";
 import {mapToOutputPost} from "../repositories/post-query-repository";
 import {BlogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 import {PostsRepository} from "../repositories/posts-repository";
@@ -26,17 +26,10 @@ export class PostsService {
     }
 
     async createPost(body: InputPostType): Promise<string | null> {
-        const existBlog = await this.blogsQueryRepository.findBlog(body.blogId)///к сервису или репе
+        const existBlog = await this.blogsQueryRepository.findBlog(body.blogId)
         if (existBlog) {
-            const newPost: PostType = {
-                title: body.title,
-                shortDescription: body.shortDescription,
-                content: body.content,
-                blogId: body.blogId,
-                blogName: existBlog.name,
-                createdAt: (new Date().toISOString())
-            }
-            return await this.postsRepository.createPost(newPost)
+            const newPost = PostModel.createInstance({...body,BlogName:existBlog.name})
+            return this.postsRepository.save(newPost)
         } else {
             return null
         }

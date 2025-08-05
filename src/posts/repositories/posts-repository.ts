@@ -1,7 +1,7 @@
 import {ObjectId} from "mongodb";
 import {PostType} from "../service/posts-service";
 import {injectable} from "inversify";
-import {PostModel} from "../../db/post-db-type";
+import {PostDocument, PostModel} from "../../db/post-db-type";
 
 @injectable()
 export class PostsRepository {
@@ -33,5 +33,9 @@ export class PostsRepository {
         await post.save()
 
         await PostModel.findById(postId).exec() // TODO все ли верно ?
+    }
+    async save(post:PostDocument){
+        await post.save()
+        return post._id.toString()
     }
 }
