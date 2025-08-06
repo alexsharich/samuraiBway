@@ -8,6 +8,7 @@ import {userIdentificationMiddleware} from "../posts/middlewares/userIdentificat
 
 const postsController = container.get(PostsController)
 export const postsRouter = Router()
+postsRouter.put('/:id/like-status',postsController.changePostLikeStatus.bind(postsController))
 postsRouter.get('/:id/comments',userIdentificationMiddleware, postsController.getPostComments.bind(postsController))
 postsRouter.post('/:id/comments', authMiddleware, ...commentContentValidator, postsController.createCommentForPost.bind(postsController))
 postsRouter.get('/', postsController.getPost.bind(postsController))

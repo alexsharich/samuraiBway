@@ -4,6 +4,7 @@ import {mapToOutputPost} from "../repositories/post-query-repository";
 import {BlogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 import {PostsRepository} from "../repositories/posts-repository";
 import {inject, injectable} from "inversify";
+import {LikeStatus} from "../../db/comment-db-type";
 
 
 export type PostType = {
@@ -28,12 +29,19 @@ export class PostsService {
     async createPost(body: InputPostType): Promise<string | null> {
         const existBlog = await this.blogsQueryRepository.findBlog(body.blogId)
         if (existBlog) {
-            const newPost = PostModel.createInstance({...body,BlogName:existBlog.name})
+            const newPost = PostModel.createInstance({...body, BlogName: existBlog.name})
             return this.postsRepository.save(newPost)
         } else {
             return null
         }
     }
+
+    ///
+    async changgeLikeStatus(commentId: string, newStatus: LikeStatus) {
+
+    }
+
+    ///
 
     async updatePost({params, body}: any): Promise<any> {
         return await this.postsRepository.updatePost({params, body})

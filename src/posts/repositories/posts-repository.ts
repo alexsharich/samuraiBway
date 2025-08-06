@@ -32,7 +32,7 @@ export class PostsRepository {
         post.blogId = body.blogId
         await post.save()
 
-        await PostModel.findById(postId).exec() // TODO все ли верно ?
+        await PostModel.findById(postId).exec()
     }
     async save(post:PostDocument){
         await post.save()
