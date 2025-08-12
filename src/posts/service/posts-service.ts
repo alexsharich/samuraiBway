@@ -1,10 +1,12 @@
 import {InputPostType, OutputPostType} from "../../input-output-types/post-types";
-import {PostDocument, PostEntity, PostModel} from "../../db/post-db-type";
+import {PostModel} from "../../db/post-db-type";
 import {mapToOutputPost} from "../repositories/post-query-repository";
 import {BlogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 import {PostsRepository} from "../repositories/posts-repository";
 import {inject, injectable} from "inversify";
 import {LikeStatus} from "../../db/comment-db-type";
+import {LikePostModel} from "../../db/like-post-db-type";
+import {UserModel} from "../../db/user-db-type";
 
 
 export type PostType = {
@@ -36,12 +38,40 @@ export class PostsService {
         }
     }
 
-    ///
-    async changgeLikeStatus(commentId: string, newStatus: LikeStatus) {
+    async changeLikeStatus(postId: string, newStatus: LikeStatus, userId: string) {
+        const post = await PostModel.findOne(postId).exec()
+        if (!post) {
+            return false
+        }
 
+        const userLikeStatus = await LikePostModel.findOne({userId}).exec()
+
+        if (!userId) {
+            return 'User likeStatus not found'
+        }
+        if (!userLikeStatus) {
+            const user = await UserModel.findById(userId).exec()
+            if (!user) {
+                return 'User not found'
+            }
+            const newLike = new LikePostModel({
+                postId,
+                userId,
+                myStatus: newStatus,
+                login: user.accountData.userName
+            })
+            await newLike.save()
+        }
+        else {
+            if(userLikeStatus.myStatus !== newStatus){
+                userLikeStatus.myStatus = newStatus
+                await userLikeStatus.save()
+            }
+        }
+        post.changeLikeStatus(newStatus, userLikeStatus.myStatus)
+        await this.postsRepository.save(post)
     }
 
-    ///
 
     async updatePost({params, body}: any): Promise<any> {
         return await this.postsRepository.updatePost({params, body})

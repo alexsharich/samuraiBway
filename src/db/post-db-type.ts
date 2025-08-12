@@ -53,27 +53,38 @@ export class PostEntity {
         post.blogName = BlogName
         return post as PostDocument
     }
-    public changeLikeStatus(newStatus:LikeStatus,status:LikeStatus){
-        if(newStatus === status){
+
+    public changeLikeStatus(newStatus: LikeStatus, status: LikeStatus) {
+        if (newStatus === status) {
             return
         }
-        if(newStatus === 'None' ){
-            if(status === 'Like'){
+        if (newStatus === 'None') {
+            if (status === 'Like') {
                 this.likesCount--
                 return
             }
-            if(status === 'Dislike'){
+            if (status === 'Dislike') {
                 this.dislikesCount--
                 return
             }
         }
-        if(newStatus === 'Like'){
-            if(status === 'None'){
+        if (newStatus === 'Like') {
+            if (status === 'None') {
                 this.likesCount++
                 return
             }
-            if(status === 'Dislike'){
+            if (status === 'Dislike') {
                 this.dislikesCount--
+                return
+            }
+        }
+        if (newStatus === 'Dislike') {
+            if (status === 'None') {
+                this.dislikesCount++
+                return
+            }
+            if (status === 'Like') {
+                this.likesCount--
                 return
             }
         }

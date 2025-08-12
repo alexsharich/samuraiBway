@@ -87,11 +87,9 @@ export class PostsQueryRepository {
     }
 
     async findPost(id: string): Promise<PostDBType | null> {
-
         const postId = new ObjectId(id)
         const post = await PostModel.findById(postId).exec()
         if (post) return mapToOutputPost(post)
         return null
-
     }
 }

@@ -16,6 +16,7 @@ import {CommentsQueryRepository} from "../../comments/repositories/comments-quer
 import {CommentsService} from "../../comments/service/comments-service";
 import {inject, injectable} from "inversify";
 import {LikeStatus} from "../../db/comment-db-type";
+import {PostModel} from "../../db/post-db-type";
 
 @injectable()
 export class PostsController {
@@ -24,18 +25,8 @@ export class PostsController {
     }
 
     async changePostLikeStatus(req: Request<{ id: string }, any, { likeStatus: LikeStatus }>, res: Response) {
-        const newStatus = req.body.likeStatus
         const userId = req.userId
-        const isPostExist = await this.postsQueryRepository.findPost(req.params.id)
-        if (!isPostExist) {
-            res.sendStatus(404)
-            return
-        }
-        if (!userId) {
-            res.sendStatus(401)
-            return
-        }
-
+     await this.postsService.changeLikeStatus(req.params.id,req.body.likeStatus,userId)
     }
 
     async createCommentForPost(req: Request<{
