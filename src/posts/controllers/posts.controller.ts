@@ -16,7 +16,6 @@ import {CommentsQueryRepository} from "../../comments/repositories/comments-quer
 import {CommentsService} from "../../comments/service/comments-service";
 import {inject, injectable} from "inversify";
 import {LikeStatus} from "../../db/comment-db-type";
-import {PostModel} from "../../db/post-db-type";
 
 @injectable()
 export class PostsController {
@@ -26,7 +25,12 @@ export class PostsController {
 
     async changePostLikeStatus(req: Request<{ id: string }, any, { likeStatus: LikeStatus }>, res: Response) {
         const userId = req.userId
-     await this.postsService.changeLikeStatus(req.params.id,req.body.likeStatus,userId)
+        const result = await this.postsService.changeLikeStatus(req.params.id, req.body.likeStatus, userId)
+        if (!result) {
+            res.sendStatus(404)
+            return
+        }
+        res.sendStatus(204)
     }
 
     async createCommentForPost(req: Request<{
@@ -41,7 +45,6 @@ export class PostsController {
         if (!userId) {
             res.sendStatus(401)
             return
-
         }
         const user = await this.usersQueryRepository.findUser(userId)
         console.log('USER :::: ', user, 'USERID :::', userId)
@@ -85,7 +88,8 @@ export class PostsController {
     }
 
     async findPost(req: Request<{ id: string }>, res: Response) {
-        const foundPost = await this.postsQueryRepository.findPost(req.params.id)
+        const userId = req.userId
+        const foundPost = await this.postsQueryRepository.findPost(req.params.id, userId)
         if (!foundPost) {
             res.sendStatus(404)
             return;
@@ -96,7 +100,8 @@ export class PostsController {
 
     async getPost(req: Request<{}, {}, {}, PaginationQueriesType>, res: Response) {
         const sortFilter = paginationQueries(req.query)
-        const posts = await this.postsQueryRepository.getAllPosts(sortFilter)
+        const userId = req.userId
+        const posts = await this.postsQueryRepository.getAllPosts(sortFilter, userId)
         if (posts) {
             res.status(200).json(posts)
         }

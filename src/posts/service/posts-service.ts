@@ -1,5 +1,5 @@
 import {InputPostType, OutputPostType} from "../../input-output-types/post-types";
-import {PostModel} from "../../db/post-db-type";
+import {PostDocument, PostModel} from "../../db/post-db-type";
 import {mapToOutputPost} from "../repositories/post-query-repository";
 import {BlogsQueryRepository} from "../../blogs/repositories/blogs-query-repository";
 import {PostsRepository} from "../repositories/posts-repository";
@@ -31,7 +31,7 @@ export class PostsService {
     async createPost(body: InputPostType): Promise<string | null> {
         const existBlog = await this.blogsQueryRepository.findBlog(body.blogId)
         if (existBlog) {
-            const newPost = PostModel.createInstance({...body, BlogName: existBlog.name})
+            const newPost = new PostModel({...body, blogName: existBlog.name})
             return this.postsRepository.save(newPost)
         } else {
             return null
@@ -39,20 +39,21 @@ export class PostsService {
     }
 
     async changeLikeStatus(postId: string, newStatus: LikeStatus, userId: string) {
-        const post = await PostModel.findOne(postId).exec()
+        const post = await PostModel.findById(postId).exec()
         if (!post) {
             return false
         }
 
-        const userLikeStatus = await LikePostModel.findOne({userId}).exec()
+        const userLikeStatus = await LikePostModel.findOne({userId, postId}).exec()
 
         if (!userId) {
-            return 'User likeStatus not found'
+            return false
         }
+        post.changeLikeStatus(newStatus, userLikeStatus?.myStatus)
         if (!userLikeStatus) {
             const user = await UserModel.findById(userId).exec()
             if (!user) {
-                return 'User not found'
+                return false
             }
             const newLike = new LikePostModel({
                 postId,
@@ -61,15 +62,14 @@ export class PostsService {
                 login: user.accountData.userName
             })
             await newLike.save()
-        }
-        else {
-            if(userLikeStatus.myStatus !== newStatus){
+        } else {
+            if (userLikeStatus.myStatus !== newStatus) {
                 userLikeStatus.myStatus = newStatus
                 await userLikeStatus.save()
             }
         }
-        post.changeLikeStatus(newStatus, userLikeStatus.myStatus)
         await this.postsRepository.save(post)
+        return true
     }
 
 
@@ -77,12 +77,12 @@ export class PostsService {
         return await this.postsRepository.updatePost({params, body})
     }
 
-    async findPost(id: string): Promise<OutputPostType | null> {
+    async findPost(id: string): Promise<PostDocument | null> {
 
-        const post = await PostModel.findById(id)
+        const post = await PostModel.findById(id).exec()
         if (!post) {
             return null
         }
-        return mapToOutputPost(post)
+        return post
     }
 }

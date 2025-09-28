@@ -76,15 +76,17 @@ export class BlogsController {
 
         const {pageNumber, pageSize, sortBy, sortDirection, searchNameTerm} = paginationQueries(req.query)
         const blogId: string = req.params.id
+        const userId = req.userId
         const blog = await this.blogsQueryRepository.findBlog(blogId)
         if (!blog) {
             res.sendStatus(404)
             return
         }
-        const posts = await this.postsQueryRepository.getPostsForSelectedBlog({
+        const posts = await this.postsQueryRepository.getAllPosts(
+            {pageSize, pageNumber, sortDirection, sortBy, searchNameTerm},
+            userId,
             blogId,
-            query: {pageSize, pageNumber, sortDirection, sortBy, searchNameTerm}
-        })
+        )
 
 
         if (!posts) {

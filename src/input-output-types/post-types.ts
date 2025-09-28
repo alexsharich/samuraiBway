@@ -1,12 +1,28 @@
+import {LikeStatus} from "../db/comment-db-type";
+
+type NewsLikeInfo = {
+
+    addedAt: string,
+    userId: string,
+    login: string
+
+}
 export type OutputPostType = {
     id: string,
     title: string,
     shortDescription: string,
-    createdAt:string,
+    createdAt: string,
     content: string,
     blogId: string,
-    blogName: string
+    blogName: string,
+    extendedLikesInfo: {
+        likesCount: number,
+        dislikesCount: number,
+        myStatus: LikeStatus,
+        newestLikes?: NewsLikeInfo[]
+    }
 }
+
 
 export type InputPostType = {
     title: string,

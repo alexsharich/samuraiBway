@@ -4,6 +4,7 @@ import {adminMiddleware} from "../global-middleware/admin-middleware";
 import {postForBlogValidator} from "../posts/middlewares/postValidators";
 import {container} from "../composition-root";
 import {BlogsController} from "../blogs/controllers/blogs.controller";
+import {userIdentificationMiddleware} from "../posts/middlewares/userIdentificationMiddleware";
 
 const blogsController = container.get(BlogsController)
 export const blogsRouter = Router()
@@ -14,6 +15,6 @@ blogsRouter.get('/:id', findBlogValidator, blogsController.findBlog.bind(blogsCo
 blogsRouter.delete('/:id', adminMiddleware, findBlogValidator, blogsController.deleteBlog.bind(blogsController))
 blogsRouter.put('/:id', findBlogValidator, ...blogValidators, blogsController.updateBlog.bind(blogsController))
 blogsRouter.post('/:id/posts', findBlogValidator, ...postForBlogValidator, blogsController.createPostForSelectedBlog.bind(blogsController))
-blogsRouter.get('/:id/posts', blogsController.getPostsForSelectedBlog.bind(blogsController))
+blogsRouter.get('/:id/posts', userIdentificationMiddleware, blogsController.getPostsForSelectedBlog.bind(blogsController))
 
 

@@ -41,7 +41,7 @@ export class PostEntity {
         this.dislikesCount = dislikesCount
     }
 
-    static createInstance({title, shortDescription, content, blogId, BlogName}: InputPostType & { BlogName: string }) {
+    /*static createInstance({title, shortDescription, content, blogId, BlogName}: InputPostType & { BlogName: string }) {
         const post = new this()
         post.title = title
         post.shortDescription = shortDescription
@@ -52,7 +52,7 @@ export class PostEntity {
         post.dislikesCount = 0
         post.blogName = BlogName
         return post as PostDocument
-    }
+    }*/
 
     public changeLikeStatus(newStatus: LikeStatus, status: LikeStatus) {
         if (newStatus === status) {
@@ -60,50 +60,52 @@ export class PostEntity {
         }
         if (newStatus === 'None') {
             if (status === 'Like') {
-                this.likesCount--
+                this.likesCount > 0 && this.likesCount--
                 return
             }
             if (status === 'Dislike') {
-                this.dislikesCount--
+                this.dislikesCount > 0 && this.dislikesCount--
                 return
             }
         }
         if (newStatus === 'Like') {
-            if (status === 'None') {
-                this.likesCount++
-                return
-            }
+
             if (status === 'Dislike') {
-                this.dislikesCount--
-                return
+                this.dislikesCount > 0 && this.dislikesCount--
             }
+            this.likesCount++
+            return
         }
         if (newStatus === 'Dislike') {
-            if (status === 'None') {
-                this.dislikesCount++
-                return
-            }
+
             if (status === 'Like') {
-                this.likesCount--
-                return
+                this.likesCount > 0 && this.likesCount--
             }
+            this.dislikesCount++
+            return
         }
+
     }
 }
 
-export type PostModelType = Model<PostEntity> & typeof PostEntity
+export type PostModelType = Model<PostEntity>
 export type PostDocument = HydratedDocument<PostEntity>
 
 const PostSchema = new Schema<PostEntity>({
-    title: {type: String, required: true},
-    createdAt: {type: String, required: true},
-    blogName: {type: String, required: true},
-    blogId: {type: String, required: true},
-    content: {type: String, required: true},
-    shortDescription: {type: String, required: true},
-    likesCount: {type: Number, required: true},
-    dislikesCount: {type: Number, required: true}
-})
+        title: {type: String, required: true},
+        blogName: {type: String, required: true},
+        blogId: {type: String, required: true},
+        content: {type: String, required: true},
+        shortDescription: {type: String, required: true},
+        likesCount: {type: Number, default: 0},
+        dislikesCount: {type: Number, default: 0},
+    },
+    {versionKey: false, timestamps: true}
+)
+
 PostSchema.loadClass(PostEntity)
 
 export const PostModel = model<PostEntity, PostModelType>('posts', PostSchema)
+
+
+
