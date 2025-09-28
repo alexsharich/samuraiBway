@@ -8,13 +8,6 @@ import {injectable} from "inversify";
 import {LikeStatus} from "../../db/comment-db-type";
 import {LikePostDocument, LikePostModel} from "../../db/like-post-db-type";
 
-type Last3Likes = {
-    createdAt: string | Date,
-    userId: string,
-    login: string
-}
-
-
 export const mapToOutputPost = (post: PostDocument, myStatus: LikeStatus = "None", last3likes: Array<LikePostDocument>): OutputPostType => {
     return {
         id: post._id.toString(),
