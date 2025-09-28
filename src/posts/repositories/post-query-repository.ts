@@ -1,5 +1,4 @@
 import {PaginationQueriesType} from "../../helpers/pagination_values";
-import {blogsCollection} from "../../repositories/DB";
 import {ObjectId} from "mongodb";
 import {PostDBType, PostDocument, PostModel} from "../../db/post-db-type";
 import {OutputPostType} from "../../input-output-types/post-types";
@@ -50,33 +49,6 @@ export type MapToOutputWithPagination = {
 
 @injectable()
 export class PostsQueryRepository {
-    /*async getPostsForSelectedBlog({blogId, query}: { blogId: string, query: PaginationQueriesType }): Promise<any> {
-
-        const pageNumber = query.pageNumber
-        const pageSize = query.pageSize
-        const sortBy = query.sortBy
-        const sortDirection = query.sortDirection === 'asc' ? 1 : -1
-
-        let filter = {blogId: blogId}
-
-        const sortFilter: SortMongoType = {[sortBy]: sortDirection} as SortMongoType
-        const posts = await PostModel
-            .find(filter).sort(sortFilter)
-            .skip((pageNumber - 1) * pageSize)
-            .limit(pageSize)
-            .lean().exec()
-
-        const totalCount = await PostModel.countDocuments(filter)
-
-        return {
-            pagesCount: Math.ceil(totalCount / query.pageSize),
-            page: query.pageNumber,
-            pageSize: query.pageSize,
-            totalCount: totalCount,
-            items: posts.map((post: PostDocument) => mapToOutputPost(post))
-        }
-    }*/
-
     async getAllPosts(query: PaginationQueriesType, userId?: string, blogId?: string): Promise<any> {
         const pageNumber = query.pageNumber
         const pageSize = query.pageSize
@@ -100,7 +72,6 @@ export class PostsQueryRepository {
 
         const totalCount = await PostModel.countDocuments(filter)
 
-        console.log("ID",userId)
         const userLikes = await LikePostModel.find({userId}).exec()
 
         const allLikes = await LikePostModel.find({myStatus: "Like"}).sort({ createdAt: -1 }).exec()
@@ -114,7 +85,6 @@ export class PostsQueryRepository {
             items: posts.map((post: PostDocument) => {
                 const currentLike = userLikes?.find(like => like.postId === String(post._id))
                 const last3likes = allLikes.filter(l => l.postId === String(post._id)).slice(0, 3)
-                console.log("USEEEEER",userLikes)
                 return mapToOutputPost(post, currentLike?.myStatus, last3likes)
             })
         }

@@ -1,5 +1,4 @@
 import {HydratedDocument, model, Model, Schema} from "mongoose";
-import {InputPostType} from "../input-output-types/post-types";
 import {LikeStatus} from "./comment-db-type";
 
 export type PostDBType = {
@@ -40,19 +39,6 @@ export class PostEntity {
         this.likesCount = likesCount
         this.dislikesCount = dislikesCount
     }
-
-    /*static createInstance({title, shortDescription, content, blogId, BlogName}: InputPostType & { BlogName: string }) {
-        const post = new this()
-        post.title = title
-        post.shortDescription = shortDescription
-        post.content = content
-        post.blogId = blogId
-        post.createdAt = new Date().toISOString()
-        post.likesCount = 0
-        post.dislikesCount = 0
-        post.blogName = BlogName
-        return post as PostDocument
-    }*/
 
     public changeLikeStatus(newStatus: LikeStatus, status: LikeStatus) {
         if (newStatus === status) {

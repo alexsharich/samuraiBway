@@ -47,7 +47,6 @@ export class PostsController {
             return
         }
         const user = await this.usersQueryRepository.findUser(userId)
-        console.log('USER :::: ', user, 'USERID :::', userId)
         if (!user) {
             res.sendStatus(401)
             return

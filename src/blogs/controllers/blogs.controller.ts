@@ -65,7 +65,7 @@ export class BlogsController {
     async getBlog(req: Request<{}, {}, {}, PaginationQueriesType>, res: Response<MapToOutputWithPagination>) {
         const sortFilter = paginationQueries(req.query)
         const blogs = await this.blogsQueryRepository.getBlogs(sortFilter)
-        if (blogs) { // TODO
+        if (blogs) {
             res.status(200).send(blogs)
         }
     }
@@ -87,8 +87,6 @@ export class BlogsController {
             userId,
             blogId,
         )
-
-
         if (!posts) {
             res.sendStatus(404)
             return
@@ -102,9 +100,7 @@ export class BlogsController {
             res.sendStatus(404)
             return
         }
-
         const updatedBLog = await this.blogsQueryRepository.findBlog(req.params.id)
-
         res.status(204).send(updatedBLog)
     }
 }
