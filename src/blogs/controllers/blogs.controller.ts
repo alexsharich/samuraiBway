@@ -65,7 +65,7 @@ export class BlogsController {
     async getBlog(req: Request<{}, {}, {}, PaginationQueriesType>, res: Response<MapToOutputWithPagination>) {
         const sortFilter = paginationQueries(req.query)
         const blogs = await this.blogsQueryRepository.getBlogs(sortFilter)
-        if (blogs) { // TODO
+        if (blogs) {
             res.status(200).send(blogs)
         }
     }
@@ -76,17 +76,17 @@ export class BlogsController {
 
         const {pageNumber, pageSize, sortBy, sortDirection, searchNameTerm} = paginationQueries(req.query)
         const blogId: string = req.params.id
+        const userId = req.userId
         const blog = await this.blogsQueryRepository.findBlog(blogId)
         if (!blog) {
             res.sendStatus(404)
             return
         }
-        const posts = await this.postsQueryRepository.getPostsForSelectedBlog({
+        const posts = await this.postsQueryRepository.getAllPosts(
+            {pageSize, pageNumber, sortDirection, sortBy, searchNameTerm},
+            userId,
             blogId,
-            query: {pageSize, pageNumber, sortDirection, sortBy, searchNameTerm}
-        })
-
-
+        )
         if (!posts) {
             res.sendStatus(404)
             return
@@ -100,9 +100,7 @@ export class BlogsController {
             res.sendStatus(404)
             return
         }
-
         const updatedBLog = await this.blogsQueryRepository.findBlog(req.params.id)
-
         res.status(204).send(updatedBLog)
     }
 }

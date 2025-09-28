@@ -51,8 +51,6 @@ export class CommentsRepository {
 
         const like = await LikeModel.findOne({commentId, userId}).exec()
         const userLikeStatus = comment.likeInfo
-        console.log("likeeeeeeeeeeeeeee: ", like, status)
-        console.log('USERID ::::: ', userId)
         if (!like) {
             if (status === 'None') {
                 return
