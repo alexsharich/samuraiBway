@@ -62,14 +62,9 @@ export class PostsQueryRepository {
             .skip((pageNumber - 1) * pageSize)
             .limit(+pageSize)
             .lean().exec()
-
         const totalCount = await PostModel.countDocuments(filter)
-
         const userLikes = await LikePostModel.find({userId}).exec()
-
         const allLikes = await LikePostModel.find({myStatus: "Like"}).sort({ createdAt: -1 }).exec()
-
-
         return {
             pagesCount: Math.ceil(totalCount / query.pageSize),
             page: query.pageNumber,
